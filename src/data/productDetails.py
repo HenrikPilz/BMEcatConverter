@@ -21,7 +21,7 @@ class ProductDetails():
         self.erpGroupSupplier = None
         self.deliveryTime = 2
         self.specialTreatmentClasses = []
-        self.keyword = {}
+        self.keywords = []
         self.remarks = []
         self.segment = []
         self.articleOrder = 1
@@ -37,3 +37,6 @@ class ProductDetails():
     
     def addSpecialTreatmentClass(self, treatmentclass):
         self.specialTreatmentClasses.append(treatmentclass)
+    
+    def addKeyword(self, keyword):
+        self.keywords.append(keyword)

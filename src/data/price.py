@@ -20,11 +20,13 @@ class Price():
         if self.amount is None:
             logging.error("Kein Preis angegeben!")
         elif float(self.amount) < 0:
+            self.amount = 0
             logging.error("Negativer Preis angegeben!")
         if self.priceType is None:
             logging.warning("Kein Typ für den Preis angeben!")
         if float(self.tax) not in  [ 0.19, 0.07 ]:
-            logging.warning("Ungültige Steuerangabe: {t:f}".format(t=self.tax))
+            logging.warning("Ungültige Steuerangabe: {t:f}. Steuer auf 0.19 gesetzt.".format(t=self.tax))
+            self.tax = 0.19
         if self.currency != "EUR":
             logging.warning("Währung nicht in EURO: " + self.currency)
         if float(self.lowerBound) < 1:
