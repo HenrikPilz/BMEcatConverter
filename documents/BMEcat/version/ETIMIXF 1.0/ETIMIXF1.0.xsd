@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+  ETIM International eXchange Format 1.0 (2014-01-24)
+  Copyright © 2014 ETIM International
+
+  Authors:
+    Arian Haeser, ETIM Netherlands
+
+  This schema is build according to the Venetian Blind design principle;
+  Versioning of schema and instance documents is managed by the fixed schemaVersion attribute; The namespace contains the major part of the version
+
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.etim-international.com/etimixf/1" targetNamespace="http://www.etim-international.com/etimixf/1" elementFormDefault="qualified">
+	<!-- There is only one element, according to the Venetian Blind design principle -->
+	<xs:element name="IXF" type="IXFType">
+		<xs:key name="FeatureCodeKey">
+			<xs:selector xpath="./Features/Feature"/>
+			<xs:field xpath="Code"/>
+		</xs:key>
+		<xs:keyref name="ClassFeatureCode" refer="FeatureCodeKey">
+			<xs:selector xpath="./Classes/Class/Features/Feature"/>
+			<xs:field xpath="FeatureCode"/>
+		</xs:keyref>
+		
+		<xs:key name="ValueCodeKey">
+			<xs:selector xpath="./Values/Value"/>
+			<xs:field xpath="Code"/>
+		</xs:key>
+		<xs:keyref name="ClassFeatureValueCode" refer="ValueCodeKey">
+			<xs:selector xpath="./Classes/Class/Features/Feature/Values/Value"/>
+			<xs:field xpath="ValueCode"/>
+		</xs:keyref>
+		
+		<xs:key name="UnitCodeKey">
+			<xs:selector xpath="./Units/Unit"/>
+			<xs:field xpath="Code"/>
+		</xs:key>
+		<xs:keyref name="ClassFeatureUnitCode" refer="UnitCodeKey">
+			<xs:selector xpath="./Classes/Class/Features/Feature"/>
+			<xs:field xpath="UnitCode"/>
+		</xs:keyref>
+		
+		<xs:key name="GroupCodeKey">
+			<xs:selector xpath="./Groups/Group"/>
+			<xs:field xpath="Code"/>
+		</xs:key>
+		<xs:keyref name="ClassGroupKey" refer="GroupCodeKey">
+			<xs:selector xpath="./Classes/Class"/>
+			<xs:field xpath="GroupCode"/>
+		</xs:keyref>
+	</xs:element>
+
+	<xs:complexType name="IXFType">
+		<xs:sequence>
+			<xs:element name="Header" type="HeaderType"/>
+			<xs:element name="Units" type="UnitListType" minOccurs="0"/>
+			<xs:element name="Features" type="FeatureListType" minOccurs="0"/>
+			<xs:element name="Values" type="ValueListType" minOccurs="0"/>
+			<xs:element name="Groups" type="GroupListType" minOccurs="0"/>
+			<xs:element name="Classes" type="ClassListType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="schemaVersion" type="xs:decimal" use="required" fixed="1.0"/>
+	</xs:complexType>
+
+	<xs:complexType name="HeaderType">
+		<xs:sequence>
+			<xs:element name="Description" type="ShortDescriptionType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ExportDate" type="xs:dateTime"/>
+			<xs:element name="Publication" type="PublicationType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="PublicationType">
+		<xs:sequence>
+			<xs:element name="Name" type="ShortDescriptionType"/>
+			<xs:element name="Number" type="xs:unsignedInt"/>
+			<xs:element name="Date" type="xs:dateTime"/>
+			<xs:element name="Prerelease" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UnitListType">
+		<xs:sequence>
+			<xs:element name="Unit" type="UnitType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UnitType">
+		<xs:sequence>
+			<xs:element name="Code" type="UnitCodeType"/>
+			<xs:element name="Translations" type="UnitTranslationListType" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UnitTranslationListType">
+		<xs:sequence>
+			<xs:element name="Translation" type="UnitTranslationType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UnitTranslationType">
+		<xs:sequence>
+			<xs:element name="Description" type="ShortDescriptionType"/>
+			<xs:element name="Abbreviation" type="UnitAbbreviationType"/>
+		</xs:sequence>
+		<xs:attribute name="language" type="LanguageCode" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="FeatureListType">
+		<xs:sequence>
+			<xs:element name="Feature" type="FeatureType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="FeatureType">
+		<xs:sequence>
+			<xs:element name="Code" type="FeatureCodeType"/>
+			<xs:element name="Type" type="FeatureTypeType"/>
+			<xs:element name="Translations" type="ShortTranslationListType" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ShortTranslationListType">
+		<xs:sequence>
+			<xs:element name="Translation" type="ShortTranslationType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ShortTranslationType">
+		<xs:sequence>
+			<xs:element name="Description" type="ShortDescriptionType"/>
+		</xs:sequence>
+		<xs:attribute name="language" type="LanguageCode" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="ValueListType">
+		<xs:sequence>
+			<xs:element name="Value" type="ValueType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ValueType">
+		<xs:sequence>
+			<xs:element name="Code" type="ValueCodeType"/>
+			<xs:element name="Translations" type="ShortTranslationListType" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="GroupListType">
+		<xs:sequence>
+			<xs:element name="Group" type="GroupType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="GroupType">
+		<xs:sequence>
+			<xs:element name="Code" type="GroupCodeType"/>
+			<xs:element name="Translations" type="ShortTranslationListType" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ClassListType">
+		<xs:sequence>
+			<xs:element name="Class" type="ClassType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ClassType">
+		<xs:sequence>
+			<xs:element name="Code" type="ClassCodeType"/>
+			<xs:element name="Version" type="ClassVersionType"/>
+			<xs:element name="Translations" type="ClassTranslationListType" minOccurs="1"/>
+			<xs:element name="Features" type="ClassFeatureListType" minOccurs="0"/>
+			<xs:element name="Status" type="ClassStatusType"/>
+			<xs:element name="GroupCode" type="GroupCodeType"/>
+		</xs:sequence>
+		<xs:attribute name="changeCode" type="ChangeCodeType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="ClassTranslationListType">
+		<xs:sequence>
+			<xs:element name="Translation" type="ClassTranslationType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ClassTranslationType">
+		<xs:sequence>
+			<xs:element name="Description" type="ShortDescriptionType" minOccurs="1"/>
+			<xs:element name="Synonyms" type="ClassSynonymListType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="language" type="LanguageCode" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="ClassSynonymListType">
+		<xs:sequence>
+			<xs:element name="Synonym" type="ShortDescriptionType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ClassFeatureListType">
+		<xs:sequence>
+			<xs:element name="Feature" type="ClassFeatureType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ClassFeatureType">
+		<xs:sequence>
+			<xs:element name="FeatureCode" type="FeatureCodeType"/>
+			<xs:element name="UnitCode" type="UnitCodeType" minOccurs="0"/>
+			<xs:element name="OrderNumber" type="xs:int"/>
+			<xs:element name="Values" type="ClassFeatureValueListType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="changeCode" type="ChangeCodeType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="ClassFeatureValueListType">
+		<xs:sequence>
+			<xs:element name="Value" type="ClassFeatureValueType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ClassFeatureValueType">
+		<xs:sequence>
+			<xs:element name="ValueCode" type="ValueCodeType"/>
+			<xs:element name="OrderNumber" type="xs:int"/>
+		</xs:sequence>
+		<xs:attribute name="changeCode" type="ChangeCodeType" use="required"/>
+	</xs:complexType>
+
+	
+	<!-- Simple type definitions -->
+	
+	<xs:simpleType name="ClassCodeType">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="8"/>
+			<xs:maxLength value="8"/>
+			<xs:pattern value="EC[0-9]{6}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ClassVersionType">
+		<xs:restriction base="xs:unsignedInt"/>
+	</xs:simpleType>
+		
+	<xs:simpleType name="FeatureCodeType">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="8"/>
+			<xs:maxLength value="8"/>
+			<xs:pattern value="EF[0-9]{6}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ValueCodeType">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="8"/>
+			<xs:maxLength value="8"/>
+			<xs:pattern value="EV[0-9]{6}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="UnitCodeType">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="8"/>
+			<xs:maxLength value="8"/>
+			<xs:pattern value="EU[0-9]{6}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="GroupCodeType">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="8"/>
+			<xs:maxLength value="8"/>
+			<xs:pattern value="EG[0-9]{6}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ShortDescriptionType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="80"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="UnitAbbreviationType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="15"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="LanguageCode">
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="8"/>
+			<xs:pattern value="[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*" id="language.pattern"> 
+				<xs:annotation> 
+					<xs:documentation 
+						source="http://www.ietf.org/rfc/rfc3066.txt"> 
+						pattern specifies the content of section 2.12 of XML 1.0e2
+						and RFC 3066 (Revised version of RFC 1766).
+						See also: http://www.w3.org/TR/xmlschema-2/#language
+					</xs:documentation> 
+				</xs:annotation> 
+			</xs:pattern> 
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ChangeCodeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="New"/>
+			<xs:enumeration value="Changed"/>
+			<xs:enumeration value="Unchanged"/>
+			<xs:enumeration value="Deleted"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="FeatureTypeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Alphanumeric"/>
+			<xs:enumeration value="Numeric"/>
+			<xs:enumeration value="Range"/>
+			<xs:enumeration value="Logical"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ClassStatusType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Defined"/>
+			<xs:enumeration value="UnderConstruction"/>
+			<xs:enumeration value="ReadyForPublication"/>
+			<xs:enumeration value="Published"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>
