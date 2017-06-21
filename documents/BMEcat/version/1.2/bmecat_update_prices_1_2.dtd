@@ -1,0 +1,36 @@
+<!--
+
+  Name:                 bmecat_update_prices_1_2.dtd
+  Version:              1.2 Rev. A
+  Datum:                2003-05-09
+  Authors:              Volker Schmitz (stz), Universitaet Essen BLI
+  						Claus Huempel (chp), Fraunhofer IAO Stuttgart 
+                        Sascha Schroeder (sas), e-pro solutions GmbH Stuttgart 
+                        Dr. Juergen Waesch (jw), e-pro solutions GmbH Stuttgart
+
+  Copyright 1998-2003, All Rights Reserved
+  Fraunhofer IAO Stuttgart, Universitaet Essen BLI, e-pro solutions GmbH Stuttgart
+  
+  Namespace = http://www.bmecat.org/bmecat/1.2/bmecat_update_prices   
+
+  Changes from 1.2 to 1.2 rev. A:
+  stz 2003-05-09:	According to BMEcat V1.01 there was an additional element USER_DEFINED_EXTENSIONS within the element ARTICLE. 
+  					Due to an error this element was erased in BMEcat V1.2. The element USER_DEFINED_EXTENSIONS was added again. 
+					The specification will be corrected in revision A.
+-->
+<!ENTITY % BASE SYSTEM "bmecat_base_1_2.dtd">
+
+%BASE;
+
+<!ELEMENT BMECAT (HEADER, T_UPDATE_PRICES)>
+<!ATTLIST BMECAT
+	version CDATA #FIXED "1.2"
+	xmlns CDATA #FIXED "http://www.bmecat.org/bmecat/1.2/bmecat_update_prices">
+	
+<!ELEMENT T_UPDATE_PRICES (ARTICLE+)>
+<!ATTLIST T_UPDATE_PRICES
+							prev_version CDATA #REQUIRED>
+	
+<!ELEMENT ARTICLE (SUPPLIER_AID, ARTICLE_PRICE_DETAILS+,USER_DEFINED_EXTENSIONS?)>
+<!ATTLIST ARTICLE
+							mode %ARTICLE_MODE_QUALIFIERS; #FIXED "update">

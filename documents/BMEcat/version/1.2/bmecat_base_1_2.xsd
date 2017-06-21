@@ -1,0 +1,1615 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+  Name:             bmecat_base_1_2.xsd
+  Fileversion:      1.2
+  Unchanged since:  1.2
+  Date:             10.01.2003
+  Authors:          Volker Schmitz  (stz),  Universitaet Essen BLI
+                    Oliver Kelkar   (olk),  Fraunhofer IAO Stuttgart
+                    Stefan Kubitzky (kub),  Universitaet Essen BLI
+                    Sven Sprandel   (spr),  Fraunhofer IAO Stuttgart
+
+  Copyright 2003, All Rights Reserved
+  Fraunhofer IAO Stuttgart, Universitaet Essen BLI
+  
+  !! If you've got problems in parsing the identity-constraints !!
+  !! please set the marked blocks in commentary tags            !!
+  !! ***** START deactivate identity-constraints *****          !!
+  !! ***** END deactivate identity-constraints   *****          !!
+
+  BMEcat:
+  more infos and full specification: http://www.bmecat.org
+  e-mail contact: authors@bmecat.org
+
+  Change history:
+  
+  1.2 draft -> 1.2:
+  03.01.2003  stz: unused element CATALOG_REFERENCE deleted
+
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		elementFormDefault="qualified">
+
+	<xsd:include schemaLocation="countries.xsd"/>
+	<xsd:include schemaLocation="currencies.xsd"/>
+	<xsd:include schemaLocation="lang.xsd"/>
+	<xsd:include schemaLocation="punit.xsd"/>
+	<xsd:include schemaLocation="udx.xsd"/>
+	<xsd:include schemaLocation="unit.xsd"/>
+
+	<xsd:simpleType name="dtBOOLEAN">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[Ff][Aa][Ll][Ss][Ee]|[Tt][Rr][Uu][Ee]"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="dtDATETYPE">
+		<xsd:restriction base="xsd:date"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="dtFLOAT">
+		<xsd:restriction base="xsd:float"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="dtINTEGER">
+		<xsd:restriction base="xsd:integer"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="dtNUMBER">
+		<xsd:restriction base="xsd:decimal"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="dtSTRING">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="dtTIMETYPE">
+		<xsd:restriction base="xsd:string">
+ 			<xsd:pattern value="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9])(:[0-5][0-9](\.[0-9]{1,}){0,1}){0,1}"/> 
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="dtTIMEZONETYPE">
+		<xsd:restriction base="xsd:string">
+ 			<xsd:pattern value="([+-]([0-1][0-9]|2[0-3])(:[0-5][0-9]))|Z"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="typeADDRESS">
+		<xsd:sequence>
+			<xsd:element ref="NAME" minOccurs="0"/>
+			<xsd:element ref="NAME2" minOccurs="0"/>
+			<xsd:element ref="NAME3" minOccurs="0"/>
+			<xsd:element ref="CONTACT" minOccurs="0"/>
+			<xsd:element ref="STREET" minOccurs="0"/>
+			<xsd:element ref="ZIP" minOccurs="0"/>
+			<xsd:element ref="BOXNO" minOccurs="0"/>
+			<xsd:element ref="ZIPBOX" minOccurs="0"/>
+			<xsd:element ref="CITY" minOccurs="0"/>
+			<xsd:element ref="STATE" minOccurs="0"/>
+			<xsd:element ref="COUNTRY" minOccurs="0"/>
+			<xsd:element ref="PHONE" minOccurs="0"/>
+			<xsd:element ref="FAX" minOccurs="0"/>
+			<xsd:element ref="EMAIL" minOccurs="0"/>
+			<xsd:element ref="PUBLIC_KEY" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="URL" minOccurs="0"/>
+			<xsd:element ref="ADDRESS_REMARKS" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="typeALLOWED_VALUE_ID">
+		<xsd:restriction base="dtSTRING">
+			<xsd:maxLength value="60"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="typeARTICEL_STATUS">
+		<xsd:restriction base="dtSTRING">
+			<xsd:maxLength value="250"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="typeBUYER_AID">
+		<xsd:restriction base="dtSTRING">
+			<xsd:maxLength value="50"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="typeBUYER_ID">
+		<xsd:restriction base="dtSTRING">
+			<xsd:maxLength value="50"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="typeCLASSIFICATION_SYSTEM_LEVEL_NAME">
+		<xsd:restriction base="dtSTRING">
+			<xsd:maxLength value="60"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="typeDATETIME">
+		<xsd:sequence>
+			<xsd:element ref="DATE"/>
+			<xsd:element ref="TIME" minOccurs="0"/>
+			<xsd:element ref="TIMEZONE" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="typePUBLIC_KEY">
+		<xsd:restriction base="dtSTRING">
+			<xsd:maxLength value="64000"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="typeSPECIAL_TREATMENT_CLASS">
+		<xsd:restriction base="dtSTRING">
+			<xsd:maxLength value="20"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="typeSUPPLIER_ID">
+		<xsd:restriction base="dtSTRING">
+			<xsd:maxLength value="50"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:element name="ADDRESS_REMARKS">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="AGREEMENT">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="AGREEMENT_ID"/>
+				<xsd:element name="DATETIME" maxOccurs="2">
+					<xsd:complexType>
+						<xsd:complexContent>
+							<xsd:extension base="typeDATETIME">
+								<xsd:attribute name="type" use="required">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:NMTOKEN">
+											<xsd:enumeration value="agreement_start_date"/>
+											<xsd:enumeration value="agreement_end_date"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:attribute>
+							</xsd:extension>
+						</xsd:complexContent>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="AGREEMENT_ID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="ALLOWED_VALUE">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="ALLOWED_VALUE_ID"/>
+				<xsd:element ref="ALLOWED_VALUE_NAME"/>
+				<xsd:element ref="ALLOWED_VALUE_DESCR" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="ALLOWED_VALUES">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="ALLOWED_VALUE" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="ALLOWED_VALUE_DESCR">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="ALLOWED_VALUE_ID" type="typeALLOWED_VALUE_ID"/>
+	<xsd:element name="ALLOWED_VALUE_IDREF">
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="typeALLOWED_VALUE_ID">
+					<xsd:attribute name="order" type="dtINTEGER" use="optional"/>
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="ALLOWED_VALUE_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="ARTICLE_DETAILS">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="DESCRIPTION_SHORT"/>
+				<xsd:element ref="DESCRIPTION_LONG" minOccurs="0"/>
+				<xsd:element ref="EAN" minOccurs="0"/>
+				<xsd:element ref="SUPPLIER_ALT_AID" minOccurs="0"/>
+				<xsd:element ref="BUYER_AID" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="MANUFACTURER_AID" minOccurs="0"/>
+				<xsd:element ref="MANUFACTURER_NAME" minOccurs="0"/>
+				<xsd:element ref="MANUFACTURER_TYPE_DESCR" minOccurs="0"/>
+				<xsd:element ref="ERP_GROUP_BUYER" minOccurs="0"/>
+				<xsd:element ref="ERP_GROUP_SUPPLIER" minOccurs="0"/>
+				<xsd:element ref="DELIVERY_TIME" minOccurs="0"/>
+				<xsd:element ref="SPECIAL_TREATMENT_CLASS" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="KEYWORD" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="REMARKS" minOccurs="0"/>
+				<xsd:element ref="SEGMENT" minOccurs="0"/>
+				<xsd:element ref="ARTICLE_ORDER" minOccurs="0"/>
+				<xsd:element ref="ARTICLE_STATUS" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:unique name="uniqueBUYER_AIDtype">
+			<xsd:selector xpath="BUYER_AID"/>
+			<xsd:field xpath="@type"/>
+		</xsd:unique>
+		<xsd:unique name="uniqueKEYWORD">
+			<xsd:selector xpath="KEYWORD"/>
+			<xsd:field xpath="."/>
+		</xsd:unique>
+		<xsd:unique name="uniqueARTICLE_STATUStype">
+			<xsd:selector xpath="ARTICLE_STATUS"/>
+			<xsd:field xpath="@type"/>
+		</xsd:unique>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="ARTICLE_FEATURES">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="REFERENCE_FEATURE_SYSTEM_NAME" minOccurs="0"/>
+				<xsd:choice minOccurs="0">
+					<xsd:element ref="REFERENCE_FEATURE_GROUP_ID"/>
+					<xsd:element ref="REFERENCE_FEATURE_GROUP_NAME"/>
+				</xsd:choice>
+				<xsd:element ref="FEATURE" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:unique name="uniqueFNAME">
+			<xsd:selector xpath="FEATURE"/>
+			<xsd:field xpath="FNAME"/>
+		</xsd:unique>
+		<xsd:unique name="uniqueVORDER">
+			<xsd:selector xpath="FEATURE/VARIANTS"/>
+			<xsd:field xpath="VORDER"/>
+		</xsd:unique>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="ARTICLE_ORDER" type="dtINTEGER"/>
+	<xsd:element name="ARTICLE_ORDER_DETAILS">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="ORDER_UNIT"/>
+				<xsd:element ref="CONTENT_UNIT" minOccurs="0"/>
+				<xsd:element ref="NO_CU_PER_OU" minOccurs="0"/>
+				<xsd:element ref="PRICE_QUANTITY" minOccurs="0"/>
+				<xsd:element ref="QUANTITY_MIN" minOccurs="0"/>
+				<xsd:element ref="QUANTITY_INTERVAL" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="ARTICLE_PRICE">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="PRICE_AMOUNT"/>
+				<xsd:element ref="PRICE_CURRENCY" minOccurs="0"/>
+				<xsd:element ref="TAX" minOccurs="0"/>
+				<xsd:element ref="PRICE_FACTOR" minOccurs="0"/>
+				<xsd:element ref="LOWER_BOUND" minOccurs="0"/>
+				<xsd:element ref="TERRITORY" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attribute name="price_type" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="dtSTRING">
+						<xsd:pattern value="net_list|gros_list|net_customer|nrp|net_customer_exp|udp_\w{1,16}"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:unique name="uniqueARTICLE_TERRITORY">
+			<xsd:selector xpath="TERRITORY"/>
+			<xsd:field xpath="."/>
+		</xsd:unique>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="ARTICLE_PRICE_DETAILS">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="DATETIME" minOccurs="0" maxOccurs="2">
+					<xsd:complexType>
+						<xsd:complexContent>
+							<xsd:extension base="typeDATETIME">
+								<xsd:attribute name="type" use="required">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:NMTOKEN">
+											<xsd:enumeration value="valid_start_date"/>
+											<xsd:enumeration value="valid_end_date"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:attribute>
+							</xsd:extension>
+						</xsd:complexContent>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element ref="DAILY_PRICE" minOccurs="0"/>
+				<xsd:element ref="ARTICLE_PRICE" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="ARTICLE_REFERENCE">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="ART_ID_TO"/>
+				<xsd:element ref="CATALOG_ID" minOccurs="0"/>
+				<xsd:element ref="CATALOG_VERSION" minOccurs="0"/>
+			</xsd:sequence>
+			<xsd:attribute name="type" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="sparepart"/>
+						<xsd:enumeration value="similar"/>
+						<xsd:enumeration value="followup"/>
+						<xsd:enumeration value="mandatory"/>
+						<xsd:enumeration value="select"/>
+						<xsd:enumeration value="others"/>
+						<xsd:enumeration value="accessories"/>
+						<xsd:enumeration value="diff_orderunit"/>
+						<xsd:enumeration value="consists_of"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="quantity" type="dtINTEGER" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="ARTICLE_STATUS">
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="typeARTICEL_STATUS">
+					<xsd:attribute name="type" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:NMTOKEN">
+								<xsd:enumeration value="bargain"/>
+								<xsd:enumeration value="new_article"/>
+								<xsd:enumeration value="old_article"/>
+								<xsd:enumeration value="new"/>
+								<xsd:enumeration value="used"/>
+								<xsd:enumeration value="refurbished"/>
+								<xsd:enumeration value="core_article"/>
+								<xsd:enumeration value="others"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="ARTICLE_TO_CATALOGGROUP_MAP_ORDER" type="dtINTEGER"/>
+	<xsd:element name="ART_ID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="32"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="ART_ID_TO">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="32"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="BOXNO">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="20"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="BUYER">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="BUYER_ID" minOccurs="0"/>
+				<xsd:element ref="BUYER_NAME"/>
+				<xsd:element name="ADDRESS" minOccurs="0">
+					<xsd:complexType>
+						<xsd:complexContent>
+							<xsd:extension base="typeADDRESS">
+								<xsd:attribute name="type" fixed="buyer"/>
+							</xsd:extension>
+						</xsd:complexContent>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="BUYER_AID">
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="typeBUYER_AID">
+					<xsd:attribute name="type" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="dtSTRING">
+								<xsd:maxLength value="50"/>
+								<xsd:minLength value="1"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="BUYER_ID">
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="typeBUYER_ID">
+					<xsd:attribute name="type" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="dtSTRING">
+								<xsd:maxLength value="50"/>
+								<xsd:minLength value="1"/>
+								<!-- ***** predefined values for attribute 'type' of element 'BUYER_ID' *****
+									"(duns | iln | buyer_specific | supplier_specific)" 
+								-->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="BUYER_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CATALOG">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="LANGUAGE"/>
+				<xsd:element ref="CATALOG_ID"/>
+				<xsd:element ref="CATALOG_VERSION"/>
+				<xsd:element ref="CATALOG_NAME" minOccurs="0"/>
+				<xsd:element name="DATETIME" minOccurs="0">
+					<xsd:complexType>
+						<xsd:complexContent>
+							<xsd:extension base="typeDATETIME">
+								<xsd:attribute name="type" fixed="generation_date"/>
+							</xsd:extension>
+						</xsd:complexContent>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element ref="TERRITORY" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="CURRENCY" minOccurs="0"/>
+				<xsd:element ref="MIME_ROOT" minOccurs="0"/>
+				<xsd:element ref="PRICE_FLAG" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:unique name="uniquePRICE_FLAG2">
+			<xsd:selector xpath="PRICE_FLAG"/>
+			<xsd:field xpath="@type"/>
+		</xsd:unique>
+		<xsd:unique name="uniqueTERRITORY">
+			<xsd:selector xpath="TERRITORY"/>
+			<xsd:field xpath="."/>
+		</xsd:unique>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="CATALOG_GROUP_ID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CATALOG_GROUP_SYSTEM">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="GROUP_SYSTEM_ID" minOccurs="0"/>
+				<xsd:element ref="GROUP_SYSTEM_NAME" minOccurs="0"/>
+				<xsd:element ref="CATALOG_STRUCTURE" maxOccurs="unbounded"/>
+				<xsd:element ref="GROUP_SYSTEM_DESCRIPTION" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="CATALOG_ID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="20"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CATALOG_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="100"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CATALOG_STRUCTURE">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="GROUP_ID"/>
+				<xsd:element ref="GROUP_NAME"/>
+				<xsd:element ref="GROUP_DESCRIPTION" minOccurs="0"/>
+				<xsd:element ref="PARENT_ID"/>
+				<xsd:element ref="GROUP_ORDER" minOccurs="0"/>
+				<xsd:element ref="MIME_INFO" minOccurs="0"/>
+				<xsd:element name="USER_DEFINED_EXTENSIONS" type="catstrucUSER_DEFINED_EXTENSIONS" minOccurs="0"/>
+				<xsd:element ref="KEYWORD" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attribute name="type" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="root"/>
+						<xsd:enumeration value="node"/>
+						<xsd:enumeration value="leaf"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="CATALOG_VERSION">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="7"/>
+				<xsd:minLength value="3"/>
+				<xsd:pattern value="[0-9]{1,3}\.[0-9]{1,3}"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CITY">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_GROUP">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="CLASSIFICATION_GROUP_ID"/>
+				<xsd:element ref="CLASSIFICATION_GROUP_NAME"/>
+				<xsd:element ref="CLASSIFICATION_GROUP_DESCR" minOccurs="0"/>
+				<xsd:element ref="CLASSIFICATION_GROUP_SYNONYMS" minOccurs="0"/>
+				<xsd:element ref="CLASSIFICATION_GROUP_FEATURE_TEMPLATES" minOccurs="0"/>
+				<xsd:element ref="CLASSIFICATION_GROUP_PARENT_ID" minOccurs="0"/>
+			</xsd:sequence>
+			<xsd:attribute name="type" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="node"/>
+						<xsd:enumeration value="leaf"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="level" type="dtINTEGER" use="optional"/>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:unique name="uniqueFT_IDREF">
+			<xsd:selector xpath="CLASSIFICATION_GROUP_FEATURE_TEMPLATES/CLASSIFICATION_GROUP_FEATURE_TEMPLATE"/>
+			<xsd:field xpath="FT_IDREF"/>
+		</xsd:unique>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_GROUPS">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="CLASSIFICATION_GROUP" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_GROUP_DESCR">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_GROUP_FEATURE_TEMPLATE">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="FT_IDREF"/>
+				<xsd:element ref="FT_MANDATORY"/>
+				<xsd:element ref="FT_DATATYPE"/>
+				<xsd:element ref="FT_UNIT" minOccurs="0"/>
+				<xsd:element ref="FT_ORDER" minOccurs="0"/>
+				<xsd:element ref="FT_ALLOWED_VALUES" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_GROUP_FEATURE_TEMPLATES">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="CLASSIFICATION_GROUP_FEATURE_TEMPLATE" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_GROUP_ID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_GROUP_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_GROUP_PARENT_ID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_GROUP_SYNONYMS">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="SYNONYM" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:key name="keySYNONYM">
+			<xsd:selector xpath="SYNONYM"/>
+			<xsd:field xpath="."/>
+		</xsd:key>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_SYSTEM">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="CLASSIFICATION_SYSTEM_NAME"/>
+				<xsd:element ref="CLASSIFICATION_SYSTEM_FULLNAME" minOccurs="0"/>
+				<xsd:element ref="CLASSIFICATION_SYSTEM_VERSION" minOccurs="0"/>
+				<xsd:element ref="CLASSIFICATION_SYSTEM_DESCR" minOccurs="0"/>
+				<xsd:element ref="CLASSIFICATION_SYSTEM_LEVELS" minOccurs="0"/>
+				<xsd:element ref="CLASSIFICATION_SYSTEM_LEVEL_NAMES" minOccurs="0"/>
+				<xsd:element ref="ALLOWED_VALUES" minOccurs="0"/>
+				<xsd:element ref="UNITS" minOccurs="0"/>
+				<xsd:element ref="CLASSIFICATION_SYSTEM_FEATURE_TEMPLATES" minOccurs="0"/>
+				<xsd:element ref="CLASSIFICATION_GROUPS"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:key name="keyALLOWED_VALUE_ID">
+			<xsd:selector xpath="ALLOWED_VALUES/ALLOWED_VALUE"/>
+			<xsd:field xpath="ALLOWED_VALUE_ID"/>
+		</xsd:key>
+		<xsd:key name="keyFT_ID">
+			<xsd:selector xpath="CLASSIFICATION_SYSTEM_FEATURE_TEMPLATES/CLASSIFICATION_SYSTEM_FEATURE_TEMPLATE"/>
+			<xsd:field xpath="FT_ID"/>
+		</xsd:key>
+		<xsd:key name="keyLEVEL_NAMElevel">
+			<xsd:selector xpath="CLASSIFICATION_SYSTEM_LEVEL_NAMES/CLASSIFICATION_SYSTEM_LEVEL_NAME"/>
+			<xsd:field xpath="@level"/>
+		</xsd:key>
+		<xsd:key name="keyUNIT_ID">
+			<xsd:selector xpath="UNITS/UNIT"/>
+			<xsd:field xpath="UNIT_ID"/>
+		</xsd:key>
+		<xsd:key name="keyCLASSIFICATION_GROUP_ID">
+			<xsd:selector xpath="CLASSIFICATION_GROUPS/CLASSIFICATION_GROUP"/>
+			<xsd:field xpath="CLASSIFICATION_GROUP_ID"/>
+		</xsd:key>
+		<xsd:keyref name="keyrefCLASSIFICATION_GROUP_ID" refer="keyCLASSIFICATION_GROUP_ID">
+			<xsd:selector xpath="CLASSIFICATION_GROUPS/CLASSIFICATION_GROUP"/>
+			<xsd:field xpath="CLASSIFICATION_GROUP_PARENT_ID"/>
+		</xsd:keyref>
+		<xsd:keyref name="keyrefFT_IDREF" refer="keyFT_ID">
+			<xsd:selector xpath="CLASSIFICATION_GROUPS/CLASSIFICATION_GROUP/CLASSIFICATION_GROUP_FEATURE_TEMPLATES/CLASSIFICATION_GROUP_FEATURE_TEMPLATE"/>
+			<xsd:field xpath="FT_IDREF"/>
+		</xsd:keyref>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_SYSTEM_DESCR">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_SYSTEM_FEATURE_TEMPLATE">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="FT_ID"/>
+				<xsd:element ref="FT_NAME"/>
+				<xsd:element ref="FT_DESCR" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_SYSTEM_FEATURE_TEMPLATES">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="CLASSIFICATION_SYSTEM_FEATURE_TEMPLATE" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_SYSTEM_FULLNAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_SYSTEM_LEVELS" type="dtINTEGER"/>
+	<xsd:element name="CLASSIFICATION_SYSTEM_LEVEL_NAME">
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="typeCLASSIFICATION_SYSTEM_LEVEL_NAME">
+					<xsd:attribute name="level" type="dtINTEGER" use="required"/>
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_SYSTEM_LEVEL_NAMES">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="CLASSIFICATION_SYSTEM_LEVEL_NAME" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_SYSTEM_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="20"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CLASSIFICATION_SYSTEM_VERSION">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="20"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CONTACT">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CONTENT_UNIT" type="dtPUNIT"/>
+	<xsd:element name="COUNTRY">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="CURRENCY" type="dtCURRENCIES"/>
+	<xsd:element name="DAILY_PRICE" type="dtBOOLEAN"/>
+	<xsd:element name="DATE" type="dtDATETYPE"/>
+	<xsd:element name="DELIVERY_TIME" type="dtNUMBER"/>
+	<xsd:element name="DESCRIPTION_LONG">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:minLength value="1"/>
+				<xsd:maxLength value="64000"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="DESCRIPTION_SHORT">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="80"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="EAN">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="14"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="EMAIL">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="100"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="ERP_GROUP_BUYER">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="10"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="ERP_GROUP_SUPPLIER">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="10"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FAX">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="30"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FDESCR">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FEATURE">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="FNAME"/>
+				<xsd:choice>
+					<xsd:element ref="VARIANTS"/>
+					<xsd:element ref="FVALUE" maxOccurs="unbounded"/>
+				</xsd:choice>
+				<xsd:element ref="FUNIT" minOccurs="0"/>
+				<xsd:element ref="FORDER" minOccurs="0"/>
+				<xsd:element ref="FDESCR" minOccurs="0"/>
+				<xsd:element ref="FVALUE_DETAILS" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:unique name="uniqueFVALUE">
+			<xsd:selector xpath="FVALUE"/>
+			<xsd:field xpath="."/>
+		</xsd:unique>
+		<xsd:unique name="uniqueVARIANT_FVALUE">
+			<xsd:selector xpath="VARIANTS/VARIANT"/>
+			<xsd:field xpath="FVALUE"/>
+		</xsd:unique>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="FEATURE_GROUP">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="FEATURE_GROUP_ID"/>
+				<xsd:element ref="FEATURE_GROUP_NAME"/>
+				<xsd:element ref="FEATURE_TEMPLATE" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="FEATURE_GROUP_DESCR" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:key name="keyFT_NAME">
+			<xsd:selector xpath="FEATURE_TEMPLATE"/>
+			<xsd:field xpath="FT_NAME"/>
+		</xsd:key>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="FEATURE_GROUP_DESCR">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FEATURE_GROUP_ID">
+		<xsd:annotation>
+			<xsd:documentation>Fieldlength 50 according to BMEcat V1.01. Fieldlength 20 in BMEcat V1.2 is an error and will be corrected in the next version</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FEATURE_GROUP_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FEATURE_SYSTEM">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="FEATURE_SYSTEM_NAME"/>
+				<xsd:element ref="FEATURE_SYSTEM_DESCR" minOccurs="0"/>
+				<xsd:element ref="FEATURE_GROUP" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:key name="keyFEATURE_GROUP_ID">
+			<xsd:selector xpath="FEATURE_GROUP"/>
+			<xsd:field xpath="FEATURE_GROUP_ID"/>
+		</xsd:key>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="FEATURE_SYSTEM_DESCR">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FEATURE_SYSTEM_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FEATURE_TEMPLATE">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="FT_NAME"/>
+				<xsd:element ref="FT_UNIT" minOccurs="0"/>
+				<xsd:element ref="FT_ORDER" minOccurs="0"/>
+			</xsd:sequence>
+			<xsd:attribute name="type" use="optional" default="free_entry">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="free_entry"/>
+						<xsd:enumeration value="defaults"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="FNAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FORDER" type="dtINTEGER"/>
+	<xsd:element name="FT_ALLOWED_VALUES">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="ALLOWED_VALUE_IDREF" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="FT_DATATYPE">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="20"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FT_DESCR">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FT_ID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FT_IDREF">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FT_MANDATORY" type="dtBOOLEAN"/>
+	<xsd:element name="FT_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FT_ORDER" type="dtINTEGER"/>
+	<xsd:element name="FT_UNIT">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FUNIT">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="20"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FVALUE">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="FVALUE_DETAILS">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="GENERATOR_INFO">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="GROUP_DESCRIPTION">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="GROUP_ID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="GROUP_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="GROUP_ORDER" type="dtINTEGER"/>
+	<xsd:element name="GROUP_SYSTEM_DESCRIPTION">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="GROUP_SYSTEM_ID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="GROUP_SYSTEM_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="HEADER">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="GENERATOR_INFO" minOccurs="0"/>
+				<xsd:element ref="CATALOG"/>
+				<xsd:element ref="BUYER" minOccurs="0"/>
+				<xsd:element ref="AGREEMENT" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="SUPPLIER"/>
+				<xsd:element name="USER_DEFINED_EXTENSIONS" type="headerUSER_DEFINED_EXTENSIONS" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:key name="keyAGREEMENT_ID">
+			<xsd:selector xpath="AGREEMENT"/>
+			<xsd:field xpath="AGREEMENT_ID"/>
+		</xsd:key>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="KEYWORD">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="LANGUAGE" type="dtLANG"/>
+	<xsd:element name="LOWER_BOUND" type="dtNUMBER"/>
+	<xsd:element name="MANUFACTURER_AID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="MANUFACTURER_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="MANUFACTURER_TYPE_DESCR">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="MIME">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="MIME_TYPE" minOccurs="0"/>
+				<xsd:element ref="MIME_SOURCE"/>
+				<xsd:element ref="MIME_DESCR" minOccurs="0"/>
+				<xsd:element ref="MIME_ALT" minOccurs="0"/>
+				<xsd:element ref="MIME_PURPOSE" minOccurs="0"/>
+				<xsd:element ref="MIME_ORDER" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="MIME_ALT">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="MIME_DESCR">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="MIME_INFO">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="MIME" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="MIME_ORDER" type="dtINTEGER"/>
+	<xsd:element name="MIME_PURPOSE">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:NMTOKEN">
+				<xsd:enumeration value="thumbnail"/>
+				<xsd:enumeration value="normal"/>
+				<xsd:enumeration value="detail"/>
+				<xsd:enumeration value="data_sheet"/>
+				<xsd:enumeration value="logo"/>
+				<xsd:enumeration value="others"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="MIME_ROOT">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="100"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="MIME_SOURCE">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="MIME_TYPE">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="30"/>
+				<xsd:minLength value="1"/>
+				<!-- ***** predefined values for element 'MIME_TYPE' *****
+					"(url | application/pdf | image/jpeg | image/gif | text/html | text/plain | ...)" 
+				-->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="NAME2">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="NAME3">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="NO_CU_PER_OU" type="dtNUMBER"/>
+	<xsd:element name="ORDER_UNIT" type="dtPUNIT"/>
+	<xsd:element name="PARENT_ID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="PHONE">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="30"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="PRICE_AMOUNT" type="dtNUMBER"/>
+	<xsd:element name="PRICE_CURRENCY" type="dtCURRENCIES"/>
+	<xsd:element name="PRICE_FACTOR" type="dtNUMBER"/>
+	<xsd:element name="PRICE_FLAG">
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="dtBOOLEAN">
+					<xsd:attribute name="type" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:NMTOKEN">
+								<xsd:enumeration value="incl_freight"/>
+								<xsd:enumeration value="incl_duty"/>
+								<xsd:enumeration value="incl_packing"/>
+								<xsd:enumeration value="incl_assurance"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="PRICE_QUANTITY" type="dtNUMBER"/>
+	<xsd:element name="PUBLIC_KEY">
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="typePUBLIC_KEY">
+					<xsd:attribute name="type" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="dtSTRING">
+								<xsd:maxLength value="50"/>
+								<xsd:minLength value="1"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="QUANTITY_INTERVAL" type="dtINTEGER"/>
+	<xsd:element name="QUANTITY_MIN" type="dtINTEGER"/>
+	<xsd:element name="REFERENCE_FEATURE_GROUP_ID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="REFERENCE_FEATURE_GROUP_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="REFERENCE_FEATURE_SYSTEM_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+				<!-- ***** predefined values for element 'REFERENCE_FEATURE_SYSTEM_NAME' *****
+					"(ECLASS-x.y | ETIM-x.y | UNSPSC-x.y | udf_ZZZ-x.y)" 
+				-->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="REMARKS">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:minLength value="1"/>
+				<xsd:maxLength value="64000"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="SEGMENT">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="100"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="SPECIAL_TREATMENT_CLASS">
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="typeSPECIAL_TREATMENT_CLASS">
+					<xsd:attribute name="type" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="dtSTRING">
+								<xsd:maxLength value="50"/>
+								<xsd:minLength value="1"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="STATE">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="STREET">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="SUPPLIER">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="SUPPLIER_ID" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="SUPPLIER_NAME"/>
+				<xsd:element name="ADDRESS" minOccurs="0">
+					<xsd:complexType>
+						<xsd:complexContent>
+							<xsd:extension base="typeADDRESS">
+								<xsd:attribute name="type" fixed="supplier"/>
+							</xsd:extension>
+						</xsd:complexContent>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element ref="MIME_INFO" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:unique name="uniqueSUPPLIER_IDtype">
+			<xsd:selector xpath="SUPPLIER_ID"/>
+			<xsd:field xpath="@type"/>
+		</xsd:unique>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="SUPPLIER_AID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="32"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="SUPPLIER_AID_SUPPLEMENT">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="31"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="SUPPLIER_ALT_AID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="SUPPLIER_ID">
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="typeSUPPLIER_ID">
+					<xsd:attribute name="type" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="dtSTRING">
+								<xsd:maxLength value="50"/>
+								<xsd:minLength value="1"/>
+								<!-- ***** predefined values for attribute 'type' of element 'SUPPLIER_ID' *****
+									"(duns | iln | buyer_specific | supplier_specific)" 
+								-->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="SUPPLIER_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="50"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="SYNONYM">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="TAX" type="dtNUMBER"/>
+	<xsd:element name="TERRITORY" type="dtCOUNTRIES"/>
+	<xsd:element name="TIME" type="dtTIMETYPE"/>
+	<xsd:element name="TIMEZONE" type="dtTIMEZONETYPE"/>
+	<xsd:element name="UNIT">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="UNIT_ID"/>
+				<xsd:element ref="UNIT_NAME" minOccurs="0"/>
+				<xsd:element ref="UNIT_DESCR" minOccurs="0"/>
+			</xsd:sequence>
+			<xsd:attribute name="system" use="optional">
+				<xsd:simpleType>
+					<xsd:restriction base="dtSTRING">
+						<xsd:maxLength value="20"/>
+						<xsd:minLength value="1"/>
+						<!-- ***** predefined values for attribute 'type' of element 'SUPPLIER_ID' *****
+							"(unece | si)" 
+						-->
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="UNITS">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="UNIT" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="UNIT_DESCR">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="250"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="UNIT_ID">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="UNIT_NAME">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="60"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="URL">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="100"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="VARIANT">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="FVALUE"/>
+				<xsd:element ref="SUPPLIER_AID_SUPPLEMENT"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="VARIANTS">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="VARIANT" maxOccurs="unbounded"/>
+				<xsd:element ref="VORDER"/>
+			</xsd:sequence>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:key name="keySUPPLIER_AID_SUPPLEMENT">
+			<xsd:selector xpath="VARIANT"/>
+			<xsd:field xpath="SUPPLIER_AID_SUPPLEMENT"/>
+		</xsd:key>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="VORDER" type="dtINTEGER"/>
+	<xsd:element name="ZIP">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="20"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="ZIPBOX">
+		<xsd:simpleType>
+			<xsd:restriction base="dtSTRING">
+				<xsd:maxLength value="20"/>
+				<xsd:minLength value="1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+</xsd:schema>

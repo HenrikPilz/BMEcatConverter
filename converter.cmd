@@ -1,0 +1,1 @@
+python C:\Users\henrik.pilz\Desktop\BMEcatConverter\src\main.py

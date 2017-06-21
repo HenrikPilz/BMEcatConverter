@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+  Name:             bmecat_updateprice_1_2.xsd
+  Fileversion:      1.2
+  Unchanged since:  1.2 draft
+  Date:             10.01.2003
+  Authors:          Volker Schmitz  (stz),  Universitaet Essen BLI
+                    Oliver Kelkar   (olk),  Fraunhofer IAO Stuttgart
+                    Stefan Kubitzky (kub),  Universitaet Essen BLI
+                    Sven Sprandel   (spr),  Fraunhofer IAO Stuttgart
+
+  Copyright 2003, All Rights Reserved
+  Fraunhofer IAO Stuttgart, Universitaet Essen BLI
+  
+  !! If you've got problems in parsing the identity-constraints !!
+  !! please set the marked blocks in commentary tags            !!
+  !! ***** START deactivate identity-constraints *****          !!
+  !! ***** END deactivate identity-constraints   *****          !!
+
+  BMEcat:
+  more infos and full specification: http://www.bmecat.org
+  e-mail contact: authors@bmecat.org
+
+-->
+
+<xsd:schema targetNamespace="http://www.bmecat.org/XMLSchema/1.2/bmecat_update_prices"
+		xmlns="http://www.bmecat.org/XMLSchema/1.2/bmecat_update_prices"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		elementFormDefault="qualified">
+
+	<xsd:include schemaLocation="bmecat_base_1_2.xsd"/>
+
+	<xsd:element name="BMECAT">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="HEADER"/>
+				<xsd:element ref="T_UPDATE_PRICES"/>
+			</xsd:sequence>
+			<xsd:attribute name="version" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="dtSTRING">
+						<xsd:maxLength value="7"/>
+						<xsd:enumeration value="1.01"/>
+						<xsd:enumeration value="1.2"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="T_UPDATE_PRICES">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="ARTICLE" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attribute name="prev_version" type="dtINTEGER" use="required"/>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:key name="keyARTICLE">
+			<xsd:selector xpath="ARTICLE"/>
+			<xsd:field xpath="SUPPLIER_AID"/>
+		</xsd:key>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="ARTICLE">
+		<xsd:annotation>
+			<xsd:documentation>According to BMEcat V1.01 there was an additional element USER_DEFINED_EXTENSIONS. Due to an error this element was erased in BMEcat V1.2. The element USER_DEFINED_EXTENSIONS was added again. The specification will be corrected in the next revision.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="SUPPLIER_AID"/>
+				<xsd:element ref="ARTICLE_PRICE_DETAILS" maxOccurs="unbounded"/>
+				<xsd:element name="USER_DEFINED_EXTENSIONS" type="articleUSER_DEFINED_EXTENSIONS" minOccurs="0"/>
+			</xsd:sequence>
+			<xsd:attribute name="mode" use="optional">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="update"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

@@ -1,0 +1,32 @@
+<!--
+
+  Name:                 bmecat_new_catalog_1_2.dtd
+  Version:              1.2 Rev. A
+  Datum:                2003-05-09
+  Authors:              Volker Schmitz (stz), Universitaet Essen BLI
+						Claus Huempel (chp), Fraunhofer IAO Stuttgart 
+                        Sascha Schroeder (sas), e-pro solutions GmbH Stuttgart 
+                        Dr. Juergen Waesch (jw), e-pro solutions GmbH Stuttgart
+
+  Copyright 1998-2003, All Rights Reserved
+  Fraunhofer IAO Stuttgart, Universitaet Essen BLI, e-pro solutions GmbH Stuttgart
+  
+  Namespace = http://www.bmecat.org/bmecat/1.2/bmecat_new_catalog   
+-->
+
+<!ENTITY % BASE SYSTEM "bmecat_base_1_2.dtd">
+
+%BASE;
+
+  <!ELEMENT BMECAT (HEADER,T_NEW_CATALOG)>
+  <!ATTLIST BMECAT 	version  CDATA #FIXED "1.2" 
+  					xmlns CDATA   #FIXED 'http://www.bmecat.org/bmecat/1.2/bmecat_new_catalog'>
+
+
+  <!ELEMENT T_NEW_CATALOG (FEATURE_SYSTEM*,CLASSIFICATION_SYSTEM*,CATALOG_GROUP_SYSTEM?,ARTICLE*,ARTICLE_TO_CATALOGGROUP_MAP*)>
+  <!ATTLIST T_NEW_CATALOG 	prev_version CDATA #IMPLIED>
+
+
+  <!ELEMENT ARTICLE (SUPPLIER_AID,ARTICLE_DETAILS,ARTICLE_FEATURES*,ARTICLE_ORDER_DETAILS,ARTICLE_PRICE_DETAILS+,MIME_INFO?,USER_DEFINED_EXTENSIONS?,ARTICLE_REFERENCE*)>
+  <!ATTLIST ARTICLE	mode %ARTICLE_MODE_QUALIFIERS; #FIXED 'new'>
+

@@ -1,0 +1,35 @@
+<!--
+
+  Name:                 bmecat_update_products_1_2.dtd
+  Version:              1.2 Rev. A
+  Datum:                2003-05-09
+  Authors:              Volker Schmitz (stz), Universitaet Essen BLI
+  						Claus Huempel (chp), Fraunhofer IAO Stuttgart 
+                        Sascha Schroeder (sas), e-pro solutions GmbH Stuttgart 
+                        Dr. Juergen Waesch (jw), e-pro solutions GmbH Stuttgart
+
+  Copyright 1998-2003, All Rights Reserved
+  Fraunhofer IAO Stuttgart, Universitaet Essen BLI, e-pro solutions GmbH Stuttgart
+  
+  Namespace = http://www.bmecat.org/bmecat/1.2/bmecat_update_products 
+        
+  Changes from 1.2 to 1.2 rev. A:
+  stz 2003-05-09:	<!ENTITY % BASE SYSTEM "bmecat_base_1_2fd.dtd"> -> <!ENTITY % BASE SYSTEM "bmecat_base_1_2.dtd">
+-->
+<!ENTITY % BASE SYSTEM "bmecat_base_1_2.dtd">
+
+%BASE;
+
+<!ELEMENT BMECAT (HEADER, T_UPDATE_PRODUCTS)>
+<!ATTLIST BMECAT 	version CDATA #FIXED "1.2" 
+					xmlns CDATA #FIXED "http://www.bmecat.org/bmecat/1.2/bmecat_update_products">
+
+<!ELEMENT T_UPDATE_PRODUCTS (ARTICLE+, ARTICLE_TO_CATALOGGROUP_MAP*)>
+<!ATTLIST T_UPDATE_PRODUCTS prev_version CDATA #REQUIRED>
+
+<!ELEMENT ARTICLE (SUPPLIER_AID, ARTICLE_DETAILS, ARTICLE_FEATURES*, ARTICLE_ORDER_DETAILS, ARTICLE_PRICE_DETAILS+, MIME_INFO?, USER_DEFINED_EXTENSIONS?, ARTICLE_REFERENCE*)>
+<!ATTLIST ARTICLE mode %ARTICLE_MODE_QUALIFIERS; #REQUIRED>
+
+<!ENTITY % ARTICLE_TO_CATALOGGROUP_MAP_QUALIFIERS "(new|delete)">
+
+<!ATTLIST ARTICLE_TO_CATALOGGROUP_MAP mode %ARTICLE_TO_CATALOGGROUP_MAP_QUALIFIERS; #REQUIRED>

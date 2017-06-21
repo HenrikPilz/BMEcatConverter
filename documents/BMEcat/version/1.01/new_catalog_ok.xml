@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE BMECAT SYSTEM "bmecat_new_catalog.dtd" [
+	<!ENTITY % USERDEFINES "(UDX.UGE.ROOMNR?,UDX.UGE.VALUATION?,UDX.UGE.LEVEL?)">
+	<!ELEMENT UDX.UGE.ROOMNR (#PCDATA)>
+	<!ELEMENT UDX.UGE.VALUATION (#PCDATA)>
+	<!ELEMENT UDX.UGE.LEVEL (#PCDATA)>
+]>
+<BMECAT version="1.01">
+   <HEADER>
+      <GENERATOR_INFO>erstellt von Volker Schmitz 18.11.1999 - alles per Hand - ohne Tool</GENERATOR_INFO>
+      <CATALOG>
+         <LANGUAGE>DEU</LANGUAGE>
+         <CATALOG_ID>12348s5121</CATALOG_ID>
+         <CATALOG_VERSION>120</CATALOG_VERSION>
+         <CATALOG_NAME>Herbst/Winter 99/00</CATALOG_NAME>
+         <DATETIME type="generation_date">
+            <DATE>1999-09-10</DATE>
+            <TIME>20:38:00</TIME>
+         </DATETIME>
+         <TERRITORY>EU</TERRITORY>
+         <TERRITORY>CH</TERRITORY>
+         <CURRENCY>DEM</CURRENCY>
+         <MIME_ROOT>//mime-dateien</MIME_ROOT>
+		 <PRICE_FLAG type="incl_freight">TRUE</PRICE_FLAG>
+		 <PRICE_FLAG type="incl_packing">TRUE</PRICE_FLAG>
+		 <PRICE_FLAG type="incl_assurance">FALSE</PRICE_FLAG>
+		 <PRICE_FLAG type="incl_duty">TRUE</PRICE_FLAG>
+      </CATALOG>
+      <BUYER>
+         <BUYER_ID>1234</BUYER_ID>
+         <BUYER_NAME>Fraunhofer IAO</BUYER_NAME>
+         <ADDRESS type="buyer">
+            <NAME>Fraunhofer IAO</NAME>
+            <NAME2>Marktstrategieteam Netze und Dienste</NAME2>
+            <CONTACT>Claus Huempel</CONTACT>
+            <STREET>Holzgartenstrasse 17</STREET>
+            <ZIP>70174</ZIP>
+            <CITY>Stuttgart</CITY>
+            <COUNTRY>Germany</COUNTRY>
+            <PHONE>+49 711 970 2449</PHONE>
+            <FAX>+49 711 970 2401</FAX>
+            <EMAIL>claus.huempel@iao.fhg.de</EMAIL>
+            <URL>http://www.e-business.iao.fhg.de</URL>
+         </ADDRESS>
+      </BUYER>
+      <AGREEMENT>
+         <AGREEMENT_ID>23/97</AGREEMENT_ID>
+         <DATETIME type="agreement_start_date">
+            <DATE>1999-03-01</DATE>
+         </DATETIME>
+         <DATETIME type="agreement_end_date">
+            <DATE>2002-05-31</DATE>
+         </DATETIME>
+      </AGREEMENT>
+      <SUPPLIER>
+         <SUPPLIER_ID type="supplier_specific">UEG</SUPPLIER_ID>
+         <SUPPLIER_NAME>Universitaet GH Essen</SUPPLIER_NAME>
+         <ADDRESS type="supplier">
+            <NAME>FB Wirtschaftswissenschaften/Wirtschaftsinformatik</NAME>
+            <NAME2>Beschaffung, Logistik und Informationsmanagement</NAME2>
+            <CONTACT>Volker Schmitz</CONTACT>
+            <STREET>Universitaetsstr. 9</STREET>
+            <ZIP>45117</ZIP>
+            <CITY>Essen</CITY>
+            <COUNTRY>Germany</COUNTRY>
+            <PHONE>+49 201 183 4084</PHONE>
+            <FAX>+49 201 183 4081</FAX>
+            <EMAIL>volker.schmitz@uni-essen.de</EMAIL>
+            <URL>http://www.pul.uni-essen.de</URL>
+         </ADDRESS>
+      </SUPPLIER>
+      <USER_DEFINED_EXTENSIONS>
+ 	         <UDX.UGE.ROOMNR>R09 R01 H41</UDX.UGE.ROOMNR>
+      </USER_DEFINED_EXTENSIONS>
+   </HEADER>
+   <T_NEW_CATALOG>
+	   <FEATURE_SYSTEM>
+	      <FEATURE_SYSTEM_NAME>udf_HeMoMeGu</FEATURE_SYSTEM_NAME>
+	      <FEATURE_SYSTEM_DESCR>Herrenmodenmerkmalsgruppensystem</FEATURE_SYSTEM_DESCR>
+	      <FEATURE_GROUP>
+	         <FEATURE_GROUP_ID>116</FEATURE_GROUP_ID>
+	         <FEATURE_GROUP_NAME>Hosen</FEATURE_GROUP_NAME>
+	         <FEATURE_TEMPLATE type="free_entry">
+	            <FT_NAME>Bund</FT_NAME>
+	            <FT_UNIT>Zoll</FT_UNIT>
+	            <FT_ORDER>10</FT_ORDER>
+	         </FEATURE_TEMPLATE>
+	         <FEATURE_TEMPLATE type="free_entry">
+	            <FT_NAME>Laenge</FT_NAME>
+	            <FT_UNIT>Zoll</FT_UNIT>
+	            <FT_ORDER>20</FT_ORDER>
+	         </FEATURE_TEMPLATE>
+	         <FEATURE_TEMPLATE type="defaults">
+	            <FT_NAME>Farbe</FT_NAME>
+	            <FT_UNIT/>
+	            <FT_ORDER>30</FT_ORDER>
+	         </FEATURE_TEMPLATE>
+	      </FEATURE_GROUP>
+	      <FEATURE_GROUP>
+	         <FEATURE_GROUP_ID>123</FEATURE_GROUP_ID>
+	         <FEATURE_GROUP_NAME>Hemden</FEATURE_GROUP_NAME>
+	         <FEATURE_TEMPLATE type="free_entry">
+	            <FT_NAME>Gewicht</FT_NAME>
+	            <FT_UNIT>g</FT_UNIT>
+	            <FT_ORDER>10</FT_ORDER>
+	         </FEATURE_TEMPLATE>
+	         <FEATURE_TEMPLATE type="defaults">
+	            <FT_NAME>Farbe</FT_NAME>
+	            <FT_UNIT/>
+	            <FT_ORDER>20</FT_ORDER>
+	         </FEATURE_TEMPLATE>
+	      </FEATURE_GROUP>
+	      <FEATURE_GROUP>
+	         <FEATURE_GROUP_ID>333</FEATURE_GROUP_ID>
+	         <FEATURE_GROUP_NAME>Schuhe</FEATURE_GROUP_NAME>
+          </FEATURE_GROUP>
+	   </FEATURE_SYSTEM>
+	   <CATALOG_GROUP_SYSTEM>
+	      <GROUP_SYSTEM_ID>KBK-1-99/00</GROUP_SYSTEM_ID>
+	      <GROUP_SYSTEM_NAME>Herrenmode</GROUP_SYSTEM_NAME>
+	      <CATALOG_STRUCTURE type="root">
+	         <GROUP_ID>1</GROUP_ID>
+	         <GROUP_NAME>Herrenbekleidung</GROUP_NAME>
+	         <PARENT_ID>0</PARENT_ID>
+	      </CATALOG_STRUCTURE>
+	      <CATALOG_STRUCTURE type="node">
+	         <GROUP_ID>2</GROUP_ID>
+	         <GROUP_NAME>Oberbekleidung</GROUP_NAME>
+	         <GROUP_DESCRIPTION>Alles was der Mann darueber traegt.</GROUP_DESCRIPTION>
+	         <PARENT_ID>1</PARENT_ID>
+		     <MIME_INFO>
+			     <MIME>
+			         <MIME_TYPE>image/jpg</MIME_TYPE>
+			         <MIME_SOURCE>hr_ober.jpg</MIME_SOURCE>
+			     </MIME>
+		     </MIME_INFO>
+	      </CATALOG_STRUCTURE>
+	      <CATALOG_STRUCTURE type="leaf">
+	         <GROUP_ID>3</GROUP_ID>
+	         <GROUP_NAME>Unterwaesche</GROUP_NAME>
+	         <GROUP_DESCRIPTION>Alles was der Mann drunter traegt.</GROUP_DESCRIPTION>
+	         <PARENT_ID>1</PARENT_ID>
+		     <MIME_INFO>
+			     <MIME>
+			         <MIME_TYPE>image/jpg</MIME_TYPE>
+			         <MIME_SOURCE>hr_unter.jpg</MIME_SOURCE>
+			     </MIME>
+		     </MIME_INFO>
+	      </CATALOG_STRUCTURE>
+	      <CATALOG_STRUCTURE type="leaf">
+	         <GROUP_ID>4</GROUP_ID>
+	         <GROUP_NAME>Struempfe</GROUP_NAME>
+	         <GROUP_DESCRIPTION>Socken, Struempfe und noch mehr</GROUP_DESCRIPTION>
+	         <PARENT_ID>1</PARENT_ID>
+		     <MIME_INFO>
+			     <MIME>
+			         <MIME_TYPE>image/jpg</MIME_TYPE>
+			         <MIME_SOURCE>stink1.jpg</MIME_SOURCE>
+			     </MIME>
+		     </MIME_INFO>
+	      </CATALOG_STRUCTURE>
+	      <CATALOG_STRUCTURE type="leaf">
+	         <GROUP_ID>5</GROUP_ID>
+	         <GROUP_NAME>Hemden</GROUP_NAME>
+	         <GROUP_DESCRIPTION>Fuer Freizeit und Business</GROUP_DESCRIPTION>
+	         <PARENT_ID>2</PARENT_ID>
+		     <MIME_INFO>
+			     <MIME>
+			         <MIME_TYPE>image/jpg</MIME_TYPE>
+			         <MIME_SOURCE>charlie_und_dennis.jpg</MIME_SOURCE>
+			     </MIME>
+		     </MIME_INFO>
+		     <USER_DEFINED_EXTENSIONS>
+	 	         <UDX.UGE.LEVEL>4</UDX.UGE.LEVEL>
+	      	 </USER_DEFINED_EXTENSIONS>
+	         <KEYWORD>Oberhemden</KEYWORD>
+	         <KEYWORD>Strandhemden</KEYWORD>
+	      </CATALOG_STRUCTURE>
+	      <CATALOG_STRUCTURE type="leaf">
+	         <GROUP_ID>6</GROUP_ID>
+	         <GROUP_NAME>Hosen</GROUP_NAME>
+	         <GROUP_DESCRIPTION>Man(n) geht nicht mehr ohne</GROUP_DESCRIPTION>
+	         <PARENT_ID>2</PARENT_ID>
+		     <MIME_INFO>
+			     <MIME>
+			         <MIME_TYPE>image/jpg</MIME_TYPE>
+			         <MIME_SOURCE>tote_h.jpg</MIME_SOURCE>
+			     </MIME>
+		     </MIME_INFO>
+	      </CATALOG_STRUCTURE>
+	      <GROUP_SYSTEM_DESCRIPTION>Der Herrenmoden-Katalog</GROUP_SYSTEM_DESCRIPTION>
+	   </CATALOG_GROUP_SYSTEM>
+	   <ARTICLE>
+	      <SUPPLIER_AID>54-Charlie-R</SUPPLIER_AID>
+	      <ARTICLE_DETAILS>
+	         <DESCRIPTION_SHORT>Freizeithemd Charlie</DESCRIPTION_SHORT>
+	         <DESCRIPTION_LONG>Das modische Hemd der Extraklasse.</DESCRIPTION_LONG>
+	         <EAN>87126709</EAN>
+	         <SUPPLIER_ALT_AID>2334charlie</SUPPLIER_ALT_AID>
+	         <BUYER_AID type="BRZNR">K4484</BUYER_AID>
+	         <BUYER_AID type="KMF">78787</BUYER_AID>
+	         <MANUFACTURER_AID>123-RD-67-U</MANUFACTURER_AID>
+	         <MANUFACTURER_NAME>Faden und Soehne</MANUFACTURER_NAME>
+	         <ERP_GROUP_BUYER>23</ERP_GROUP_BUYER>
+	         <ERP_GROUP_SUPPLIER>G67-HHH</ERP_GROUP_SUPPLIER>
+	         <DELIVERY_TIME>4</DELIVERY_TIME>
+                 <SPECIAL_TREATMENT_CLASS type="GVVS">34-677-9876</SPECIAL_TREATMENT_CLASS>
+	         <SPECIAL_TREATMENT_CLASS type="GVVW">GLUEH12</SPECIAL_TREATMENT_CLASS>
+	         <KEYWORD>Oberhemd</KEYWORD>
+	         <KEYWORD>Strandhemd</KEYWORD>
+	         <REMARKS>wurde garantiert nicht mit Kinderarbeit produziert</REMARKS>
+	         <SEGMENT>Bekleidung</SEGMENT>
+	         <ARTICLE_ORDER>10</ARTICLE_ORDER>
+	         <ARTICLE_STATUS type="bargain">Dauertiefstpreis</ARTICLE_STATUS>
+	         <ARTICLE_STATUS type="new_article">Seit dieser Saison neu</ARTICLE_STATUS>
+	      </ARTICLE_DETAILS>
+	      <ARTICLE_FEATURES>
+	         <REFERENCE_FEATURE_SYSTEM_NAME>udf_HeMoMeGu</REFERENCE_FEATURE_SYSTEM_NAME>
+	         <REFERENCE_FEATURE_GROUP_ID>Gruppe 123</REFERENCE_FEATURE_GROUP_ID>
+	         <FEATURE>
+	            <FNAME>Gewicht</FNAME>
+	            <FVALUE>500</FVALUE>
+	            <FUNIT>g</FUNIT>
+	         </FEATURE>
+	         <FEATURE>
+	            <FNAME>Farbe</FNAME>
+	            <FVALUE>Rot</FVALUE>
+	         </FEATURE>
+	      </ARTICLE_FEATURES>
+	      <ARTICLE_ORDER_DETAILS>
+	         <ORDER_UNIT>Packung</ORDER_UNIT>
+	         <CONTENT_UNIT>Stueck</CONTENT_UNIT>
+	         <NO_CU_PER_OU>6</NO_CU_PER_OU>
+	         <PRICE_QUANTITY>1</PRICE_QUANTITY>
+	         <QUANTITY_MIN>1</QUANTITY_MIN>
+	         <QUANTITY_INTERVAL>1</QUANTITY_INTERVAL>
+	      </ARTICLE_ORDER_DETAILS>
+	      <ARTICLE_PRICE_DETAILS>
+	         <DATETIME type="valid_start_date">
+	            <DATE>1999-10-01</DATE>
+	         </DATETIME>
+	         <DATETIME type="valid_end_date">
+	            <DATE>2000-03-31</DATE>
+	         </DATETIME>
+	         <DAILY_PRICE>FALSE</DAILY_PRICE>
+	         <ARTICLE_PRICE price_type="net_customer">
+	            <PRICE_AMOUNT>17,23</PRICE_AMOUNT>
+	            <PRICE_CURRENCY>DEM</PRICE_CURRENCY>
+	            <TAX>16</TAX>
+	            <PRICE_FACTOR>,8</PRICE_FACTOR>
+	            <LOWER_BOUND>1</LOWER_BOUND>
+		        <TERRITORY>DE</TERRITORY>
+		        <TERRITORY>NL</TERRITORY>
+	         </ARTICLE_PRICE>
+	         <ARTICLE_PRICE price_type="net_customer">
+	            <PRICE_AMOUNT>8,61</PRICE_AMOUNT>
+	            <PRICE_CURRENCY>EUR</PRICE_CURRENCY>
+	            <TAX>16</TAX>
+	            <PRICE_FACTOR>,8</PRICE_FACTOR>
+	            <LOWER_BOUND>1</LOWER_BOUND>
+		        <TERRITORY>DE</TERRITORY>
+		        <TERRITORY>NL</TERRITORY>
+	         </ARTICLE_PRICE>
+	         <ARTICLE_PRICE price_type="net_list">
+	            <PRICE_AMOUNT>20,00</PRICE_AMOUNT>
+	            <PRICE_CURRENCY>DEM</PRICE_CURRENCY>
+	            <TAX>16</TAX>
+	            <PRICE_FACTOR>,8</PRICE_FACTOR>
+	            <LOWER_BOUND>1</LOWER_BOUND>
+		        <TERRITORY>DE</TERRITORY>
+		        <TERRITORY>NL</TERRITORY>
+	         </ARTICLE_PRICE>
+	         <ARTICLE_PRICE price_type="net_list">
+	            <PRICE_AMOUNT>10,00</PRICE_AMOUNT>
+	            <PRICE_CURRENCY>EUR</PRICE_CURRENCY>
+	            <TAX>16</TAX>
+	            <PRICE_FACTOR>,8</PRICE_FACTOR>
+	            <LOWER_BOUND>1</LOWER_BOUND>
+		        <TERRITORY>DE</TERRITORY>
+		        <TERRITORY>NL</TERRITORY>
+	         </ARTICLE_PRICE>
+	      </ARTICLE_PRICE_DETAILS>
+	      <MIME_INFO>
+		      <MIME>
+		         <MIME_TYPE>image/jpg</MIME_TYPE>
+		         <MIME_SOURCE>charlie.jpg</MIME_SOURCE>
+		         <MIME_DESCR>Vorderansicht unseres Freizeithemdes</MIME_DESCR>
+		         <MIME_ALT>Bild charlie</MIME_ALT>
+		         <MIME_PURPOSE>normal</MIME_PURPOSE>
+		      </MIME>
+		      <MIME>
+		         <MIME_TYPE>application/pdf</MIME_TYPE>
+		         <MIME_SOURCE>charlie.pdf</MIME_SOURCE>
+		         <MIME_DESCR>Beschreibung des Produktionsprozesses</MIME_DESCR>
+		         <MIME_ALT>PDF-Datei zu Charlie</MIME_ALT>
+		         <MIME_PURPOSE>others</MIME_PURPOSE>
+		      </MIME>
+	      </MIME_INFO>
+	      <USER_DEFINED_EXTENSIONS>
+	 	         <UDX.UGE.VALUATION>2,3</UDX.UGE.VALUATION>
+	      </USER_DEFINED_EXTENSIONS>
+	      <ARTICLE_REFERENCE type="followup">
+	         <ART_ID_TO>54-Dennis-B</ART_ID_TO>
+	      </ARTICLE_REFERENCE>
+	      <ARTICLE_REFERENCE type="similar">
+	         <ART_ID_TO>57-Roger-S</ART_ID_TO>
+	         <CATALOG_ID>4342S-4543-U</CATALOG_ID>
+	      </ARTICLE_REFERENCE>
+	   </ARTICLE>
+	   <ARTICLE mode="new">
+	      <SUPPLIER_AID>54-Dennis-B</SUPPLIER_AID>
+	      <ARTICLE_DETAILS>
+	         <DESCRIPTION_SHORT>Businesshemd Dennis</DESCRIPTION_SHORT>
+	         <DESCRIPTION_LONG>Da macht die Vertragsverhandlung Spass.</DESCRIPTION_LONG>
+	         <EAN>87126709</EAN>
+	         <SUPPLIER_ALT_AID>2355dennis</SUPPLIER_ALT_AID>
+	         <BUYER_AID type="BRZNR">Kdsf84</BUYER_AID>
+	         <BUYER_AID type="KMF">76887</BUYER_AID>
+	         <MANUFACTURER_AID>123-DF-69-U</MANUFACTURER_AID>
+	         <MANUFACTURER_NAME>Faden und Soehne</MANUFACTURER_NAME>
+	         <ERP_GROUP_BUYER>23</ERP_GROUP_BUYER>
+	         <ERP_GROUP_SUPPLIER>G67-HHH</ERP_GROUP_SUPPLIER>
+	         <DELIVERY_TIME>4</DELIVERY_TIME>
+	         <KEYWORD>Oberhemd</KEYWORD>
+	         <REMARKS>wurde garantiert nicht mit Kinderarbeit produziert</REMARKS>
+	         <ARTICLE_ORDER>20</ARTICLE_ORDER>
+	      </ARTICLE_DETAILS>
+	      <ARTICLE_FEATURES>
+	         <REFERENCE_FEATURE_SYSTEM_NAME>udf_HeMoMeGu</REFERENCE_FEATURE_SYSTEM_NAME>
+	         <REFERENCE_FEATURE_GROUP_ID>Gruppe 123</REFERENCE_FEATURE_GROUP_ID>
+	         <FEATURE>
+	            <FNAME>Gewicht</FNAME>
+	            <FVALUE>200</FVALUE>
+	            <FUNIT>g</FUNIT>
+	         </FEATURE>
+	         <FEATURE>
+	            <FNAME>Farbe</FNAME>
+	            <FVALUE>Weiss</FVALUE>
+	         </FEATURE>
+	      </ARTICLE_FEATURES>
+	      <ARTICLE_ORDER_DETAILS>
+	         <ORDER_UNIT>Packung</ORDER_UNIT>
+	      </ARTICLE_ORDER_DETAILS>
+	      <ARTICLE_PRICE_DETAILS>
+	         <ARTICLE_PRICE price_type="net_customer">
+	            <PRICE_AMOUNT>17,23</PRICE_AMOUNT>
+	            <TAX>16</TAX>
+	            <LOWER_BOUND>1</LOWER_BOUND>
+	         </ARTICLE_PRICE>
+	         <ARTICLE_PRICE price_type="net_list">
+	            <PRICE_AMOUNT>20,00</PRICE_AMOUNT>
+	         </ARTICLE_PRICE>
+	      </ARTICLE_PRICE_DETAILS>
+	      <MIME_INFO>
+		      <MIME>
+		         <MIME_TYPE>image/jpg</MIME_TYPE>
+		         <MIME_SOURCE>dennis.jpg</MIME_SOURCE>
+		      </MIME>
+		      <MIME>
+		         <MIME_TYPE>application/pdf</MIME_TYPE>
+		         <MIME_SOURCE>dennis.pdf</MIME_SOURCE>
+		         <MIME_ALT>PDF-Datei zu Dennis</MIME_ALT>
+		         <MIME_PURPOSE>others</MIME_PURPOSE>
+		      </MIME>
+	      </MIME_INFO>
+	   </ARTICLE>
+	   <ARTICLE_TO_CATALOGGROUP_MAP>
+	      <ART_ID>54-Charlie-R</ART_ID>
+	      <CATALOG_GROUP_ID>5</CATALOG_GROUP_ID>
+	   </ARTICLE_TO_CATALOGGROUP_MAP>
+	   <ARTICLE_TO_CATALOGGROUP_MAP>
+	      <ART_ID>54-Dennis-B</ART_ID>
+	      <CATALOG_GROUP_ID>5</CATALOG_GROUP_ID>
+	   </ARTICLE_TO_CATALOGGROUP_MAP>
+   </T_NEW_CATALOG>
+</BMECAT>

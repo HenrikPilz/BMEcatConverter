@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+  Name:             udx.xsd
+  Fileversion:      1.0
+  Unchanged since:  1.0 draft
+  Date:             10.01.2003
+  Authors:          Oliver Kelkar   (olk),  Fraunhofer IAO Stuttgart
+                    Volker Schmitz  (stz),  Universitaet Essen BLI
+                    Stefan Kubitzky (kub),  Universitaet Essen BLI
+                    Sven Sprandel   (spr),  Fraunhofer IAO Stuttgart
+
+  Copyright 2003, All Rights Reserved
+  Fraunhofer IAO Stuttgart, Universitaet Essen BLI
+  
+  BMEcat:
+  more infos and full specification: http://www.bmecat.org
+  e-mail contact: authors@bmecat.org
+
+  openTRANS:
+  more infos and full specification: http://www.opentrans.org
+  e-mail contact: authors@opentrans.org
+
+-->
+
+<!-- 
+	Example-include-file for USER_DEFINED_EXTENSIONS
+	- ARTICLE
+	- HEADER
+	- CATALOG_GROUP_STRUCTURE
+
+	complexType's have to be listed even if they are not used (they can be empty)
+
+	Beispiel-Include-Datei fuer USER_DEFINED_EXTENSIONS
+	- ARTICLE
+	- HEADER
+	- CATALOG_GROUP_STRUCTURE
+	
+	Die complexType's muessen vorhanden sein, auch wenn sie nicht benutzt werden 
+	(koennen dann leer bleiben).
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		elementFormDefault="qualified">
+
+	<xsd:complexType name="headerUSER_DEFINED_EXTENSIONS"/>
+	<xsd:complexType name="catstrucUSER_DEFINED_EXTENSIONS"/>
+	<xsd:complexType name="articleUSER_DEFINED_EXTENSIONS"/>
+<!-- 
+	Example:
+	<xsd:complexType name="articleUSER_DEFINED_EXTENSIONS">
+		<xsd:choice>
+			<xsd:element name="udx.BasePUnit" type="xsd:string"/>
+			<xsd:element name="udx.SecurityLevel" type="xsd:integer"/>
+		</xsd:choice>
+	</xsd:complexType>
+-->
+</xsd:schema>

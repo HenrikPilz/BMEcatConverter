@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+  Name:             bmecat_newcatalog_1_2.xsd
+  Fileversion:      1.2
+  Unchanged since:  1.2 draft
+  Date:             10.01.2003
+  Authors:          Volker Schmitz  (stz),  Universitaet Essen BLI
+                    Oliver Kelkar   (olk),  Fraunhofer IAO Stuttgart
+                    Stefan Kubitzky (kub),  Universitaet Essen BLI
+                    Sven Sprandel   (spr),  Fraunhofer IAO Stuttgart
+
+  Copyright 2003, All Rights Reserved
+  Fraunhofer IAO Stuttgart, Universitaet Essen BLI
+
+  !! If you've got problems in parsing the identity-constraints !!
+  !! please set the marked blocks in commentary tags            !!
+  !! ***** START deactivate identity-constraints *****          !!
+  !! ***** END deactivate identity-constraints   *****          !!
+
+  BMEcat:
+  more infos and full specification: http://www.bmecat.org
+  e-mail contact: authors@bmecat.org
+  
+-->
+
+<xsd:schema targetNamespace="http://www.bmecat.org/XMLSchema/1.2/bmecat_new_catalog"
+		xmlns="http://www.bmecat.org/XMLSchema/1.2/bmecat_new_catalog"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		elementFormDefault="qualified">
+
+	<xsd:include schemaLocation="bmecat_base_1_2.xsd"/>
+
+	<xsd:element name="BMECAT">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="HEADER"/>
+				<xsd:element ref="T_NEW_CATALOG"/>
+			</xsd:sequence>
+			<xsd:attribute name="version" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="dtSTRING">
+						<xsd:maxLength value="7"/>
+						<xsd:enumeration value="1.01"/>
+						<xsd:enumeration value="1.2"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="T_NEW_CATALOG">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="FEATURE_SYSTEM" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="CLASSIFICATION_SYSTEM" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="CATALOG_GROUP_SYSTEM" minOccurs="0"/>
+				<xsd:element ref="ARTICLE" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="ARTICLE_TO_CATALOGGROUP_MAP" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attribute name="prev_version" type="dtINTEGER" use="optional"/>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:key name="keySUPPLIER_AID">
+			<xsd:selector xpath="ARTICLE"/>
+			<xsd:field xpath="SUPPLIER_AID"/>
+		</xsd:key>
+		<xsd:key name="keyGROUP_ID">
+			<xsd:selector xpath="CATALOG_GROUP_SYSTEM/CATALOG_STRUCTURE"/>
+			<xsd:field xpath="GROUP_ID"/>
+		</xsd:key>
+		<xsd:keyref name="keyrefARTICLE_ID" refer="keySUPPLIER_AID">
+			<xsd:selector xpath="ARTICLE_TO_CATALOGGROUP_MAP"/>
+			<xsd:field xpath="ART_ID"/>
+		</xsd:keyref>
+		<xsd:keyref name="keyrefCATALOG_GROUP_ID" refer="keyGROUP_ID">
+			<xsd:selector xpath="ARTICLE_TO_CATALOGGROUP_MAP"/>
+			<xsd:field xpath="CATALOG_GROUP_ID"/>
+		</xsd:keyref>
+		<xsd:key name="keyFEATURE_SYSTEM_NAME">
+			<xsd:selector xpath="FEATURE_SYSTEM"/>
+			<xsd:field xpath="FEATURE_SYSTEM_NAME"/>
+		</xsd:key>
+		<xsd:key name="keyCLASSIFICATION_SYSTEM_NAME">
+			<xsd:selector xpath="CLASSIFICATION_SYSTEM"/>
+			<xsd:field xpath="CLASSIFICATION_SYSTEM_NAME"/>
+		</xsd:key>
+		<xsd:key name="keyARTICLE_TO_CATALOGGROUP_MAP">
+			<xsd:selector xpath="ARTICLE_TO_CATALOGGROUP_MAP"/>
+			<xsd:field xpath="ART_ID"/>
+			<xsd:field xpath="CATALOG_GROUP_ID"/>
+		</xsd:key>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="ARTICLE">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="SUPPLIER_AID"/>
+				<xsd:element ref="ARTICLE_DETAILS"/>
+				<xsd:element ref="ARTICLE_FEATURES" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="ARTICLE_ORDER_DETAILS"/>
+				<xsd:element ref="ARTICLE_PRICE_DETAILS" maxOccurs="unbounded"/>
+				<xsd:element ref="MIME_INFO" minOccurs="0"/>
+				<xsd:element name="USER_DEFINED_EXTENSIONS" type="articleUSER_DEFINED_EXTENSIONS" minOccurs="0"/>
+				<xsd:element ref="ARTICLE_REFERENCE" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attribute name="mode" use="optional">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="new"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+		</xsd:complexType>
+		<!-- ***** START deactivate identity-constraints ***** -->
+		<xsd:unique name="uniqueREFERENCE_FEATURE_SYSTEM_NAME">
+			<xsd:selector xpath="ARTICLE_FEATURES"/>
+			<xsd:field xpath="REFERENCE_FEATURE_SYSTEM_NAME"/>
+		</xsd:unique>
+		<xsd:unique name="uniqueARTICLE_REFERENCE">
+			<xsd:selector xpath="ARTICLE_REFERENCE"/>
+			<xsd:field xpath="@type"/>
+			<xsd:field xpath="ART_ID_TO"/>
+			<xsd:field xpath="CATALOG_ID"/>
+			<xsd:field xpath="CATALOG_VERSION"/>
+		</xsd:unique>
+		<!-- ***** END deactivate identity-constraints   ***** -->
+	</xsd:element>
+	<xsd:element name="ARTICLE_TO_CATALOGGROUP_MAP">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="ART_ID"/>
+				<xsd:element ref="CATALOG_GROUP_ID"/>
+				<xsd:element ref="ARTICLE_TO_CATALOGGROUP_MAP_ORDER" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>
