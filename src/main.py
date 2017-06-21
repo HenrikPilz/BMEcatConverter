@@ -7,7 +7,9 @@ import sys
 import os
 import sys
 import getopt
+import time
 
+loggingLevel = logging.WARNING
 
 '''
 Einstellungen für die zu erwartenden Daten:
@@ -57,7 +59,7 @@ def setUpLogging():
     ''' Console out '''
     stdOutHandler = logging.StreamHandler(sys.stdout) 
     stdOutHandler.setFormatter(frmStdOut)
-    stdOutHandler.setLevel(logging.INFO)
+    stdOutHandler.setLevel(loggingLevel)
 
     logger.addHandler(stdOutHandler) 
  
@@ -149,7 +151,6 @@ def determineArguments(argv):
             dateformat=arg            
 
     if inputfile is None or outputfile is None or dateformat is None or separatorMode is None:
-        print("Missing arguments: " + " ".join(argv))
         printHelp()
     
     logging.info("Input file is {0}".format(inputfile))
@@ -182,5 +183,8 @@ def main(argv):
     
 if __name__ == '__main__':
     logging.debug('Number of arguments:', len(sys.argv), 'arguments.')
-    print ('Argument List:', str(sys.argv))
+    logging.debug('Argument List:', str(sys.argv))
+    t1 = time.clock()
     main(sys.argv[1:])
+    t2 = time.clock()
+    print('Dauer: ', t2-t1)
