@@ -5,6 +5,11 @@ from exportHandler.excel.pyxelHandler import PyxelHandler
 import logging
 import sys
 import os
+import sys
+import getopt
+import time
+
+loggingLevel = logging.WARNING
 
 '''
 Einstellungen für die zu erwartenden Daten:
@@ -15,34 +20,16 @@ Einstellungen für die zu erwartenden Daten:
  
  Tausendertrennzeichen und Dezimalkennzeichen dürfen nicht gleich sein. 
 '''
-
-''' Für ein Datum: 2017-05-31 '''
-dateFormat="%Y-%m-%d"
-''' Für ein Datum: 05.31.2017 '''
-'''dateFormat="%d.%m.%Y"'''
-''' Andere Varianten sind entsprechend erstellbar'''
-
-decimalSeparator = "."
-thousandSeparator = ","
-
-
-'''
-Merchant für den der BMEcat erstellet werden soll.
-
-'''
-merchantName = "Contorion"
-'''
-Hersteller für den der BMEcat konvertiert werden soll.
-
-'''
-manufacturerName = None
-
+separators = { "german" : { "decimalSeparator" : ",", "thousandSeparator" : "." },
+               "english" : { "decimalSeparator" : ".", "thousandSeparator" : "," }
+             }
 
 '''
     setUp Logging for File and Console
 '''
 def setUpLogging():
     logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
     
     debugLogFilename = "convert_debug.log"
     if os.path.exists(debugLogFilename):
@@ -72,27 +59,27 @@ def setUpLogging():
     ''' Console out '''
     stdOutHandler = logging.StreamHandler(sys.stdout) 
     stdOutHandler.setFormatter(frmStdOut)
-    stdOutHandler.setLevel(logging.WARNING)
+    stdOutHandler.setLevel(loggingLevel)
 
     logger.addHandler(stdOutHandler) 
-    logger.setLevel(logging.INFO)
  
 '''
 convert XML BMEcat to Excel-File
 '''
-def xmlToExcel(bmecatFilename, excelFilename):
+def xmlToExcel(bmecatFilename, excelFilename, dateFormat, separatorMode="detect", manufacturerName=None, merchant=None):
     parser = make_parser()
     
-    dateFormat="%Y-%m-%d"
-    '''
-    dateFormat="%d.%m.%Y"'''
-    decimalSeparator = "."
-    thousandSeparator = ","
+    decimalSeparator = separators[separatorMode]["decimalSeparator"]
+    thousandSeparator = separators[separatorMode]["thousandSeparator"]
 
     
     importer = BMEcatImportHandler(dateFormat, decimalSeparator, thousandSeparator)
     parser.setContentHandler(importer)
-    parser.parse(bmecatFilename)
+    if bmecatFilename.startswith(".") or bmecatFilename.startswith(".."):
+        bmecatFilename = os.getcwd() + "//" + bmecatFilename
+    if excelFilename.startswith(".") or excelFilename.startswith(".."):
+        excelFilename = os.getcwd() + "//" + excelFilename
+    parser.parse("file:" + bmecatFilename)
     logging.info("Daten eingelesen")
     exporter = PyxelHandler(importer._articles, excelFilename, manufacturerName)
     logging.info("Erstelle Excel-Datei")
@@ -129,18 +116,75 @@ def excelToXml(inputPath, bmecatFilename):
     logging.info("Fertig.")
     print("Fertig.")
 
+def determineArguments(argv):
+    inputfile = None
+    outputfile = None
+    merchant = None
+    manufacturer = None
+    dateformat = None
+    separatorMode = None
+    
+    try:
+        opts, args = getopt.getopt(argv,"hi:o:", ["merchant=", "manufacturer=", "dateformat=", "separators="])
+        print("Options: ", opts)
+    except getopt.GetoptError:
+        print("Error: ")
+        printHelp()
+        sys.exit(2)
 
-def main():    
+    for opt, arg in opts:
+        print("Option: " + opt)
+        print("Argument: " + arg)
+        if opt == '-h':
+            printHelp()
+        elif opt == "-i":
+            inputfile = arg
+        elif opt == "-o":
+            outputfile = arg
+        elif opt == "--manufacturer":
+            manufacturer = arg
+        elif opt == "--merchant":
+            merchant = arg
+        elif opt == "--separators":
+            separatorMode = arg
+        elif opt == "--dateformat":
+            dateformat=arg            
+
+    if inputfile is None or outputfile is None or dateformat is None or separatorMode is None:
+        printHelp()
+    
+    logging.info("Input file is {0}".format(inputfile))
+    logging.info("Output file is {0}".format(outputfile))
+    if merchant is not None:
+        logging.info("Merchant: {0}".format(merchant))
+    if manufacturer is not None:
+        logging.info("Manufacturer: {0}".format(manufacturer))
+
+    return inputfile, outputfile, merchant, manufacturer, dateformat, separatorMode
+
+def printHelp():
+    print("python main.py -i <inputfile> -o <outputfile> --dateformat \"%Y-%m-%d\" --separators english")
+    print("\t--dateformat <dateformat>")
+    print("\t\te.g. '%Y-%m-%d' or '%d.%m.%Y' or anything else with Y as Year, d as day and m as month ")
+    print("\t--separators <english|german|detect>")
+    print("\t\te.g. -separators german leads to numbers beeing expected like 10.000,00")
+    print("\t\t     -separators english leads to numbers beeing expected like 10,000.00")
+    print("\t\t     -separators detect tries to detect what could be there (unsafe).")
+    print("Optionally:")
+    print("\t--merchant <Merchantname>")
+    print("\t--manufacturer <Manufacturername>")
+    print("\ti.e. python main.py -i makita_bmecat.xml -o makita_excelfilname.xlsx -merchant \"Contorion\" -manufacturer \"Makita\"")
+    sys.exit()
+
+def main(argv):
     setUpLogging()
-    ''' Dateiname des BMEcats ohne Endung'''
-    filename = "20170612_BMECat_ETIM6_Klartext_Kundenpreis_MAK"
-    ''' Pfad wo der BMEcat liegt'''
-    '''bmecatPath = "file:C://Users//henrik.pilz//My Documents//LiClipse Workspace//BMEcatConverter//documents//BMEcat//"'''
-    bmecatPath = "file:C://Users//henrik.pilz//Desktop//Makita"
-
-    if not bmecatPath.endswith("//"):
-        bmecatPath += "//"
-    xmlToExcel(bmecatPath + filename + ".xml", filename + ".xlsx")
+    inputFilename, outputFilename, merchantName, manufacturerName, dateFormat, separatorMode = determineArguments(argv)
+    xmlToExcel(inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName)
     
 if __name__ == '__main__':
-    main()
+    logging.debug('Number of arguments:', len(sys.argv), 'arguments.')
+    logging.debug('Argument List:', str(sys.argv))
+    t1 = time.clock()
+    main(sys.argv[1:])
+    t2 = time.clock()
+    print('Dauer: ', t2-t1)
