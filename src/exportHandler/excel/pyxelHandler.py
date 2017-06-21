@@ -35,8 +35,8 @@ class PyxelHandler(object):
         self._numberOfArticlesProcessed = 0
 
         for articles in self._articles.values():
-            self._numberOfArticlesProcessed += len(articles)
             for article in articles:
+                numberOfVariants = None
                 numberOfPrices = 0
                 for priceDetailEntry in article.priceDetails:
                     numberOfPrices += len(priceDetailEntry.prices)
@@ -44,6 +44,15 @@ class PyxelHandler(object):
                 numberOfAttributes = 0
                 for featureSet in article.featureSets:                
                     numberOfAttributes += len(featureSet.features)
+                    for feature in featureSet.features:
+                        if feature.variants is not None:
+                            numberOfVariants = numberOfVariants * len(feature.variants)
+                if numberOfVariants is None:
+                    self._numberOfArticlesProcessed += 1
+                else:
+                    self._numberOfArticlesProcessed += numberOfVariants
+                    article.numberOfVariants = numberOfVariants
+                 
                 self._maxNumberOfAttributes = max(numberOfAttributes, self._maxNumberOfAttributes)
                 self._maxNumberOfMimes = max(len(article.mimeInfo), self._maxNumberOfMimes)
                 self._maxNumberOfSpecialTreatmentClasses = max(len(article.details.specialTreatmentClasses), self._maxNumberOfSpecialTreatmentClasses)
@@ -63,17 +72,17 @@ class PyxelHandler(object):
     def createArtikelHeader(self, sheet):
         columnIndex = 1
 
-        baseFields = ["articleType", "articleId", "supplierArticleId",
-                      "descriptionShort", "descriptionLong", "ean",
-                      "manufacturerArticleId", "manufacturerName",
-                      "deliveryTime", "orderUnit",
-                      "contentUnit", "packingQuantity", "priceQuantity",
-                      "quantityMin", "quantityInterval" ]
-        priceFields = ["validFrom", "validTo", "priceType", "priceAmount",
-                       "priceCurrency", "tax", "priceFactor", "lowerBound"]
-        mimeFields = ["mimeType", "mimeSource", "mimeAlt", "mimeDescription",
-                      "mimePurpose", "mimeOder"]
-        attributeFields = [ "attributeName", "attributeValue"] 
+        baseFields = [ "articleType", "articleId", "supplierArticleId",
+                       "descriptionShort", "descriptionLong", "ean",
+                       "manufacturerArticleId", "manufacturerName",
+                       "deliveryTime", "orderUnit",
+                       "contentUnit", "packingQuantity", "priceQuantity",
+                       "quantityMin", "quantityInterval" ]
+        priceFields = [ "validFrom", "validTo", "priceType", "priceAmount",
+                        "priceCurrency", "tax", "priceFactor", "lowerBound" ]
+        mimeFields = [ "mimeType", "mimeSource", "mimeAlt", "mimeDescription",
+                       "mimePurpose", "mimeOder" ]
+        attributeFields = [ "attributeName", "attributeValue" ] 
         ''', "attributeUnit" ]'''
         treatmentClassFields = [ "classType", "className" ]
 
@@ -81,7 +90,7 @@ class PyxelHandler(object):
             sheet.cell(row=self._headerRowIndex, column=columnIndex, value=fieldName)
             columnIndex+=1
 
-        logging.info("Anzahl verarbeiteter Artikel: " + str(self._numberOfArticlesProcessed))
+        logging.info( "Anzahl verarbeiteter Artikel: " + str(self._numberOfArticlesProcessed))
         logging.info( "Maximale Anzahl Preise: " + str(self._maxNumberOfPrices))
         logging.info( "Maximale Anzahl Bilder: " + str(self._maxNumberOfMimes))
         logging.info( "Maximale Anzahl Attribute: " + str(self._maxNumberOfAttributes))
@@ -123,13 +132,11 @@ class PyxelHandler(object):
                 self.writeOneArticleToRow(articleType, article, rowIndex, sheet)
                 rowIndex += 1
 
-
-
     def writeOneArticleToRow(self, articleType, article, rowIndex, sheet):
         self.addBaseFieldsToArticle(articleType, article, rowIndex, sheet)
-        self.addAttributesToArticle(article.featureSets, rowIndex, sheet)
         self.addMimesToArticle(article.mimeInfo, rowIndex, sheet)
         self.addPricesToArticle(article.priceDetails, rowIndex, sheet)
+        self.addAttributesToArticle(article.featureSets, rowIndex, sheet)
         self.addTreatmentClassesToArticle(article.details.specialTreatmentClasses, rowIndex, sheet)
 
 
@@ -204,7 +211,7 @@ class PyxelHandler(object):
             sheet.cell(row=rowIndex, column=self._firstMimeColumIndex + mimeCount*fieldCount + 5, value=mime.order)
             mimeCount += 1
 
-    def addAttributesToArticle(self, featureSets, rowIndex, sheet):
+    def addAttributesToArticle(self, featureSets, rowIndex, sheet, currentVariant=None):
         if self._firstAttributeColumIndex < 1:
             logging.info("Keine Attribute zu transferieren.")
             return

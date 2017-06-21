@@ -21,6 +21,11 @@ from data.reference import Reference
 from data.variantSet import VariantSet
 from data.variant import Variant
 
+from mapping.units import BMEcatUnitMapper
+from mapping.units import ETIMUnitMapper
+from mapping.blacklist import FeatureBlacklist
+from mapping.blacklist import FeatureSetBlacklist
+
 
 class BMEcatHandler(handler.ContentHandler):
     
@@ -39,7 +44,8 @@ class BMEcatHandler(handler.ContentHandler):
                 "special_treatment_class" : "createTreatmentClass",
                 "article_reference" : "createReference",
                 "variants" : "createFeatureVariantSet",
-                "variant" : "createFeatureVariant" 
+                "variant" : "createFeatureVariant",
+                "description_long" : "startDescription"
                 }
 
     ''' Mögliche Aliase für Varianten der BMEcats '''
@@ -77,7 +83,7 @@ class BMEcatHandler(handler.ContentHandler):
                 "manufacturer_aid" : "addManufacturerArticleId",
                 "manufacturer_name" : "addManufacturerName",
                 "ean" : "addEAN", 
-                "description_long" : "addDescription",
+                "description_long" : "saveDescription",
                 "description_short" : "addTitle",
                 "price" : "savePrice",
                 "price_details" : "savePriceDetails",
@@ -114,8 +120,16 @@ class BMEcatHandler(handler.ContentHandler):
                 "variants" : "saveFeatureVariantSet",
                 "vorder" : "addFeatureVariantSetOrder",
                 "variant" : "addFeatureVariant",
-                "supplier_aid_supplement" : "addFeatureVariantProductIdSuffix" 
+                "supplier_aid_supplement" : "addFeatureVariantProductIdSuffix",
+                "reference_feature_system_name" : "addFeatureSetReferenceSystem",
+                "reference_feature_group_id" : "addFeatureSetReferenceGroupId"
                 }
+    
+    bmecatUnitMapper = BMEcatUnitMapper()
+    etimUnitMapper = ETIMUnitMapper()
+    
+    featureSetBlacklist = FeatureSetBlacklist()
+    featureBlacklist = FeatureBlacklist()
     
     ''' Handlernamen für das XML-Element ermitteln. '''
     def determinteHandlername(self, tag, bOpen):
@@ -149,7 +163,7 @@ class BMEcatHandler(handler.ContentHandler):
             raise Exception("Dezimaltrennzeichen und Tausendertrennzeichen dürfen nicht gleich sein.")
         
         '''articles by SKU and Product Structure as Value'''
-        self._articles = { "new" : [], "update" : [], "delete" : [] }
+        self._articles = { "new" : [], "update" : [], "delete" : [], "failed" : [] }
         self._currentArticle = None
         self._currentPrice = None
         self._currentMime = None
@@ -162,8 +176,8 @@ class BMEcatHandler(handler.ContentHandler):
         self._currentTreatmentClass = None
         self._currentReference = None
         self._currentVariant = None
+        self.lineFeedToHTML = False
         self._currentArticleMode = "failed"
-  
   
     ''' Starte aktuelles XML Element '''
     def startElement(self, name, attrs):
@@ -187,7 +201,7 @@ class BMEcatHandler(handler.ContentHandler):
             raise NotImplementedError("Class [" + self.__class__.__name__ + "] does not implement [" + handlerName + "]")
 
     ''' ---------------------------------------------------------------------'''
-    def resetAll(self, attrs=None):
+    def resetAll(self, attrs = None):
         self._currentArticle = None
         self._currentPrice = None
         self._currentMime = None
@@ -200,17 +214,17 @@ class BMEcatHandler(handler.ContentHandler):
         self._currentTreatmentClass = None
 
     ''' ---------------------------------------------------------------------'''
-    def startMimeInfo(self, attrs=None):
+    def startMimeInfo(self, attrs = None):
         self._currentElement = self._currentArticle
         
-    def endMimeInfo(self, attrs=None):
+    def endMimeInfo(self, attrs = None):
         self._currentMime = None
         self._currentElement = None
     
     ''' ---------------------------------------------------------------------'''
     ''' Anfang Artikel '''
     def createProduct(self, attrs):
-        logging.info("Anfang Produkt " + ", ".join(attrs.getNames()))
+        logging.debug("Anfang Produkt " + ", ".join(attrs.getNames()))
         if not self._currentArticle is None:
             raise Exception("Fehler im BMEcat: Neuer Artikel soll erstellt werden. Es wird schon ein Artikel verarbeitet.")
         else:
@@ -225,15 +239,15 @@ class BMEcatHandler(handler.ContentHandler):
 
     ''' Artikel speichern '''
     def saveProduct(self, attr=None):
-        if self._currentArticle.productId is None:
-            logging.error("Produkt fehlerhaft: Keine Produkt-ID.")
+        if self._currentArticle.productId is None:            
             '''self._articles["failed"].append(self._currentArticle)'''
+            logging.error("Produkt konnte nicht gespeichert werden. Fehlerhafte Daten: Keine Artikelnummer.")
         else:
             logging.info("Produkt validieren: " + self._currentArticle.productId)
             self.validateCurrentProduct()
-            logging.info("Neues Produkt erstellt. Modus: " + self._currentArticleMode)
+            logging.debug("Neues Produkt erstellt. Modus: " + self._currentArticleMode)
             self._articles[self._currentArticleMode].append(self._currentArticle)
-        logging.info("Produktende")
+        logging.debug("Produktende")
         self.resetAll()
 
     ''' ---------------------------------------------------------------------'''
@@ -324,21 +338,36 @@ class BMEcatHandler(handler.ContentHandler):
         self._currentElement = None
 
     ''' ---------------------------------------------------------------------'''
-    def createFeatureSet(self, attrs=None):
+    def createFeatureSet(self, attrs = None):
         if not self._currentFeature is None:
             raise Exception("Fehler im BMEcat: Neues Attributset soll erstellt werden. Es wird schon ein Attributset verarbeitet.")
         else: 
             self._currentFeatureSet = FeatureSet()
             self._currentContent = ""
 
-    def saveFeatureSet(self, attrs=None):
+    def saveFeatureSet(self, attrs = None):
         if self._currentArticle is None:
             raise Exception("Attributset soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        self._currentArticle.featureSets.append(self._currentFeatureSet)
+        if len(self._currentFeatureSet.features) < 1:
+            logging.info("Attributset wird nicht gespeichert, da kein Attribute enthalten sind.")
+        elif BMEcatHandler.featureSetBlacklist.contains(self._currentFeatureSet.referenceSytem):
+            logging.info("Attributset wird nicht gespeichert, da es auf der Blacklist ist.")
+        else:
+            self._currentArticle.featureSets.append(self._currentFeatureSet)
         self._currentFeatureSet = None
+    
+    def addFeatureSetReferenceSystem(self, attrs = None):
+        if self._currentFeatureSet is None:
+            raise Exception("Referenzsystem soll gesetzt werden. Aber es ist kein Attributset vorhanden")                
+        self._currentFeatureSet.referenceSytem = self._currentContent
+
+    def addFeatureSetReferenceGroupId(self, attrs = None):
+        if self._currentFeatureSet is None:
+            raise Exception("Gruppen ID soll gesetzt werden. Aber es ist kein Attributset vorhanden")                
+        self._currentFeatureSet.referenceGroupId = self._currentContent
 
     ''' ---------------------------------------------------------------------'''
-    def createFeature(self, attrs=None):
+    def createFeature(self, attrs = None):
         if not self._currentFeature is None:
             raise Exception("Fehler im BMEcat: Neues Attribut soll erstellt werden. Es wird schon ein Attribut verarbeitet.")
         else: 
@@ -346,16 +375,23 @@ class BMEcatHandler(handler.ContentHandler):
             self._currentElement = self._currentFeature
             self._currentContent = ""
 
-    def saveFeature(self, attrs=None):
+    def saveFeature(self, attrs = None):
         if self._currentFeatureSet is None:
             raise Exception("Attribut soll gespeichert werden. Aber es ist kein Attributset vorhanden")
-        self._currentFeatureSet.features.append(self._currentFeature)
+        elif BMEcatHandler.featureBlacklist.contains(self._currentFeature.name):
+            logging.info("Attribut wird nicht gespeichert, da es auf der Blacklist ist.")
+        else:
+            self._currentFeatureSet.features.append(self._currentFeature)
+
+            if self._currentFeature.variants is not None:
+                self._currentArticle.variants.append((self._currentFeature.variants.order, self._currentFeature.name, self._currentFeature.variants))
+
         self._currentFeature = None
         self._currentElement = None
 
     ''' ---------------------------------------------------------------------'''
     ''' Referenz erstellen'''
-    def createReference(self, attrs=None):
+    def createReference(self, attrs = None):
         if not self._currentReference is None:
             raise Exception("Fehler im BMEcat: Neue Referenz soll erstellt werden. Es wird schon eine Referenz verarbeitet.")
         if not 'type' in attrs.getNames():
@@ -368,56 +404,60 @@ class BMEcatHandler(handler.ContentHandler):
                 self._currentReference.quantity = attrs.getValue('quantity')
                 
     ''' Referenz speichern'''
-    def saveReference(self, attrs=None):
+    def saveReference(self, attrs = None):
         self._currentArticle.references.append(self._currentReference)
         self._currentReference = None
         self._currentElement = None
 
     ''' ---------------------------------------------------------------------'''
     ''' Referenz ID speichern'''
-    def addReferenceArticleId(self, attrs=None):
+    def addReferenceArticleId(self, attrs = None):
         self._currentReference.supplierArticleIds.append(self._currentContent)
         
     ''' Referenz Beschreibung speichern'''
-    def addReferenceDescription(self, attrs=None):
+    def addReferenceDescription(self, attrs = None):
         self._currentReference.description = self._currentContent
         
         
     ''' ---------------------------------------------------------------------'''
     ''' Artikelnummer speichern'''
-    def addArticleId(self, attrs=None):
+    def addArticleId(self, attrs = None):
         if self._currentArticle is None:
             raise Exception("Artikelnummer soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        logging.info("Artikelnummer " + self._currentContent)
+        logging.debug("Artikelnummer " + self._currentContent)
         self._currentArticle.productId = self._currentContent
 
     ''' HerstellerArtikelnummer speichern'''
-    def addManufacturerArticleId(self, attrs=None):
+    def addManufacturerArticleId(self, attrs = None):
         if self._currentArticle is None:
             raise Exception("Herstellerartikelnummer soll gespeichert werden. Aber es ist kein Artikel vorhanden")
         self._currentArticle.addManufacturerId(self._currentContent)
 
-    def addManufacturerName(self, attrs=None):
+    def addManufacturerName(self, attrs = None):
         if self._currentArticle is None:
             raise Exception("Herstellername soll gespeichert werden. Aber es ist kein Artikel vorhanden")
         self._currentArticle.addManufacturerName(self._currentContent)
 
-    def addEAN(self, attrs=None):
+    def addEAN(self, attrs = None):
         if self._currentArticle is None:
             raise Exception("EAN soll gespeichert werden. Aber es ist kein Artikel vorhanden")
         self._currentArticle.addEAN(self._currentContent)
 
-    def addTitle(self, attrs=None):
+    def addTitle(self, attrs = None):
         if self._currentArticle is None:
             raise Exception("Artikelname soll gespeichert werden. Aber es ist kein Artikel vorhanden")
         self._currentArticle.addTitle(self._currentContent)
 
-    def addDescription(self, attrs=None):
+    def startDescription(self, attrs = None):
+        self.lineFeedToHTML = True
+        
+    def saveDescription(self, attrs = None):
         if self._currentArticle is None:
             raise Exception("Artikelbeschreibung soll gespeichert werden. Aber es ist kein Artikel vorhanden")
         self._currentArticle.addDescription(self._currentContent)
+        self.lineFeedToHTML = False
 
-    def addAlternativeArticleId(self, attrs=None):
+    def addAlternativeArticleId(self, attrs = None):
         if self._currentArticle is None:
             raise Exception("Alternative Herstellerartikelnummer soll gespeichert werden. Aber es ist kein Artikel vorhanden")
         if self._currentArticle.productId is None:
@@ -426,16 +466,15 @@ class BMEcatHandler(handler.ContentHandler):
         if self._currentArticle.details is None:
             raise Exception("Alternative Herstellerartikelnummer soll gespeichert werden. Aber es sind keine Artikeldetails vorhanden")
         else:
-            logging.info("Alternative Artikelnummer: " + self._currentContent)
+            logging.debug("Alternative Artikelnummer: " + self._currentContent)
             self._currentArticle.details.supplierAltId = self._currentContent
         
-    def addDeliveryTime(self, attrs=None):
+    def addDeliveryTime(self, attrs = None):
         if self._currentArticle is None:
             raise Exception("Lieferzeit soll gespeichert werden. Aber es ist kein Artikel vorhanden")
         self._currentArticle.addDeliveryTime(self._currentContent)
 
     ''' ---------------------------------------------------------------------'''
-    ''' returns a float '''
     def convertToEnglishDecimalValue(self, stringValue):
         convertedString = stringValue
         if not self._decimalSeparator == ".": 
@@ -444,68 +483,68 @@ class BMEcatHandler(handler.ContentHandler):
 
 
     ''' ---------------------------------------------------------------------'''
-    def addPriceAmount(self, attrs=None):
+    def addPriceAmount(self, attrs = None):
         self._currentPrice.amount = round(self.convertToEnglishDecimalValue(self._currentContent), 2)
 
-    def addPriceCurrency(self, attrs=None):
+    def addPriceCurrency(self, attrs = None):
         self._currentPrice.currency = self._currentContent
 
-    def addPriceTax(self, attrs=None):
+    def addPriceTax(self, attrs = None):
         stringValue = self._currentContent.replace("%", "").strip()
         convertedValue = self.convertToEnglishDecimalValue(stringValue)
         if convertedValue > 1:
             convertedValue = convertedValue / 100
         self._currentPrice.tax = round(convertedValue, 2)
 
-    def addPriceFactor(self, attrs=None):
+    def addPriceFactor(self, attrs = None):
         self._currentPrice.factor = self.convertToEnglishDecimalValue(self._currentContent)
     
-    def addPriceLowerBound(self, attrs=None):
+    def addPriceLowerBound(self, attrs = None):
         self._currentPrice.lowerBound = self._currentContent
         
     ''' ---------------------------------------------------------------------'''
-    def addTerritory(self, attrs=None):
+    def addTerritory(self, attrs = None):
         if self._currentElement is None:
             logging.warning("Territory kann nicht gespeichert werden.")
         else:
             self._currentElement.territory = self._currentContent
 
     ''' ---------------------------------------------------------------------'''
-    def addMimeSource(self, attrs=None):
+    def addMimeSource(self, attrs = None):
         self._currentMime.source = self._currentContent
 
-    def addMimeType(self, attrs=None):
+    def addMimeType(self, attrs = None):
         self._currentMime.mimeType = self._currentContent
 
-    def addMimeAlt(self, attrs=None):
+    def addMimeAlt(self, attrs = None):
         self._currentMime.altenativeContent = self._currentContent
 
-    def addMimePurpose(self, attrs=None):
+    def addMimePurpose(self, attrs = None):
         self._currentMime.purpose = self._currentContent
 
-    def addMimeDescription(self, attrs=None):
+    def addMimeDescription(self, attrs = None):
         self._currentMime.description = self._currentContent
 
-    def addMimeOrder(self, attrs=None):
+    def addMimeOrder(self, attrs = None):
         self._currentMime.order = self._currentContent
     
     ''' ---------------------------------------------------------------------'''
-    def addOrderUnit(self, attrs=None):
+    def addOrderUnit(self, attrs = None):
         self._currentArticle.orderDetails.orderUnit = self._currentContent
     
-    def addContentUnit(self, attrs=None):
+    def addContentUnit(self, attrs = None):
         self._currentArticle.orderDetails.contentUnit = self._currentContent
 
-    def addPriceQuantity(self, attrs=None):
+    def addPriceQuantity(self, attrs = None):
         self._currentArticle.orderDetails.priceQuantity = self._currentContent
         
-    def addPackagingQuantity(self, attrs=None):
+    def addPackagingQuantity(self, attrs = None):
         self._currentArticle.orderDetails.packagingQuantity = self._currentContent
 
-    def addQuantityInterval(self, attrs=None):
+    def addQuantityInterval(self, attrs = None):
         self._currentArticle.orderDetails.quantityInterval = self._currentContent
 
-    def addQuantityMin(self, attrs=None):
+    def addQuantityMin(self, attrs = None):
         self._currentArticle.orderDetails.quantityMin = self._currentContent
         
     ''' ---------------------------------------------------------------------'''
@@ -517,8 +556,13 @@ class BMEcatHandler(handler.ContentHandler):
     def addFeatureUnit(self, attrs = None):
         if self._currentFeature.unit is not None:
             raise Exception("Fehler im BMEcat: FeatureUnit soll gesetzt werden existiert aber schon.")
-        self._currentFeature.unit = self._currentContent
-
+        currentUnit = self._currentContent
+        if BMEcatHandler.bmecatUnitMapper.hasKey(currentUnit):
+            self._currentFeature.unit = BMEcatHandler.bmecatUnitMapper.getSIUnit(currentUnit)
+        elif BMEcatHandler.etimUnitMapper.hasKey(currentUnit):
+            self._currentFeature.unit = BMEcatHandler.etimUnitMapper.getSIUnit(currentUnit)
+        else:
+            self._currentFeature.unit = currentUnit
     def addFeatureName(self, attrs = None):
         if self._currentFeature.name is not None:
             raise Exception("Fehler im BMEcat: FeatureName soll gesetzt werden existiert aber schon.")
@@ -536,21 +580,21 @@ class BMEcatHandler(handler.ContentHandler):
 
     ''' -------------- '''
     def createFeatureVariantSet(self, attrs = None):
-        if self._currentArticle.values is not None and len(self._currentFeature.values) > 0:
+        if self._currentFeature.values is not None and len(self._currentFeature.values) > 0:
             raise Exception("Fehler im BMEcat: FeatureVariants sollen hinzugefügt werden, es existieren aber schon FeatureValues.")
-        if self._currentArticle.variants is not None:
+        if self._currentFeature.variants is not None:
             raise Exception("Fehler im BMEcat: FeatureVariants sollen hinzugefügt werden, es existieren aber schon FeatureVariants.")
-        self._currentArticle.variants = VariantSet()
+        self._currentFeature.variants = VariantSet()
 
     def addFeatureVariantSetOrder(self, attrs = None):
-        if self._currentArticle.variants is None:
+        if self._currentFeature.variants is None:
             raise Exception("Fehler im BMEcat: FeatureVariantSetOrder soll gesetzt werden, aber es existiert noch kein VariantSet.")
-        self._currentArticle.variants.order = int(self._currentContent)
+        self._currentFeature.variants.order = int(self._currentContent)
 
     def createFeatureVariant(self, attrs = None):
         if self._currentFeature.values is not None and len(self._currentFeature.values) > 0:
             raise Exception("Fehler im BMEcat: FeatureVariants sollen hinzugefügt werden, es existieren aber schon FeatureValues.")
-        if self._currentArticle.variants is None:
+        if self._currentFeature.variants is None:
             raise Exception("Fehler im BMEcat: FeatureVariant soll erstellt werden, aber es existiert noch kein VariantSet.")
         if self._currentVariant is None:
             raise Exception("Fehler im BMEcat: FeatureVariant soll erstellt werden, aber es existiert schon eine.")
@@ -568,7 +612,7 @@ class BMEcatHandler(handler.ContentHandler):
         self._currentFeature.variants.append(self._currentVariant)
         self._currentVariant = None
         self._currentElement = None
-            
+           
     ''' ---------------------------------------------------------------------'''
     def startDateTime(self, attrs = None):
         if attrs is None or not 'type' in attrs.getNames():
@@ -581,7 +625,7 @@ class BMEcatHandler(handler.ContentHandler):
         self._dateType = None
         self._currentElement = None
     
-    def addDate(self, attrs=None):
+    def addDate(self, attrs = None):
         if self._dateType is None:
             logging.warning("Datum kann nicht gespeichert werden.")
         elif self._currentElement is None:
@@ -596,9 +640,17 @@ class BMEcatHandler(handler.ContentHandler):
 
         
     ''' ---------------------------------------------------------------------'''
+    def addKeyword(self, attrs = None):
+        if self._currentArticle is not None:
+            self._currentArticle.addKeyword(self._currentContent)
+            
+    ''' ---------------------------------------------------------------------'''
     '''aktuellen Inhalt des XML-Elements ermitteln'''
-    def characters(self, content):        
-        self._currentContent += content.strip()        
+    def characters(self, content):
+        if self.lineFeedToHTML:
+            self._currentContent += content.replace("\n","<br>").strip()
+        else:
+            self._currentContent += content.strip()
 
     def validateCurrentProduct(self):
         if self._currentArticle is None:

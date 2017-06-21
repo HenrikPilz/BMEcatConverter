@@ -16,6 +16,9 @@ class Product():
         self.userDefinedExtensions = {}
         self.featureSets = []
         self.references = []
+        self.hasVariants = False
+        self.varaiants = []
+        self.numberOfVariants = 1
    
     def validate(self):
         if self.productId is None:
@@ -44,6 +47,9 @@ class Product():
         else:
             for featureSet in self.featureSets:
                 featureSet.validate()
+                for feature in featureSet.features:
+                    if feature.variants is not None and len(feature.variants) > 0:
+                        self.hasVariants = True
 
     def addPriceDetails(self, priceDetails):
         self.priceDetails.append(priceDetails)
@@ -77,3 +83,6 @@ class Product():
         
     def addSpecialTreatmentClass(self, treatmentclass):
         self.details.addSpecialTreatmentClass(treatmentclass)
+        
+    def addKeyword(self, keyword):
+        self.details.addKeyword(keyword)
