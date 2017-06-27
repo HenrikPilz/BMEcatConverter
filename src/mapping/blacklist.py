@@ -14,12 +14,14 @@ class Blacklist(object):
     '''
 
 
-    def __init__(self):
+    def __init__(self, filename):
         '''
         Constructor
         '''
-        self.filename = None 
+        self.filename = filename
         self._blacklist = []
+        if self.filename is not None:
+            self.readFile()
         
     def readFile(self):
         if self.filename:
@@ -59,5 +61,6 @@ class FeatureSetBlacklist(Blacklist):
         Constructor
         '''
         super().__init__()
+        self.filename = ".//documents//BMEcat//version//FeatureBlacklist.csv"
         self.filename = ".//documents//BMEcat//version//FeatureSetBlacklist.csv"
         super().readFile()

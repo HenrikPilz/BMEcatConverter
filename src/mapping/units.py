@@ -13,12 +13,14 @@ class UnitMapper(object):
     classdocs
     '''    
 
-    def __init__(self):
+    def __init__(self, filename):
         '''
         Constructor
         '''
-        self.filename = None 
+        self.filename = filename
         self._units = {}
+        if self.filename is not None:
+            self.readFile()
         
     def readFile(self):
         if self.filename:
@@ -38,30 +40,3 @@ class UnitMapper(object):
 
     def getSIUnit(self, bmecatUnit):
         return self._units[bmecatUnit]
-    
-    
-class BMEcatUnitMapper(UnitMapper):
-    '''
-    classdocs
-    '''
-
-    def __init__(self):
-        '''
-        Constructor
-        '''
-        super().__init__()
-        self.filename = ".//documents//BMEcat//version//BMEcatUnitMapping.csv"
-        super().readFile()
-
-class ETIMUnitMapper(UnitMapper):
-    '''
-    classdocs
-    '''
-
-    def __init__(self):
-        '''
-        Constructor
-        '''
-        super().__init__()
-        self.filename = ".//documents//BMEcat//version//ETIMUnitMapping.csv"
-        super().readFile()
