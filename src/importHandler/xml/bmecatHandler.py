@@ -21,13 +21,14 @@ from data.reference import Reference
 from data.variantSet import VariantSet
 from data.variant import Variant
 
-from mapping.units import BMEcatUnitMapper
-from mapping.units import ETIMUnitMapper
-from mapping.blacklist import FeatureBlacklist
-from mapping.blacklist import FeatureSetBlacklist
+from mapping.units import UnitMapper
+from mapping.blacklist import Blacklist
 
 
 class BMEcatHandler(handler.ContentHandler):
+    '''
+        Handler fuer Sax2Parser, welcher BMEcats in den Formaten 1.01,1.2,2005, 2005.1 sowie ETIM aller Arten liest.
+    '''
     
     ''' alle registrierten StartElementhandler '''
     _startElementHandler = {
@@ -102,9 +103,9 @@ class BMEcatHandler(handler.ContentHandler):
                 "mime_order" : "addMimeOrder",
                 "order_unit" : "addOrderUnit",
                 "content_unit" : "addContentUnit",
-                "no_cu_per_ou " : "addPackagingQuantity",
-                "price_quantity " : "addPriceQuantity",
-                "quantity_min " : "addQuantityMin",
+                "no_cu_per_ou" : "addPackagingQuantity",
+                "price_quantity" : "addPriceQuantity",
+                "quantity_min" : "addQuantityMin",
                 "quantity_interval" : "addQuantityInterval",
                 "date" : "addDate",
                 "fname" : "addFeatureName",
@@ -125,11 +126,13 @@ class BMEcatHandler(handler.ContentHandler):
                 "reference_feature_group_id" : "addFeatureSetReferenceGroupId"
                 }
     
-    bmecatUnitMapper = BMEcatUnitMapper()
-    etimUnitMapper = ETIMUnitMapper()
+            
+    bmecatUnitMapper = UnitMapper(".//documents//BMEcat//version//BMEcatUnitMapping.csv")
+    etimUnitMapper = UnitMapper(".//documents//BMEcat//version//ETIMUnitMapping.csv")
     
-    featureSetBlacklist = FeatureSetBlacklist()
-    featureBlacklist = FeatureBlacklist()
+    featureSetBlacklist = Blacklist(".//documents//BMEcat//version//FeatureSetBlacklist.csv")
+    featureBlacklist = Blacklist(".//documents//BMEcat//version//FeatureBlacklist.csv")
+    
     
     ''' Handlernamen für das XML-Element ermitteln. '''
     def determinteHandlername(self, tag, bOpen):
@@ -153,7 +156,9 @@ class BMEcatHandler(handler.ContentHandler):
 
     ''' Konstruktor '''
     def __init__(self, dateFormat, decimalSeparator, thousandSeparator):
-        self._dateFormat=dateFormat 
+        self._dateFormat=dateFormat
+        '''self._separatorConverter = SeparatorConverter()'''
+
         self._decimalSeparator = decimalSeparator
         self._thousandSeparator = thousandSeparator
         
@@ -425,6 +430,8 @@ class BMEcatHandler(handler.ContentHandler):
         if self._currentArticle is None:
             raise Exception("Artikelnummer soll gespeichert werden. Aber es ist kein Artikel vorhanden")
         logging.debug("Artikelnummer " + self._currentContent)
+        if "58790003" == self._currentContent:
+            logging.warning("We are here")
         self._currentArticle.productId = self._currentContent
 
     ''' HerstellerArtikelnummer speichern'''
@@ -556,13 +563,18 @@ class BMEcatHandler(handler.ContentHandler):
     def addFeatureUnit(self, attrs = None):
         if self._currentFeature.unit is not None:
             raise Exception("Fehler im BMEcat: FeatureUnit soll gesetzt werden existiert aber schon.")
-        currentUnit = self._currentContent
-        if BMEcatHandler.bmecatUnitMapper.hasKey(currentUnit):
-            self._currentFeature.unit = BMEcatHandler.bmecatUnitMapper.getSIUnit(currentUnit)
-        elif BMEcatHandler.etimUnitMapper.hasKey(currentUnit):
-            self._currentFeature.unit = BMEcatHandler.etimUnitMapper.getSIUnit(currentUnit)
+        self._currentFeature.unit = self.getUnit(self._currentContent)
+            
+    def getUnit(self, value):
+        currentUnit = None
+        if BMEcatHandler.bmecatUnitMapper.hasKey(value):
+           currentUnit = BMEcatHandler.bmecatUnitMapper.getSIUnit(value)
+        elif BMEcatHandler.etimUnitMapper.hasKey(value):
+            currentUnit = BMEcatHandler.etimUnitMapper.getSIUnit(value)
         else:
-            self._currentFeature.unit = currentUnit
+            currentUnit = value
+        return currentUnit 
+        
     def addFeatureName(self, attrs = None):
         if self._currentFeature.name is not None:
             raise Exception("Fehler im BMEcat: FeatureName soll gesetzt werden existiert aber schon.")
