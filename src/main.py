@@ -29,7 +29,6 @@ separators = { "german" : { "decimalSeparator" : ",", "thousandSeparator" : "." 
 '''
 def setUpLogging():
     logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
     
     debugLogFilename = "convert_debug.log"
     if os.path.exists(debugLogFilename):
@@ -62,6 +61,7 @@ def setUpLogging():
     stdOutHandler.setLevel(loggingLevel)
 
     logger.addHandler(stdOutHandler) 
+    logger.setLevel(loggingLevel)
  
 '''
 convert XML BMEcat to Excel-File
@@ -187,4 +187,4 @@ if __name__ == '__main__':
     t1 = time.clock()
     main(sys.argv[1:])
     t2 = time.clock()
-    print('Dauer: ', t2-t1)
+    print('Dauer: ', (t2-t1)/60)
