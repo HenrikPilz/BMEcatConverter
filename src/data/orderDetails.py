@@ -28,9 +28,9 @@ class OrderDetails():
             logging.warning("Falsche Bestelleinheit angeben: " + self.orderUnit)
         if self.contentUnit not in OrderDetails.allowedContentUnits:
             logging.warning("Falsche Verpackungseinheit angeben: " + self.contentUnit)
-        if self.quantityMin != self.quantityInterval:
+        if float(self.quantityMin) != float(self.quantityInterval):
             logging.info("Mindestbestellmenge und Bestellintervall sollten gleich sein.")
-        if self.packagingQuantity > 1 and self.quantityMin > 1:
+        if float(self.packagingQuantity) > 1 and float(self.quantityMin) > 1:
             logging.warning("Mindestbestellmenge und PackagingQuantity dürfen nicht beide ungleich eins sein.")
-        if self.packagingQuantity != self.priceQuantity:
+        if float(self.packagingQuantity) != float(self.priceQuantity):
             logging.info("PackagingQuantity und PriceQuantity untscheiden sich!")
