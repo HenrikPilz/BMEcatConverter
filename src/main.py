@@ -2,6 +2,7 @@ from xml.sax import make_parser, handler
 from importHandler.xml.bmecatHandler import BMEcatHandler as BMEcatImportHandler
 '''from exportHandler.xml.bmecatHandler import BMEcatExportHandler'''
 from exportHandler.excel.pyxelHandler import PyxelHandler
+from resolver.dtdResolver import DTDResolver
 import logging
 import sys
 import os
@@ -75,12 +76,14 @@ def xmlToExcel(bmecatFilename, excelFilename, dateFormat, separatorMode="detect"
     
     importer = BMEcatImportHandler(dateFormat, decimalSeparator, thousandSeparator)
     parser.setContentHandler(importer)
+    parser.setEntityResolver(DTDResolver())
     if bmecatFilename.startswith(".") or bmecatFilename.startswith(".."):
         bmecatFilename = os.getcwd() + "//" + bmecatFilename
     if excelFilename.startswith(".") or excelFilename.startswith(".."):
         excelFilename = os.getcwd() + "//" + excelFilename
     parser.parse("file:" + bmecatFilename)
     logging.info("Daten eingelesen")
+
     exporter = PyxelHandler(importer._articles, excelFilename, manufacturerName)
     logging.info("Erstelle Excel-Datei")
     exporter.createNewWorkbook()
