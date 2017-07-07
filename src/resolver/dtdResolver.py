@@ -36,4 +36,4 @@ class DTDResolver(EntityResolver):
         if systemId in self.bmecatVersions.keys():
             return  self.bmecatVersions[systemId]
         else:
-            return self.bmecatDataPath + systemId
+            return systemId
