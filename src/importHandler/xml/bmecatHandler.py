@@ -644,8 +644,10 @@ class BMEcatHandler(handler.ContentHandler):
             logging.warning("Datum [" + self._dateType + "] kann nicht gespeichert werden, weil kein Element zum Speichern existiert.")
         else:
             if self._dateType == 'valid_start_date':
+                logging.debug("Datum [" + self._currentContent + "] wird als Startdatum gespeichert.")
                 self._currentElement.validFrom = datetime.strptime(self._currentContent, self._dateFormat)
             elif self._dateType == 'valid_end_date':
+                logging.debug("Datum [" + self._currentContent + "] wird als Enddatum gespeichert.")
                 self._currentElement.validTo = datetime.strptime(self._currentContent, self._dateFormat)
             else:
                 logging.warning("Datum [" + self._dateType + "] kann nicht gespeichert werden.")
@@ -659,10 +661,14 @@ class BMEcatHandler(handler.ContentHandler):
     ''' ---------------------------------------------------------------------'''
     '''aktuellen Inhalt des XML-Elements ermitteln'''
     def characters(self, content):
+        logging.debug("Original input: '{0}'".format(content))
         if self.lineFeedToHTML:
             self._currentContent += content.replace("\n","<br>").strip()
         else:
+            if len(self._currentContent) > 0 and len(content) > len(content.strip()):
+                self._currentContent = self._currentContent.strip() + ' '
             self._currentContent += content.strip()
+        logging.debug("Saved input: '{0}'".format(self._currentContent))
 
     def validateCurrentProduct(self):
         if self._currentArticle is None:
