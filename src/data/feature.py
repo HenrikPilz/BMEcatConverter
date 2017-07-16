@@ -3,7 +3,8 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
-from src.data import ValidatingObject
+from data import ValidatingObject
+from data.variantSet import VariantSet
 
 class Feature(ValidatingObject):
     def __init__(self):
@@ -31,9 +32,21 @@ class Feature(ValidatingObject):
                 self.variants.validate()
     
     def addValue(self, value):
-        if value is not None and len(value.strip()) > 0:
-            self.values.append(value)
+        if value is not None:
+            if type(value) is str and len(value.strip()) > 0:
+                self.values.append(value)
+            elif type(value) is not str: 
+                self.values.append(value)
+            else:
+                pass
+
+    def addVariantOrder(self, order):
+        if self.variants is None:
+            self.variants = VariantSet()
+        self.variants.order = order
 
     def addVariant(self, variant):
+        if self.variants is None:
+            self.variants = VariantSet()
         self.variants.addVariant(variant)
         

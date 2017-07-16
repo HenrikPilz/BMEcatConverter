@@ -5,6 +5,7 @@ Created on 05.05.2017
 '''
 import logging
 
+
 class Product():
 
     def __init__(self):        
@@ -17,7 +18,7 @@ class Product():
         self.featureSets = []
         self.references = []
         self.hasVariants = False
-        self.varaiants = []
+        self.variants = []
         self.numberOfVariants = 1
    
     def validate(self):
@@ -79,7 +80,8 @@ class Product():
         self.references.append(reference)
 
     def addUserDefinedExtension(self, udf):
-        self.userDefinedExtensions.append(udf)
+        '''self.userDefinedExtensions.append(udf)'''
+        pass
         
     def addSpecialTreatmentClass(self, treatmentclass):
         self.details.addSpecialTreatmentClass(treatmentclass)
@@ -87,17 +89,19 @@ class Product():
     def addKeyword(self, keyword):
         self.details.addKeyword(keyword)
         
-    def addFeatureSet(self,featureSet):
+    def addFeatureSet(self, featureSet):
         if len(featureSet) > 0:
             self.featureSets.append(featureSet)
         
             for feature in featureSet.features:
                 if feature.variants is not None:
                     logging.info("Variante gefunden.")
-                    self.__addVariant__(feature)
+                    self.__addVariant(feature)
         else:
             logging.info("Attributset ist leer und wird nicht gespeichert.")
     
-    def __addVariant__(self, feature):
+    def __addVariant(self, feature):
         self.variants.append((feature.variants.order, feature.name, feature.variants))
+        self.numberOfVariants *= len(feature.variants)
+        self.hasVariants = len(feature.variants) > 0
     

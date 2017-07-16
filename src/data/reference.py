@@ -5,6 +5,7 @@ Created on 05.05.2017
 '''
 import logging
 
+
 class Reference(object):
     '''
     classdocs
@@ -23,11 +24,11 @@ class Reference(object):
 
     def validate(self):
         if self.referenceType is None:
-            raise Exception("Der Referent wurde kein Typ zugewiesen.")
+            raise Exception("Der Referenz wurde kein Typ zugewiesen.")
         if self.supplierArticleIds is None or len(self.supplierArticleIds) == 0:
             logging.error("Es wird keine Artikelnummer referenziert.")
         if int(self.quantity) != len(self.supplierArticleIds):
-            logging.warning("Anzahl referenzierter Artikel stimmt nicht mit der Anzahl der vorhandenen Artikelnummern überein..")
+            logging.warning("Anzahl referenzierter Artikel stimmt nicht mit der Anzahl der vorhandenen Artikelnummern ueberein..")
         if self.mimeInfo is None or len(self.mimeInfo) == 0:
             logging.info("Es wurden keine Bilder gefunden.")
         else:

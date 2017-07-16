@@ -5,6 +5,7 @@ Created on 17.05.2017
 '''
 import logging
 
+
 class VariantSet():
     def __init__(self):
         self.order = None
@@ -14,7 +15,7 @@ class VariantSet():
         if self.order is None:
             logging.error("Die Reihenfolge der Suffixe ist nicht definitiert.")
         if self.variants is None or len(self.variants)==0:
-            logging.warning("Keine Varianten für diesen Artikel vorhanden!")
+            logging.warning("Keine Varianten fuer diesen Artikel vorhanden!")
         else:
             for variant in self.variants:
                 variant.validate()
