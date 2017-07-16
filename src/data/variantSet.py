@@ -21,3 +21,6 @@ class VariantSet():
 
     def addVariant(self, variant):
         self.variants.append(variant)
+
+    def __len__(self):
+        return len(self.variants)

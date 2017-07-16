@@ -86,3 +86,18 @@ class Product():
         
     def addKeyword(self, keyword):
         self.details.addKeyword(keyword)
+        
+    def addFeatureSet(self,featureSet):
+        if len(featureSet) > 0:
+            self.featureSets.append(featureSet)
+        
+            for feature in featureSet.features:
+                if feature.variants is not None:
+                    logging.info("Variante gefunden.")
+                    self.__addVariant__(feature)
+        else:
+            logging.info("Attributset ist leer und wird nicht gespeichert.")
+    
+    def __addVariant__(self, feature):
+        self.variants.append((feature.variants.order, feature.name, feature.variants))
+    
