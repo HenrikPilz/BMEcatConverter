@@ -31,7 +31,7 @@ class BMEcatHandler(handler.ContentHandler):
     '''
     
     ''' alle registrierten StartElementhandler '''
-    _startElementHandler = {
+    __startElementHandler = {
                 "article" : "createProduct",
                 "article_details" : "createProductDetails", 
                 "order_details" : "createOrderDetails",
@@ -50,7 +50,7 @@ class BMEcatHandler(handler.ContentHandler):
                 }
 
     ''' Mögliche Aliase für Varianten der BMEcats '''
-    _alias = {
+    __alias = {
                 "product" : "article",
                 "product_details" : "article_details",
                 "supplier_pid" : "supplier_aid",
@@ -71,7 +71,7 @@ class BMEcatHandler(handler.ContentHandler):
             }
             
     ''' alle registrierten EndElementhandler '''
-    _endElementHandler = {
+    __endElementHandler = {
                 "article_features" :"saveFeatureSet",
                 "feature" : "saveFeature",
                 "article" : "saveProduct",
@@ -127,29 +127,29 @@ class BMEcatHandler(handler.ContentHandler):
                 }
     
             
-    bmecatUnitMapper = UnitMapper(".//documents//BMEcat//version//BMEcatUnitMapping.csv")
-    etimUnitMapper = UnitMapper(".//documents//BMEcat//version//ETIMUnitMapping.csv")
+    __bmecatUnitMapper = UnitMapper(".//documents//BMEcat//version//BMEcatUnitMapping.csv")
+    __etimUnitMapper = UnitMapper(".//documents//BMEcat//version//ETIMUnitMapping.csv")
     
-    featureSetBlacklist = Blacklist(".//documents//BMEcat//version//FeatureSetBlacklist.csv")
-    featureBlacklist = Blacklist(".//documents//BMEcat//version//FeatureBlacklist.csv")
+    __featureSetBlacklist = Blacklist(".//documents//BMEcat//version//FeatureSetBlacklist.csv")
+    __featureBlacklist = Blacklist(".//documents//BMEcat//version//FeatureBlacklist.csv")
     
     
     ''' Handlernamen für das XML-Element ermitteln. '''
-    def determinteHandlername(self, tag, bOpen):
+    def __determinteHandlername(self, tag, bOpen):
         name = tag.lower()
-        if tag.lower() in self._alias:
+        if tag.lower() in self.__alias:
             logging.debug("[" + str(bOpen) +"] '" + tag + "' has an alias")
-            name = self._alias[tag.lower()]
+            name = self.__alias[tag.lower()]
 
         handlerName = None
         if bOpen:
             try:
-                handlerName = self._startElementHandler[name]
+                handlerName = self.__startElementHandler[name]
             except KeyError:
                 logging.debug("Call for Start Tag <" + name + "> FAILED:")            
         else :
             try:
-                handlerName = self._endElementHandler[name]
+                handlerName = self.__endElementHandler[name]
             except KeyError:
                 logging.debug("Call for End Tag <" + name + "> FAILED:")            
         return handlerName
@@ -159,518 +159,515 @@ class BMEcatHandler(handler.ContentHandler):
         self._dateFormat=dateFormat
         '''self._separatorConverter = SeparatorConverter()'''
 
-        self._decimalSeparator = decimalSeparator
-        self._thousandSeparator = thousandSeparator
+        self.__decimalSeparator = decimalSeparator
+        self.__thousandSeparator = thousandSeparator
         
-        if self._decimalSeparator is None or self._thousandSeparator  is None:
+        if self.__decimalSeparator is None or self.__thousandSeparator  is None:
             raise Exception("Dezimaltrennzeichen und Tausendertrennzeichen müssen angegeben werden.")
-        if self._decimalSeparator==self._thousandSeparator:
+        if self.__decimalSeparator==self.__thousandSeparator:
             raise Exception("Dezimaltrennzeichen und Tausendertrennzeichen dürfen nicht gleich sein.")
         
         '''articles by SKU and Product Structure as Value'''
-        self._articles = { "new" : [], "update" : [], "delete" : [], "failed" : [] }
-        self._currentArticle = None
-        self._currentPrice = None
-        self._currentMime = None
-        self._currentPriceDetails = None
-        self._currentElement = None
-        self._currentContent = ""
-        self._dateType = None
-        self._currentFeatureSet = None
-        self._currentFeature = None
-        self._currentTreatmentClass = None
-        self._currentReference = None
-        self._currentVariant = None
-        self.lineFeedToHTML = False
-        self._currentArticleMode = "failed"
+        self.articles = { "new" : [], "update" : [], "delete" : [], "failed" : [] }
+        self.__currentArticle = None
+        self.__currentPrice = None
+        self.__currentMime = None
+        self.__currentPriceDetails = None
+        self.__currentElement = None
+        self.__currentContent = ""
+        self.__dateType = None
+        self.__currentFeatureSet = None
+        self.__currentFeature = None
+        self.__currentTreatmentClass = None
+        self.__currentReference = None
+        self.__currentVariant = None
+        self.__lineFeedToHTML = False
+        self.__currentArticleMode = "failed"
   
     ''' Starte aktuelles XML Element '''
     def startElement(self, name, attrs):
-        self.workOnElement(name, attrs, True)
+        self.__workOnElement(name, attrs, True)
 
     ''' Schließe aktuelles XML Element '''
     def endElement(self, name):
-        self.workOnElement(name, None, False)
+        self.__workOnElement(name, None, False)
     
     ''' Handler ermitteln, der die Arbeit macht. '''
-    def workOnElement(self, name, attrs, bOpen):
+    def __workOnElement(self, name, attrs, bOpen):
         logging.debug("Call for Tag <" + name + ">")
         elementHandler = None
         try:
-            handlerName = self.determinteHandlername(name, bOpen)
+            handlerName = self.__determinteHandlername(name, bOpen)
             if not handlerName is None:
                 elementHandler = getattr(self, handlerName)
                 elementHandler(attrs)
-            self._currentContent = ""
+            self.__currentContent = ""
         except AttributeError:
             raise NotImplementedError("Class [" + self.__class__.__name__ + "] does not implement [" + handlerName + "]")
 
     ''' ---------------------------------------------------------------------'''
     def resetAll(self, attrs = None):
-        self._currentArticle = None
-        self._currentPrice = None
-        self._currentMime = None
-        self._currentPriceDetails = None
-        self._currentElement = None
-        self._currentContent = ""
-        self._dateType = None
-        self._currentFeatureSet = None
-        self._currentFeature = None
-        self._currentTreatmentClass = None
+        self.__currentArticle = None
+        self.__currentPrice = None
+        self.__currentMime = None
+        self.__currentPriceDetails = None
+        self.__currentElement = None
+        self.__currentContent = ""
+        self.__dateType = None
+        self.__currentFeatureSet = None
+        self.__currentFeature = None
+        self.__currentTreatmentClass = None
 
     ''' ---------------------------------------------------------------------'''
     def startMimeInfo(self, attrs = None):
-        self._currentElement = self._currentArticle
+        self.__currentElement = self.__currentArticle
         
     def endMimeInfo(self, attrs = None):
-        self._currentMime = None
-        self._currentElement = None
+        self.__currentMime = None
+        self.__currentElement = None
     
     ''' ---------------------------------------------------------------------'''
     ''' Anfang Artikel '''
     def createProduct(self, attrs):
         logging.debug("Anfang Produkt " + ", ".join(attrs.getNames()))
-        if not self._currentArticle is None:
+        if not self.__currentArticle is None:
             raise Exception("Fehler im BMEcat: Neuer Artikel soll erstellt werden. Es wird schon ein Artikel verarbeitet.")
         else:
-            self._currentArticle = Product()
-            self._currentContent = ""
-            self._currentElement = self._currentArticle
-            self._currentArticleMode = 'new'
+            self.__currentArticle = Product()
+            self.__currentContent = ""
+            self.__currentElement = self.__currentArticle
+            self.__currentArticleMode = 'new'
             if 'mode' in attrs.getNames():
-                self._currentArticleMode = attrs.getValue('mode')
+                self.__currentArticleMode = attrs.getValue('mode')
             else:
                 logging.warning("Fehler im BMEcat: es wurde kein mode für den Artikel angegeben.")
 
     ''' Artikel speichern '''
     def saveProduct(self, attr=None):
-        if self._currentArticle.productId is None:            
-            '''self._articles["failed"].append(self._currentArticle)'''
+        if self.__currentArticle.productId is None:            
+            '''self.articles["failed"].append(self.__currentArticle)'''
             logging.error("Produkt konnte nicht gespeichert werden. Fehlerhafte Daten: Keine Artikelnummer.")
         else:
-            logging.info("Produkt validieren: " + self._currentArticle.productId)
+            logging.info("Produkt validieren: " + self.__currentArticle.productId)
             self.validateCurrentProduct()
-            logging.debug("Neues Produkt erstellt. Modus: " + self._currentArticleMode)
-            self._articles[self._currentArticleMode].append(self._currentArticle)
+            logging.debug("Neues Produkt erstellt. Modus: " + self.__currentArticleMode)
+            self.articles[self.__currentArticleMode].append(self.__currentArticle)
         logging.debug("Produktende")
         self.resetAll()
 
     ''' ---------------------------------------------------------------------'''
     def createProductDetails(self, attrs):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("Artikeldetails sollen erstellt werden. Aber es ist kein Artikel vorhanden")
-        if not self._currentArticle.details is None:
+        if not self.__currentArticle.details is None:
             raise Exception("Fehler im BMEcat: Neue Artikeldetails sollen erstellt werden. Es werden schon Artikeldetails verarbeitet.")
         else:
-            self._currentArticle.details = ProductDetails()
+            self.__currentArticle.details = ProductDetails()
 
     ''' ---------------------------------------------------------------------'''
     def createOrderDetails(self, attrs):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("Bestelldetails sollen erstellt werden. Aber es ist kein Artikel vorhanden")
-        if not self._currentArticle.orderDetails is None:
+        if not self.__currentArticle.orderDetails is None:
             raise Exception("Fehler im BMEcat: Neue Bestelldetails sollen erstellt werden. Es werden schon Bestelldetails verarbeitet.")
         else: 
-            self._currentArticle.orderDetails = OrderDetails()
+            self.__currentArticle.orderDetails = OrderDetails()
 
     ''' ---------------------------------------------------------------------'''
     def createPriceDetails(self, attrs):
-        if not self._currentPriceDetails is None:
+        if not self.__currentPriceDetails is None:
             raise Exception("Fehler im BMEcat: Neue Preisdetails sollen erstellt werden. Es werden schon Preisdetails verarbeitet.") 
         else: 
-            self._currentPriceDetails = PriceDetails()
-            self._currentElement = self._currentPriceDetails
+            self.__currentPriceDetails = PriceDetails()
+            self.__currentElement = self.__currentPriceDetails
 
     def savePriceDetails(self, attrs):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("Preisdetails sollen gespeichert werden. Aber es ist kein Artikel vorhanden")
-        self._currentArticle.addPriceDetails(self._currentPriceDetails)
-        self._currentPriceDetails = None
-        self._currentElement = None
+        self.__currentArticle.addPriceDetails(self.__currentPriceDetails)
+        self.__currentPriceDetails = None
+        self.__currentElement = None
 
     ''' ---------------------------------------------------------------------'''
     ''' Anfang Bild '''
     def createMime(self, attrs):
-        if not self._currentMime is None:
+        if not self.__currentMime is None:
             raise Exception("Fehler im BMEcat: Neues Bild soll erstellt werden. Es wird schon ein Bild verarbeitet.")
         else: 
-            self._currentMime = Mime()
+            self.__currentMime = Mime()
 
     ''' Bild speichern '''
     def saveMime(self, attrs):
-        if self._currentElement is None:
+        if self.__currentElement is None:
             logging.warning("Bild konnte nicht gespeichert werden.")
         else:
-            self._currentElement.addMime(self._currentMime)
-        self._currentMime = None
+            self.__currentElement.addMime(self.__currentMime)
+        self.__currentMime = None
 
     ''' ---------------------------------------------------------------------'''
     ''' Anfang Preis '''
     def createPrice(self, attrs):
-        if not self._currentPrice is None:
+        if not self.__currentPrice is None:
             raise Exception("Fehler im BMEcat: Neuer Preis soll erstellt werden. Es wird schon ein Preis verarbeitet.")
         else: 
-            self._currentPrice = Price()
-            self._currentPrice.priceType = attrs.getValue('price_type')
-            self._currentElement = self._currentPrice
+            self.__currentPrice = Price()
+            self.__currentPrice.priceType = attrs.getValue('price_type')
+            self.__currentElement = self.__currentPrice
 
     ''' Preis speichern '''
     def savePrice(self, attrs):
-        if self._currentPriceDetails is None:
+        if self.__currentPriceDetails is None:
             raise Exception("Preis soll gespeichert werden. Aber es sind keine Preisdetails  vorhanden")
-        self._currentPriceDetails.prices.append(self._currentPrice)
-        self._currentPrice = None
-        self._currentElement = self._currentPriceDetails     
+        self.__currentPriceDetails.prices.append(self.__currentPrice)
+        self.__currentPrice = None
+        self.__currentElement = self.__currentPriceDetails     
 
 
     ''' ---------------------------------------------------------------------'''
     ''' Anfang TreatmentClass '''
     def createTreatmentClass(self, attrs):
-        if not self._currentTreatmentClass is None:
+        if not self.__currentTreatmentClass is None:
             raise Exception("Fehler im BMEcat: Neue SpecialTreatmentClass soll erstellt werden. Es wird schon ein SpecialTreatmentClass verarbeitet.")
         else: 
-            self._currentTreatmentClass = TreatmentClass()
-            self._currentTreatmentClass.classType = attrs.getValue('type')
-            self._currentElement = self._currentTreatmentClass
+            self.__currentTreatmentClass = TreatmentClass()
+            self.__currentTreatmentClass.classType = attrs.getValue('type')
+            self.__currentElement = self.__currentTreatmentClass
 
     ''' TreatmentClass speichern '''
     def saveTreatmentClass(self, attrs):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("SpecialTreatmentClass soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        self._currentTreatmentClass.value = self._currentContent
-        self._currentArticle.addSpecialTreatmentClass(self._currentTreatmentClass)
-        self._currentTreatmentClass = None
-        self._currentElement = None
+        self.__currentTreatmentClass.value = self.__currentContent
+        self.__currentArticle.addSpecialTreatmentClass(self.__currentTreatmentClass)
+        self.__currentTreatmentClass = None
+        self.__currentElement = None
 
     ''' ---------------------------------------------------------------------'''
     def createFeatureSet(self, attrs = None):
-        if not self._currentFeature is None:
+        if not self.__currentFeature is None:
             raise Exception("Fehler im BMEcat: Neues Attributset soll erstellt werden. Es wird schon ein Attributset verarbeitet.")
         else: 
-            self._currentFeatureSet = FeatureSet()
-            self._currentContent = ""
+            self.__currentFeatureSet = FeatureSet()
+            self.__currentContent = ""
 
     def saveFeatureSet(self, attrs = None):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("Attributset soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        if len(self._currentFeatureSet.features) < 1:
+        if len(self.__currentFeatureSet.features) < 1:
             logging.info("Attributset wird nicht gespeichert, da kein Attribute enthalten sind.")
-        elif BMEcatHandler.featureSetBlacklist.contains(self._currentFeatureSet.referenceSytem):
+        elif BMEcatHandler.__featureSetBlacklist.contains(self.__currentFeatureSet.referenceSytem):
             logging.info("Attributset wird nicht gespeichert, da es auf der Blacklist ist.")
         else:
-            self._currentArticle.featureSets.append(self._currentFeatureSet)
-        self._currentFeatureSet = None
+            self.__currentArticle.addFeatureSet(self.__currentFeatureSet)
+        self.__currentFeatureSet = None
     
     def addFeatureSetReferenceSystem(self, attrs = None):
-        if self._currentFeatureSet is None:
+        if self.__currentFeatureSet is None:
             raise Exception("Referenzsystem soll gesetzt werden. Aber es ist kein Attributset vorhanden")                
-        self._currentFeatureSet.referenceSytem = self._currentContent
+        self.__currentFeatureSet.referenceSytem = self.__currentContent
 
     def addFeatureSetReferenceGroupId(self, attrs = None):
-        if self._currentFeatureSet is None:
+        if self.__currentFeatureSet is None:
             raise Exception("Gruppen ID soll gesetzt werden. Aber es ist kein Attributset vorhanden")                
-        self._currentFeatureSet.referenceGroupId = self._currentContent
+        self.__currentFeatureSet.referenceGroupId = self.__currentContent
 
     ''' ---------------------------------------------------------------------'''
     def createFeature(self, attrs = None):
-        if not self._currentFeature is None:
+        if not self.__currentFeature is None:
             raise Exception("Fehler im BMEcat: Neues Attribut soll erstellt werden. Es wird schon ein Attribut verarbeitet.")
         else: 
-            self._currentFeature = Feature()
-            self._currentElement = self._currentFeature
-            self._currentContent = ""
+            self.__currentFeature = Feature()
+            self.__currentElement = self.__currentFeature
+            self.__currentContent = ""
 
     def saveFeature(self, attrs = None):
-        if self._currentFeatureSet is None:
+        if self.__currentFeatureSet is None:
             raise Exception("Attribut soll gespeichert werden. Aber es ist kein Attributset vorhanden")
-        elif BMEcatHandler.featureBlacklist.contains(self._currentFeature.name):
+        elif BMEcatHandler.__featureBlacklist.contains(self.__currentFeature.name):
             logging.info("Attribut wird nicht gespeichert, da es auf der Blacklist ist.")
         else:
-            self._currentFeatureSet.features.append(self._currentFeature)
+            self.__currentFeatureSet.addFeature(self.__currentFeature)
 
-            if self._currentFeature.variants is not None:
-                self._currentArticle.variants.append((self._currentFeature.variants.order, self._currentFeature.name, self._currentFeature.variants))
-
-        self._currentFeature = None
-        self._currentElement = None
+        self.__currentFeature = None
+        self.__currentElement = None
 
     ''' ---------------------------------------------------------------------'''
     ''' Referenz erstellen'''
     def createReference(self, attrs = None):
-        if not self._currentReference is None:
+        if not self.__currentReference is None:
             raise Exception("Fehler im BMEcat: Neue Referenz soll erstellt werden. Es wird schon eine Referenz verarbeitet.")
         if not 'type' in attrs.getNames():
             logging.warning("Referenz auf Artikel konnte nicht verarbeitet werdern, da kein Typ angegeben wurde.")
         else:
-            self._currentReference = Reference()
-            self._currentElement = self._currentReference
-            self._currentReference.referenceType = attrs.getValue('type')
+            self.__currentReference = Reference()
+            self.__currentElement = self.__currentReference
+            self.__currentReference.referenceType = attrs.getValue('type')
             if 'quantity' in attrs.getNames():
-                self._currentReference.quantity = attrs.getValue('quantity')
+                self.__currentReference.quantity = attrs.getValue('quantity')
                 
     ''' Referenz speichern'''
     def saveReference(self, attrs = None):
-        self._currentArticle.references.append(self._currentReference)
-        self._currentReference = None
-        self._currentElement = None
+        self.__currentArticle.references.append(self.__currentReference)
+        self.__currentReference = None
+        self.__currentElement = None
 
     ''' ---------------------------------------------------------------------'''
     ''' Referenz ID speichern'''
     def addReferenceArticleId(self, attrs = None):
-        self._currentReference.supplierArticleIds.append(self._currentContent)
+        self.__currentReference.supplierArticleIds.append(self.__currentContent)
         
     ''' Referenz Beschreibung speichern'''
     def addReferenceDescription(self, attrs = None):
-        self._currentReference.description = self._currentContent
+        self.__currentReference.description = self.__currentContent
         
         
     ''' ---------------------------------------------------------------------'''
     ''' Artikelnummer speichern'''
     def addArticleId(self, attrs = None):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("Artikelnummer soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        logging.debug("Artikelnummer " + self._currentContent)
-        if "58790003" == self._currentContent:
+        logging.debug("Artikelnummer " + self.__currentContent)
+        if "58790003" == self.__currentContent:
             logging.warning("We are here")
-        self._currentArticle.productId = self._currentContent
+        self.__currentArticle.productId = self.__currentContent
 
     ''' HerstellerArtikelnummer speichern'''
     def addManufacturerArticleId(self, attrs = None):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("Herstellerartikelnummer soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        self._currentArticle.addManufacturerId(self._currentContent)
+        self.__currentArticle.addManufacturerId(self.__currentContent)
 
     def addManufacturerName(self, attrs = None):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("Herstellername soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        self._currentArticle.addManufacturerName(self._currentContent)
+        self.__currentArticle.addManufacturerName(self.__currentContent)
 
     def addEAN(self, attrs = None):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("EAN soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        self._currentArticle.addEAN(self._currentContent)
+        self.__currentArticle.addEAN(self.__currentContent)
 
     def addTitle(self, attrs = None):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("Artikelname soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        self._currentArticle.addTitle(self._currentContent)
+        self.__currentArticle.addTitle(self.__currentContent)
 
     def startDescription(self, attrs = None):
-        self.lineFeedToHTML = True
+        self.__lineFeedToHTML = True
         
     def saveDescription(self, attrs = None):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("Artikelbeschreibung soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        self._currentArticle.addDescription(self._currentContent)
-        self.lineFeedToHTML = False
+        self.__currentArticle.addDescription(self.__currentContent)
+        self.__lineFeedToHTML = False
 
     def addAlternativeArticleId(self, attrs = None):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("Alternative Herstellerartikelnummer soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        if self._currentArticle.productId is None:
+        if self.__currentArticle.productId is None:
             logging.info("Alternative Artikelnummer als Artikelnummer gesetzt!")
-            self._currentArticle.productId = self._currentContent
-        if self._currentArticle.details is None:
+            self.__currentArticle.productId = self.__currentContent
+        if self.__currentArticle.details is None:
             raise Exception("Alternative Herstellerartikelnummer soll gespeichert werden. Aber es sind keine Artikeldetails vorhanden")
         else:
-            logging.debug("Alternative Artikelnummer: " + self._currentContent)
-            self._currentArticle.details.supplierAltId = self._currentContent
+            logging.debug("Alternative Artikelnummer: " + self.__currentContent)
+            self.__currentArticle.details.supplierAltId = self.__currentContent
         
     def addDeliveryTime(self, attrs = None):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("Lieferzeit soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        self._currentArticle.addDeliveryTime(self._currentContent)
+        self.__currentArticle.addDeliveryTime(self.__currentContent)
 
     ''' ---------------------------------------------------------------------'''
     def convertToEnglishDecimalValue(self, stringValue):
         convertedString = stringValue
-        if not self._decimalSeparator == ".": 
-            convertedString = convertedString.replace(",",";").replace(self._thousandSeparator,"").replace(";",".")
+        if not self.__decimalSeparator == ".": 
+            convertedString = convertedString.replace(",",";").replace(self.__thousandSeparator,"").replace(";",".")
         return float(convertedString)
 
 
     ''' ---------------------------------------------------------------------'''
     def addPriceAmount(self, attrs = None):
-        self._currentPrice.amount = round(self.convertToEnglishDecimalValue(self._currentContent), 2)
+        self.__currentPrice.amount = round(self.convertToEnglishDecimalValue(self.__currentContent), 2)
 
     def addPriceCurrency(self, attrs = None):
-        self._currentPrice.currency = self._currentContent
+        self.__currentPrice.currency = self.__currentContent
 
     def addPriceTax(self, attrs = None):
-        stringValue = self._currentContent.replace("%", "").strip()
+        stringValue = self.__currentContent.replace("%", "").strip()
         convertedValue = self.convertToEnglishDecimalValue(stringValue)
         if convertedValue > 1:
             convertedValue = convertedValue / 100
-        self._currentPrice.tax = round(convertedValue, 2)
+        self.__currentPrice.tax = round(convertedValue, 2)
 
     def addPriceFactor(self, attrs = None):
-        self._currentPrice.factor = self.convertToEnglishDecimalValue(self._currentContent)
+        self.__currentPrice.factor = self.convertToEnglishDecimalValue(self.__currentContent)
     
     def addPriceLowerBound(self, attrs = None):
-        self._currentPrice.lowerBound = self._currentContent
+        self.__currentPrice.lowerBound = self.__currentContent
         
     ''' ---------------------------------------------------------------------'''
     def addTerritory(self, attrs = None):
-        if self._currentElement is None:
+        if self.__currentElement is None:
             logging.warning("Territory kann nicht gespeichert werden.")
         else:
-            self._currentElement.territory = self._currentContent
+            self.__currentElement.territory = self.__currentContent
 
     ''' ---------------------------------------------------------------------'''
     def addMimeSource(self, attrs = None):
-        self._currentMime.source = self._currentContent
+        self.__currentMime.source = self.__currentContent
 
     def addMimeType(self, attrs = None):
-        self._currentMime.mimeType = self._currentContent
+        self.__currentMime.mimeType = self.__currentContent
 
     def addMimeAlt(self, attrs = None):
-        self._currentMime.altenativeContent = self._currentContent
+        self.__currentMime.altenativeContent = self.__currentContent
 
     def addMimePurpose(self, attrs = None):
-        self._currentMime.purpose = self._currentContent
+        self.__currentMime.purpose = self.__currentContent
 
     def addMimeDescription(self, attrs = None):
-        self._currentMime.description = self._currentContent
+        self.__currentMime.description = self.__currentContent
 
     def addMimeOrder(self, attrs = None):
-        self._currentMime.order = self._currentContent
+        self.__currentMime.order = self.__currentContent
     
     ''' ---------------------------------------------------------------------'''
     def addOrderUnit(self, attrs = None):
-        self._currentArticle.orderDetails.orderUnit = self._currentContent
+        self.__currentArticle.orderDetails.orderUnit = self.__currentContent
     
     def addContentUnit(self, attrs = None):
-        self._currentArticle.orderDetails.contentUnit = self._currentContent
+        self.__currentArticle.orderDetails.contentUnit = self.__currentContent
 
     def addPriceQuantity(self, attrs = None):
-        self._currentArticle.orderDetails.priceQuantity = self._currentContent
+        self.__currentArticle.orderDetails.priceQuantity = self.__currentContent
         
     def addPackagingQuantity(self, attrs = None):
-        self._currentArticle.orderDetails.packagingQuantity = self._currentContent
+        self.__currentArticle.orderDetails.packagingQuantity = self.__currentContent
 
     def addQuantityInterval(self, attrs = None):
-        self._currentArticle.orderDetails.quantityInterval = self._currentContent
+        self.__currentArticle.orderDetails.quantityInterval = self.__currentContent
 
     def addQuantityMin(self, attrs = None):
-        self._currentArticle.orderDetails.quantityMin = self._currentContent
+        self.__currentArticle.orderDetails.quantityMin = self.__currentContent
         
     ''' ---------------------------------------------------------------------'''
     def addFeatureValue(self, attrs = None):
-        if self._currentFeature.variants is not None and len(self._currentFeature.variants) > 0:
+        if self.__currentFeature.variants is not None and len(self.__currentFeature.variants) > 0:
             raise Exception("Fehler im BMEcat: FeatureValue soll hinzugefügt werden, es existieren aber schon FeatureVariants.")        
-        self._currentElement.addValue(self._currentContent)
+        self.__currentElement.addValue(self.__currentContent)
 
     def addFeatureUnit(self, attrs = None):
-        if self._currentFeature.unit is not None:
+        if self.__currentFeature.unit is not None:
             raise Exception("Fehler im BMEcat: FeatureUnit soll gesetzt werden existiert aber schon.")
-        self._currentFeature.unit = self.getUnit(self._currentContent)
+        self.__currentFeature.unit = self.getUnit(self.__currentContent)
             
     def getUnit(self, value):
         currentUnit = None
-        if BMEcatHandler.bmecatUnitMapper.hasKey(value):
-           currentUnit = BMEcatHandler.bmecatUnitMapper.getSIUnit(value)
-        elif BMEcatHandler.etimUnitMapper.hasKey(value):
-            currentUnit = BMEcatHandler.etimUnitMapper.getSIUnit(value)
+        if BMEcatHandler.__bmecatUnitMapper.hasKey(value):
+           currentUnit = BMEcatHandler.__bmecatUnitMapper.getSIUnit(value)
+        elif BMEcatHandler.__etimUnitMapper.hasKey(value):
+            currentUnit = BMEcatHandler.__etimUnitMapper.getSIUnit(value)
         else:
             currentUnit = value
         return currentUnit 
         
     def addFeatureName(self, attrs = None):
-        if self._currentFeature.name is not None:
+        if self.__currentFeature.name is not None:
             raise Exception("Fehler im BMEcat: FeatureName soll gesetzt werden existiert aber schon.")
-        self._currentFeature.name = self._currentContent
+        self.__currentFeature.name = self.__currentContent
 
     def addFeatureDescription(self, attrs = None):
-        if self._currentFeature.description is not None:
+        if self.__currentFeature.description is not None:
             raise Exception("Fehler im BMEcat: FeatureDescription soll gesetzt werden existiert aber schon.")
-        self._currentFeature.description = self._currentContent
+        self.__currentFeature.description = self.__currentContent
 
     def addFeatureValueDetails(self, attrs = None):
-        if self._currentFeature.valueDetails is not None:
+        if self.__currentFeature.valueDetails is not None:
             raise Exception("Fehler im BMEcat: FeatureValueDetails sollen gesetzt werden existieren aber schon.")
-        self._currentFeature.valueDetails = self._currentContent
+        self.__currentFeature.valueDetails = self.__currentContent
 
     ''' -------------- '''
     def createFeatureVariantSet(self, attrs = None):
-        if self._currentFeature.values is not None and len(self._currentFeature.values) > 0:
+        if self.__currentFeature.values is not None and len(self.__currentFeature.values) > 0:
             raise Exception("Fehler im BMEcat: FeatureVariants sollen hinzugefügt werden, es existieren aber schon FeatureValues.")
-        if self._currentFeature.variants is not None:
+        if self.__currentFeature.variants is not None:
             raise Exception("Fehler im BMEcat: FeatureVariants sollen hinzugefügt werden, es existieren aber schon FeatureVariants.")
-        self._currentFeature.variants = VariantSet()
+        self.__currentFeature.variants = VariantSet()
 
     def addFeatureVariantSetOrder(self, attrs = None):
-        if self._currentFeature.variants is None:
+        if self.__currentFeature.variants is None:
             raise Exception("Fehler im BMEcat: FeatureVariantSetOrder soll gesetzt werden, aber es existiert noch kein VariantSet.")
-        self._currentFeature.variants.order = int(self._currentContent)
+        self.__currentFeature.variants.order = int(self.__currentContent)
 
     def createFeatureVariant(self, attrs = None):
-        if self._currentFeature.values is not None and len(self._currentFeature.values) > 0:
+        if self.__currentFeature.values is not None and len(self.__currentFeature.values) > 0:
             raise Exception("Fehler im BMEcat: FeatureVariants sollen hinzugefügt werden, es existieren aber schon FeatureValues.")
-        if self._currentFeature.variants is None:
+        if self.__currentFeature.variants is None:
             raise Exception("Fehler im BMEcat: FeatureVariant soll erstellt werden, aber es existiert noch kein VariantSet.")
-        if self._currentVariant is None:
+        if self.__currentVariant is None:
             raise Exception("Fehler im BMEcat: FeatureVariant soll erstellt werden, aber es existiert schon eine.")
-        self._currentVariant = Variant()
-        self._currentElement = self._currentVariant
+        self.__currentVariant = Variant()
+        self.__currentElement = self.__currentVariant
         
     def addFeatureVariantProductIdSuffix(self, attrs = None):
-        if self._currentVariant is None:
+        if self.__currentVariant is None:
             raise Exception("Fehler im BMEcat: FeatureVariantProductIdSuffix soll gesetzt werden, aber es existiert noch keine Variante.")
-        self._currentVariant.productIdSuffix = self._currentContent
+        self.__currentVariant.productIdSuffix = self.__currentContent
 
     def saveFeatureVariant(self, attrs = None):
-        if self._currentArticle.variants is None:
+        if self.__currentArticle.variants is None:
             raise Exception("Fehler im BMEcat: FeatureVariant soll gespeichert werden, aber es existiert kein VariantSet mehr.")
-        self._currentFeature.variants.append(self._currentVariant)
-        self._currentVariant = None
-        self._currentElement = None
+        self.__currentFeature.variants.append(self.__currentVariant)
+        self.__currentVariant = None
+        self.__currentElement = None
            
     ''' ---------------------------------------------------------------------'''
     def startDateTime(self, attrs = None):
         if attrs is None or not 'type' in attrs.getNames():
             logging.warning("DateTime kann nicht gespeichert werden.")
         else:
-            self._dateType = attrs.getValue('type')
-            self._currentElement = self._currentPriceDetails
+            self.__dateType = attrs.getValue('type')
+            self.__currentElement = self.__currentPriceDetails
     
     def endDateTime(self, attrs = None):
-        self._dateType = None
-        self._currentElement = None
+        self.__dateType = None
+        self.__currentElement = None
     
     def addDate(self, attrs = None):
-        if self._dateType is None:
+        if self.__dateType is None:
             logging.warning("Datum kann nicht gespeichert werden.")
-        elif self._currentElement is None:
-            logging.warning("Datum [" + self._dateType + "] kann nicht gespeichert werden, weil kein Element zum Speichern existiert.")
+        elif self.__currentElement is None:
+            logging.warning("Datum [" + self.__dateType + "] kann nicht gespeichert werden, weil kein Element zum Speichern existiert.")
         else:
-            if self._dateType == 'valid_start_date':
-                logging.debug("Datum [" + self._currentContent + "] wird als Startdatum gespeichert.")
-                self._currentElement.validFrom = datetime.strptime(self._currentContent, self._dateFormat)
-            elif self._dateType == 'valid_end_date':
-                logging.debug("Datum [" + self._currentContent + "] wird als Enddatum gespeichert.")
-                self._currentElement.validTo = datetime.strptime(self._currentContent, self._dateFormat)
+            if self.__dateType == 'valid_start_date':
+                logging.debug("Datum [" + self.__currentContent + "] wird als Startdatum gespeichert.")
+                self.__currentElement.validFrom = datetime.strptime(self.__currentContent, self._dateFormat)
+            elif self.__dateType == 'valid_end_date':
+                logging.debug("Datum [" + self.__currentContent + "] wird als Enddatum gespeichert.")
+                self.__currentElement.validTo = datetime.strptime(self.__currentContent, self._dateFormat)
             else:
-                logging.warning("Datum [" + self._dateType + "] kann nicht gespeichert werden.")
+                logging.warning("Datum [" + self.__dateType + "] kann nicht gespeichert werden.")
 
         
     ''' ---------------------------------------------------------------------'''
     def addKeyword(self, attrs = None):
-        if self._currentArticle is not None:
-            self._currentArticle.addKeyword(self._currentContent)
+        if self.__currentArticle is not None:
+            self.__currentArticle.addKeyword(self.__currentContent)
             
     ''' ---------------------------------------------------------------------'''
     '''aktuellen Inhalt des XML-Elements ermitteln'''
     def characters(self, content):
         logging.debug("Original input: '{0}'".format(content))
-        if self.lineFeedToHTML:
-            self._currentContent += content.replace("\n","<br>").strip()
+        if self.__lineFeedToHTML:
+            self.__currentContent += content.replace("\n","<br>").strip()
         else:
-            if len(self._currentContent) > 0 and len(content) > len(content.strip()):
-                self._currentContent = self._currentContent.strip() + ' '
-            self._currentContent += content.strip()
-        logging.debug("Saved input: '{0}'".format(self._currentContent))
+            if len(self.__currentContent) > 0 and len(content) > len(content.strip()):
+                self.__currentContent = self.__currentContent.strip() + ' '
+            self.__currentContent += content.strip()
+        logging.debug("Saved input: '{0}'".format(self.__currentContent))
 
     def validateCurrentProduct(self):
-        if self._currentArticle is None:
+        if self.__currentArticle is None:
             raise Exception("Es wurde kein aktuell zu bearbeitender Artikel gefunden.")
-        self._currentArticle.validate()
+        self.__currentArticle.validate()
