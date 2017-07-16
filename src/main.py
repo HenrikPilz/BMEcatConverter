@@ -84,7 +84,7 @@ def xmlToExcel(bmecatFilename, excelFilename, dateFormat, separatorMode="detect"
     parser.parse("file:" + bmecatFilename)
     logging.info("Daten eingelesen")
 
-    exporter = PyxelHandler(importer._articles, excelFilename, manufacturerName)
+    exporter = PyxelHandler(importer.articles, excelFilename, manufacturerName)
     logging.info("Erstelle Excel-Datei")
     exporter.createNewWorkbook()
     logging.info("Fertig.")
@@ -190,4 +190,8 @@ if __name__ == '__main__':
     t1 = time.clock()
     main(sys.argv[1:])
     t2 = time.clock()
-    print('Dauer: ', (t2-t1)/60)
+    duration = t2-t1
+    if duration < 60:
+        print('Duration in seconds: ', (t2-t1))
+    else:
+        print('Duration in minutes: ', (t2-t1)/60)
