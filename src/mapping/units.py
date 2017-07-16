@@ -5,8 +5,9 @@ Created on 13.06.2017
 '''
 
 import csv
-import os
 import logging
+import os
+
 
 class UnitMapper(object):
     '''

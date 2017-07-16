@@ -3,8 +3,9 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
-import logging
 import copy
+import logging
+
 from openpyxl.workbook import Workbook
 
 

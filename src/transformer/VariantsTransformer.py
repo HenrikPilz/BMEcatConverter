@@ -29,5 +29,5 @@ class VariantsTransformer(object):
             for i in range(1, numberOfIterations):
                 for variantValue in variantValues:
                     for j in range(1,stepWidth):
-                        
+                        pass
             numberOfIterations *= len(variantValues)

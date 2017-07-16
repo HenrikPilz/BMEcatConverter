@@ -7,6 +7,7 @@ import logging
 import os
 from xml.sax.handler import EntityResolver
 
+
 class DTDResolver(EntityResolver):
     '''
     classdocs

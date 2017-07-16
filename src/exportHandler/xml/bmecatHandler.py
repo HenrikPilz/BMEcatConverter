@@ -3,21 +3,21 @@ Created on 12.05.2017
 
 @author: henrik.pilz
 '''
-from xml.sax import handler
 from datetime import datetime
+import logging
+from xml.sax import handler
 
-from data.product import Product
-from data.productDetails import ProductDetails
-from data.price import Price
-from data.priceDetails import PriceDetails
-from data.orderDetails import OrderDetails
 from data.feature import Feature
 from data.featureSet import FeatureSet
 from data.mime import Mime
-from data.treatmentClass import TreatmentClass
+from data.orderDetails import OrderDetails
+from data.price import Price
+from data.priceDetails import PriceDetails
+from data.product import Product
+from data.productDetails import ProductDetails
 from data.reference import Reference
+from data.treatmentClass import TreatmentClass
 
-import logging
 
 class BMEcatHandler(handler.ContentHandler):
     
