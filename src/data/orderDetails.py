@@ -6,10 +6,11 @@ Created on 05.05.2017
 
 import logging
 
+
 class OrderDetails():
     allowedOrderUnits = [ "C62", "MTR", "SET", "BX", "CT", "PF", "BG", "PK", "TN", "DR", "CA", "CS", "RO" ]
     allowedContentUnits = [ "C62", "MTR", "SET", "RO", "DR", "CS", "PR", "RO" ]
-    allowedCombinations = {}
+    __allowedCombinations = {}
 
     def __init__(self):
         self.orderUnit = "C62"
@@ -31,6 +32,6 @@ class OrderDetails():
         if float(self.quantityMin) != float(self.quantityInterval):
             logging.info("Mindestbestellmenge und Bestellintervall sollten gleich sein.")
         if float(self.packagingQuantity) > 1 and float(self.quantityMin) > 1:
-            logging.warning("Mindestbestellmenge und PackagingQuantity dürfen nicht beide ungleich eins sein.")
+            logging.warning("Mindestbestellmenge und PackagingQuantity duerfen nicht beide ungleich eins sein.")
         if float(self.packagingQuantity) != float(self.priceQuantity):
             logging.info("PackagingQuantity und PriceQuantity untscheiden sich!")

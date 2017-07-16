@@ -1,5 +1,6 @@
-import logging
 from abc import abstractmethod
+import logging
+
 
 class ValidatingObject(object):
     '''

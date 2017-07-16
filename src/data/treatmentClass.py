@@ -5,6 +5,7 @@ Created on 05.05.2017
 '''
 import logging
 
+
 class TreatmentClass(object):
     '''
     classdocs

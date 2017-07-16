@@ -3,7 +3,8 @@ Created on 17.05.2017
 
 @author: henrik.pilz
 '''
-from src.data import ValidatingObject
+from data import ValidatingObject
+
 
 class Variant(ValidatingObject):
     '''
@@ -11,7 +12,7 @@ class Variant(ValidatingObject):
     '''
 
 
-    def __init__(self, params):
+    def __init__(self):
         '''
         Constructor
         '''
@@ -21,8 +22,8 @@ class Variant(ValidatingObject):
     def validate(self, raiseException=False):
         errMsg = None
         if self.value is None:
-            errMsg = "Die Variante wurde nicht definitiert."
+            errMsg = "Die Variante wurde nicht definiert."
             super().logError(errMsg, raiseException)
         if self.value is None:
-            errMsg= "Das Suffix für die Variante " + self.value + " wurde nicht definiert."
+            errMsg= "Das Suffix fuer die Variante " + self.value + " wurde nicht definiert."
             super().logError(errMsg, raiseException)

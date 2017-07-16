@@ -5,6 +5,7 @@ Created on 05.05.2017
 '''
 import logging
 
+
 class FeatureSet():
     def __init__(self):
         self.referenceSytem = None
@@ -16,11 +17,11 @@ class FeatureSet():
             feature.validate(True)
             self.features.append(feature)
         except Exception as ve:
-            logging.info("Das Attribut enthält keine validen Werte. Es wird nicht hinzugefügt. ", ve)
+            logging.info("Das Attribut enthaelt keine validen Werte. Es wird nicht hinzugefuegt. ", ve)
         
     def validate(self):
         if self.features is None or len(self.features)==0:
-            logging.warning("Keine Attribute für diese Attributgruppe vorhanden!")
+            logging.warning("Keine Attribute fuer diese Attributgruppe vorhanden!")
         else:
             for feature in self.features:
                 feature.validate()
