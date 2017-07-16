@@ -3,9 +3,9 @@ Created on 17.05.2017
 
 @author: henrik.pilz
 '''
-import logging
+from src.data import ValidatingObject
 
-class Variant(object):
+class Variant(ValidatingObject):
     '''
     classdocs
     '''
@@ -18,8 +18,11 @@ class Variant(object):
         self.value = None
         self.productIdSuffix = None
        
-    def validate(self):
+    def validate(self, raiseException=False):
+        errMsg = None
         if self.value is None:
-            logging.error("Die Variante wurde nicht definitiert.")
+            errMsg = "Die Variante wurde nicht definitiert."
+            super().logError(errMsg, raiseException)
         if self.value is None:
-            logging.error("Das Suffix für die Variante " + self.value + " wurde nicht definiert.")
+            errMsg= "Das Suffix für die Variante " + self.value + " wurde nicht definiert."
+            super().logError(errMsg, raiseException)
