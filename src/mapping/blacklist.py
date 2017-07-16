@@ -5,8 +5,9 @@ Created on 14.06.2017
 '''
 
 import csv
-import os
 import logging
+import os
+
 
 class Blacklist(object):
     '''
