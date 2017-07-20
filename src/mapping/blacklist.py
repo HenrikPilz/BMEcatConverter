@@ -40,28 +40,3 @@ class Blacklist(object):
 
     def contains(self, entry):
         return entry in self._blacklist
-
-class FeatureBlacklist(Blacklist):
-    '''
-    classdocs
-    '''
-    def __init__(self):
-        '''
-        Constructor
-        '''
-        super().__init__()
-        self.filename = ".//documents//BMEcat//version//FeatureBlacklist.csv"
-        super().readFile()
-
-class FeatureSetBlacklist(Blacklist):
-    '''
-    classdocs
-    '''
-    def __init__(self):
-        '''
-        Constructor
-        '''
-        super().__init__()
-        self.filename = ".//documents//BMEcat//version//FeatureBlacklist.csv"
-        self.filename = ".//documents//BMEcat//version//FeatureSetBlacklist.csv"
-        super().readFile()

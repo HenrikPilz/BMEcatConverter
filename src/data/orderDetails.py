@@ -32,6 +32,6 @@ class OrderDetails():
         if float(self.quantityMin) != float(self.quantityInterval):
             logging.info("Mindestbestellmenge und Bestellintervall sollten gleich sein.")
         if float(self.packingQuantity) > 1 and float(self.quantityMin) > 1:
-            logging.warning("Mindestbestellmenge und PackingQuantity dürfen nicht beide ungleich eins sein.")
+            logging.warning("Mindestbestellmenge und PackingQuantity duerfen nicht beide ungleich eins sein.")
         if float(self.quantityMin) != float(self.priceQuantity):
             logging.info("PackagingQuantity und PriceQuantity untscheiden sich!")
