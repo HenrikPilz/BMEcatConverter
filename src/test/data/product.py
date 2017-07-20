@@ -62,8 +62,8 @@ class TestProduct(unittest.TestCase):
         product.addDescription("TestBeschreibung")
         assert product.details.description == "TestBeschreibung"
 
-        product.addManufacturerId("12345")
-        assert product.details.manufacturerId == "12345"
+        product.addManufacturerArticleId("12345")
+        assert product.details.manufacturerArticleId == "12345"
 
         product.addManufacturerName("Test")
         assert product.details.manufacturerName == "Test"

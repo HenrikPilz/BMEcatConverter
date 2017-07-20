@@ -356,8 +356,13 @@ class BMEcatHandler(handler.ContentHandler):
         elif BMEcatHandler.__featureSetBlacklist.contains(self.__currentFeatureSet.referenceSytem):
             logging.info("Attributset wird nicht gespeichert, da es auf der Blacklist ist.")
         else:
+<<<<<<< Updated upstream
             self.__currentArticle.addFeatureSet(self.__currentFeatureSet)
         self.__currentFeatureSet = None
+=======
+            self._currentArticle.addFeatureSet(self._currentFeatureSet)
+        self._currentFeatureSet = None
+>>>>>>> Stashed changes
     
     def addFeatureSetReferenceSystem(self, attrs = None):
         if self.__currentFeatureSet is None:
@@ -371,7 +376,11 @@ class BMEcatHandler(handler.ContentHandler):
 
     ''' ---------------------------------------------------------------------'''
     def createFeature(self, attrs = None):
+<<<<<<< Updated upstream
         if not self.__currentFeature is None:
+=======
+        if self._currentFeature is not None:
+>>>>>>> Stashed changes
             raise Exception("Fehler im BMEcat: Neues Attribut soll erstellt werden. Es wird schon ein Attribut verarbeitet.")
         else: 
             self.__currentFeature = Feature()
@@ -384,7 +393,11 @@ class BMEcatHandler(handler.ContentHandler):
         elif BMEcatHandler.__featureBlacklist.contains(self.__currentFeature.name):
             logging.info("Attribut wird nicht gespeichert, da es auf der Blacklist ist.")
         else:
+<<<<<<< Updated upstream
             self.__currentFeatureSet.addFeature(self.__currentFeature)
+=======
+            self._currentFeatureSet.addFeature(self._currentFeature)
+>>>>>>> Stashed changes
 
         self.__currentFeature = None
         self.__currentElement = None
@@ -431,7 +444,11 @@ class BMEcatHandler(handler.ContentHandler):
     def addManufacturerArticleId(self, attrs = None):
         if self.__currentArticle is None:
             raise Exception("Herstellerartikelnummer soll gespeichert werden. Aber es ist kein Artikel vorhanden")
+<<<<<<< Updated upstream
         self.__currentArticle.addManufacturerId(self.__currentContent)
+=======
+        self._currentArticle.addManufacturerArticleId(self._currentContent)
+>>>>>>> Stashed changes
 
     def addManufacturerName(self, attrs = None):
         if self.__currentArticle is None:
@@ -477,9 +494,19 @@ class BMEcatHandler(handler.ContentHandler):
     ''' ---------------------------------------------------------------------'''
     def __convertToEnglishDecimalValue(self, stringValue):
         convertedString = stringValue
+<<<<<<< Updated upstream
         if not self.__decimalSeparator == ".": 
             convertedString = convertedString.replace(",",";").replace(self.__thousandSeparator,"").replace(";",".")
         return float(convertedString)
+=======
+        if not self._decimalSeparator == ".": 
+            convertedString = convertedString.replace(",",";").replace(self._thousandSeparator,"").replace(";",".")
+        logging.debug("'{0}'".format(convertedString))
+        if convertedString is not None and len(convertedString) > 0 :
+            return float(convertedString)
+        else:
+            return 0
+>>>>>>> Stashed changes
 
 
     ''' ---------------------------------------------------------------------'''
@@ -539,7 +566,11 @@ class BMEcatHandler(handler.ContentHandler):
         self.__currentArticle.orderDetails.priceQuantity = self.__currentContent
         
     def addPackagingQuantity(self, attrs = None):
+<<<<<<< Updated upstream
         self.__currentArticle.orderDetails.packagingQuantity = self.__currentContent
+=======
+        self._currentArticle.orderDetails.packingQuantity = self._currentContent
+>>>>>>> Stashed changes
 
     def addQuantityInterval(self, attrs = None):
         self.__currentArticle.orderDetails.quantityInterval = self.__currentContent
@@ -560,10 +591,17 @@ class BMEcatHandler(handler.ContentHandler):
             
     def getUnit(self, value):
         currentUnit = None
+<<<<<<< Updated upstream
         if BMEcatHandler.__bmecatUnitMapper.hasKey(value):
             currentUnit = BMEcatHandler.__bmecatUnitMapper.getSIUnit(value)
         elif BMEcatHandler.__etimUnitMapper.hasKey(value):
             currentUnit = BMEcatHandler.__etimUnitMapper.getSIUnit(value)
+=======
+        if BMEcatHandler.bmecatUnitMapper.hasKey(value):
+            currentUnit = BMEcatHandler.bmecatUnitMapper.getSIUnit(value)
+        elif BMEcatHandler.etimUnitMapper.hasKey(value):
+            currentUnit = BMEcatHandler.etimUnitMapper.getSIUnit(value)
+>>>>>>> Stashed changes
         else:
             currentUnit = value
         return currentUnit 

@@ -24,7 +24,7 @@ class TestPrice(unittest.TestCase):
         try:
             price.validate(True)
         except Exception as ve:
-            assert ve == "Kein Preis angegeben!"
+            assert str(ve) == "Kein Preis angegeben!"
         
     def testValidateExceptionNegativeAmount(self):
         price = Price()
@@ -32,7 +32,7 @@ class TestPrice(unittest.TestCase):
         try:
             price.validate(True)
         except Exception as ve:
-            assert ve == "Negativer Preis angegeben!"
+            assert str(ve) == "Negativer Preis angegeben!"
 
     def testValidate(self):
         price = Price()

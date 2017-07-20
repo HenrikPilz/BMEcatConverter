@@ -15,7 +15,7 @@ class OrderDetails():
     def __init__(self):
         self.orderUnit = "C62"
         self.contentUnit = "C62"
-        self.packagingQuantity = 1
+        self.packingQuantity = 1
         self.priceQuantity = 1
         self.quantityMin = 1
         self.quantityInterval = 1        
@@ -31,7 +31,7 @@ class OrderDetails():
             logging.warning("Falsche Verpackungseinheit angeben: " + self.contentUnit)
         if float(self.quantityMin) != float(self.quantityInterval):
             logging.info("Mindestbestellmenge und Bestellintervall sollten gleich sein.")
-        if float(self.packagingQuantity) > 1 and float(self.quantityMin) > 1:
-            logging.warning("Mindestbestellmenge und PackagingQuantity duerfen nicht beide ungleich eins sein.")
-        if float(self.packagingQuantity) != float(self.priceQuantity):
+        if float(self.packingQuantity) > 1 and float(self.quantityMin) > 1:
+            logging.warning("Mindestbestellmenge und PackingQuantity dürfen nicht beide ungleich eins sein.")
+        if float(self.quantityMin) != float(self.priceQuantity):
             logging.info("PackagingQuantity und PriceQuantity untscheiden sich!")
