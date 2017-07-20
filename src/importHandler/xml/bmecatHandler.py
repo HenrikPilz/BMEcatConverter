@@ -5,6 +5,7 @@ Created on 05.05.2017
 '''
 from datetime import datetime
 import logging
+import os
 from xml.sax import handler
 
 from data.feature import Feature
@@ -124,12 +125,12 @@ class BMEcatHandler(handler.ContentHandler):
                 "reference_feature_group_id" : "addFeatureSetReferenceGroupId"
                 }
     
-            
-    __bmecatUnitMapper = UnitMapper(".//documents//BMEcat//version//BMEcatUnitMapping.csv")
-    __etimUnitMapper = UnitMapper(".//documents//BMEcat//version//ETIMUnitMapping.csv")
+    __baseDirectory = os.path.join(os.path.dirname(__file__),"..","..", "..","documents","BMEcat","version")
+    __bmecatUnitMapper = UnitMapper(os.path.join(__baseDirectory, "BMEcatUnitMapping.csv"))
+    __etimUnitMapper = UnitMapper(os.path.join(__baseDirectory, "ETIMUnitMapping.csv"))
     
-    __featureSetBlacklist = Blacklist(".//documents//BMEcat//version//FeatureSetBlacklist.csv")
-    __featureBlacklist = Blacklist(".//documents//BMEcat//version//FeatureBlacklist.csv")
+    __featureSetBlacklist = Blacklist(os.path.join(__baseDirectory, "FeatureSetBlacklist.csv"))
+    __featureBlacklist = Blacklist(os.path.join(__baseDirectory, "FeatureBlacklist.csv"))
     
     
     ''' Handlernamen fuer das XML-Element ermitteln. '''
@@ -154,8 +155,8 @@ class BMEcatHandler(handler.ContentHandler):
 
     ''' Konstruktor '''
     def __init__(self, dateFormat, decimalSeparator, thousandSeparator):
-        self._dateFormat=dateFormat
-        '''self._separatorConverter = SeparatorConverter()'''
+        self.__dateFormat=dateFormat
+        '''self.__separatorConverter = SeparatorConverter()'''
 
         self.__decimalSeparator = decimalSeparator
         self.__thousandSeparator = thousandSeparator
@@ -356,13 +357,8 @@ class BMEcatHandler(handler.ContentHandler):
         elif BMEcatHandler.__featureSetBlacklist.contains(self.__currentFeatureSet.referenceSytem):
             logging.info("Attributset wird nicht gespeichert, da es auf der Blacklist ist.")
         else:
-<<<<<<< Updated upstream
             self.__currentArticle.addFeatureSet(self.__currentFeatureSet)
         self.__currentFeatureSet = None
-=======
-            self._currentArticle.addFeatureSet(self._currentFeatureSet)
-        self._currentFeatureSet = None
->>>>>>> Stashed changes
     
     def addFeatureSetReferenceSystem(self, attrs = None):
         if self.__currentFeatureSet is None:
@@ -376,11 +372,7 @@ class BMEcatHandler(handler.ContentHandler):
 
     ''' ---------------------------------------------------------------------'''
     def createFeature(self, attrs = None):
-<<<<<<< Updated upstream
-        if not self.__currentFeature is None:
-=======
-        if self._currentFeature is not None:
->>>>>>> Stashed changes
+        if self.__currentFeature is not None:
             raise Exception("Fehler im BMEcat: Neues Attribut soll erstellt werden. Es wird schon ein Attribut verarbeitet.")
         else: 
             self.__currentFeature = Feature()
@@ -393,11 +385,7 @@ class BMEcatHandler(handler.ContentHandler):
         elif BMEcatHandler.__featureBlacklist.contains(self.__currentFeature.name):
             logging.info("Attribut wird nicht gespeichert, da es auf der Blacklist ist.")
         else:
-<<<<<<< Updated upstream
             self.__currentFeatureSet.addFeature(self.__currentFeature)
-=======
-            self._currentFeatureSet.addFeature(self._currentFeature)
->>>>>>> Stashed changes
 
         self.__currentFeature = None
         self.__currentElement = None
@@ -444,11 +432,7 @@ class BMEcatHandler(handler.ContentHandler):
     def addManufacturerArticleId(self, attrs = None):
         if self.__currentArticle is None:
             raise Exception("Herstellerartikelnummer soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-<<<<<<< Updated upstream
-        self.__currentArticle.addManufacturerId(self.__currentContent)
-=======
-        self._currentArticle.addManufacturerArticleId(self._currentContent)
->>>>>>> Stashed changes
+        self.__currentArticle.addManufacturerArticleId(self.__currentContent)
 
     def addManufacturerName(self, attrs = None):
         if self.__currentArticle is None:
@@ -494,22 +478,17 @@ class BMEcatHandler(handler.ContentHandler):
     ''' ---------------------------------------------------------------------'''
     def __convertToEnglishDecimalValue(self, stringValue):
         convertedString = stringValue
-<<<<<<< Updated upstream
         if not self.__decimalSeparator == ".": 
             convertedString = convertedString.replace(",",";").replace(self.__thousandSeparator,"").replace(";",".")
-        return float(convertedString)
-=======
-        if not self._decimalSeparator == ".": 
-            convertedString = convertedString.replace(",",";").replace(self._thousandSeparator,"").replace(";",".")
         logging.debug("'{0}'".format(convertedString))
         if convertedString is not None and len(convertedString) > 0 :
             return float(convertedString)
         else:
             return 0
->>>>>>> Stashed changes
 
 
     ''' ---------------------------------------------------------------------'''
+
     def addPriceAmount(self, attrs = None):
         self.__currentPrice.amount = round(self.__convertToEnglishDecimalValue(self.__currentContent), 2)
 
@@ -530,6 +509,7 @@ class BMEcatHandler(handler.ContentHandler):
         self.__currentPrice.lowerBound = self.__currentContent
         
     ''' ---------------------------------------------------------------------'''
+    
     def addTerritory(self, attrs = None):
         if self.__currentElement is None:
             logging.warning("Territory kann nicht gespeichert werden.")
@@ -566,11 +546,7 @@ class BMEcatHandler(handler.ContentHandler):
         self.__currentArticle.orderDetails.priceQuantity = self.__currentContent
         
     def addPackagingQuantity(self, attrs = None):
-<<<<<<< Updated upstream
-        self.__currentArticle.orderDetails.packagingQuantity = self.__currentContent
-=======
-        self._currentArticle.orderDetails.packingQuantity = self._currentContent
->>>>>>> Stashed changes
+        self.__currentArticle.orderDetails.packingQuantity = self.__currentContent
 
     def addQuantityInterval(self, attrs = None):
         self.__currentArticle.orderDetails.quantityInterval = self.__currentContent
@@ -591,17 +567,10 @@ class BMEcatHandler(handler.ContentHandler):
             
     def getUnit(self, value):
         currentUnit = None
-<<<<<<< Updated upstream
         if BMEcatHandler.__bmecatUnitMapper.hasKey(value):
             currentUnit = BMEcatHandler.__bmecatUnitMapper.getSIUnit(value)
         elif BMEcatHandler.__etimUnitMapper.hasKey(value):
             currentUnit = BMEcatHandler.__etimUnitMapper.getSIUnit(value)
-=======
-        if BMEcatHandler.bmecatUnitMapper.hasKey(value):
-            currentUnit = BMEcatHandler.bmecatUnitMapper.getSIUnit(value)
-        elif BMEcatHandler.etimUnitMapper.hasKey(value):
-            currentUnit = BMEcatHandler.etimUnitMapper.getSIUnit(value)
->>>>>>> Stashed changes
         else:
             currentUnit = value
         return currentUnit 
@@ -676,10 +645,10 @@ class BMEcatHandler(handler.ContentHandler):
         else:
             if self.__dateType == 'valid_start_date':
                 logging.debug("Datum [" + self.__currentContent + "] wird als Startdatum gespeichert.")
-                self.__currentElement.validFrom = datetime.strptime(self.__currentContent, self._dateFormat)
+                self.__currentElement.validFrom = datetime.strptime(self.__currentContent, self.__dateFormat)
             elif self.__dateType == 'valid_end_date':
                 logging.debug("Datum [" + self.__currentContent + "] wird als Enddatum gespeichert.")
-                self.__currentElement.validTo = datetime.strptime(self.__currentContent, self._dateFormat)
+                self.__currentElement.validTo = datetime.strptime(self.__currentContent, self.__dateFormat)
             else:
                 logging.warning("Datum [" + self.__dateType + "] kann nicht gespeichert werden.")
 
