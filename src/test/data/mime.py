@@ -21,18 +21,19 @@ class TestMime(unittest.TestCase):
     def testValidateException(self):
         mime = Mime()
         try:
-            mime.validate()
+            mime.validate(True)
+            assert False
         except Exception as ve:
-            assert ve == "Kein Bildpfad angegeben."
+            assert str(ve) == "Kein Bildpfad angegeben."
 
     def testValidate(self):
         mime = Mime()
         mime.source = "Test"
-        mime.validate()
+        mime.validate(True)
         mime.mimeType = "image/jpeg"
-        mime.validate()
+        mime.validate(True)
         mime.purpose = "detail"
-        mime.validate()
+        mime.validate(True)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

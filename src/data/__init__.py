@@ -12,7 +12,7 @@ class ValidatingObject(object):
     
     @abstractmethod
     def validate(self, throwingException=False):
-        raise NotImplementedError()
+        raise NotImplementedError("Please implement 'validate' in your class '{0}".format(__file__))
     
     def logError(self, errMsg, raiseException=False):
         '''

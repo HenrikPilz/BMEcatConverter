@@ -61,8 +61,8 @@ class Product():
     def addDescription(self, description):
         self.details.description = description
 
-    def addManufacturerId(self, manufacturerId):
-        self.details.manufacturerId = manufacturerId
+    def addManufacturerArticleId(self, manufacturerArticleId):
+        self.details.manufacturerArticleId = manufacturerArticleId
 
     def addManufacturerName(self, manufacturerName):
         self.details.manufacturerName = manufacturerName
@@ -88,7 +88,7 @@ class Product():
         
     def addKeyword(self, keyword):
         self.details.addKeyword(keyword)
-        
+
     def addFeatureSet(self, featureSet):
         if len(featureSet) > 0:
             self.featureSets.append(featureSet)

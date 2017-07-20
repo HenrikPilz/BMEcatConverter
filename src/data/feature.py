@@ -49,4 +49,3 @@ class Feature(ValidatingObject):
         if self.variants is None:
             self.variants = VariantSet()
         self.variants.addVariant(variant)
-        

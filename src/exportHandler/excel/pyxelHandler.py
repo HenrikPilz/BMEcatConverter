@@ -82,7 +82,7 @@ class PyxelHandler(object):
         priceFields = [ "validFrom", "validTo", "priceType", "priceAmount",
                         "priceCurrency", "tax", "priceFactor", "lowerBound" ]
         mimeFields = [ "mimeType", "mimeSource", "mimeAlt", "mimeDescription",
-                       "mimePurpose", "mimeOder" ]
+                       "mimePurpose", "mimeOrder" ]
         attributeFields = [ "attributeName", "attributeValue" ] 
         ''', "attributeUnit" ]'''
         treatmentClassFields = [ "classType", "className" ]
@@ -155,10 +155,10 @@ class PyxelHandler(object):
         columnIndex += 1
         sheet.cell(row=rowIndex, column=columnIndex, value=article.details.ean)
         columnIndex += 1
-        if article.details.manufacturerId is None:
+        if article.details.manufacturerArticleId is None:
             sheet.cell(row=rowIndex, column=columnIndex, value=article.productId.strip().replace(" ",""))
         else:
-            sheet.cell(row=rowIndex, column=columnIndex, value=article.details.manufacturerId.replace(" ",""))
+            sheet.cell(row=rowIndex, column=columnIndex, value=article.details.manufacturerArticleId.replace(" ",""))
         columnIndex += 1
         if article.details.manufacturerName is None:
             sheet.cell(row=rowIndex, column=columnIndex, value=self._defaultManufacturerName)
@@ -171,7 +171,7 @@ class PyxelHandler(object):
         columnIndex += 1
         sheet.cell(row=rowIndex, column=columnIndex, value=article.orderDetails.contentUnit)
         columnIndex += 1
-        sheet.cell(row=rowIndex, column=columnIndex, value=article.orderDetails.packagingQuantity)
+        sheet.cell(row=rowIndex, column=columnIndex, value=article.orderDetails.packingQuantity)
         columnIndex += 1
         sheet.cell(row=rowIndex, column=columnIndex, value=article.orderDetails.priceQuantity)
         columnIndex += 1

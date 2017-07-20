@@ -16,7 +16,7 @@ class ProductDetails():
         self.ean = None
         self.supplierAltId = None
         self.buyerId = None
-        self.manufacturerId = None
+        self.manufacturerArticleId = None
         self.manufacturerName = None
         self.erpGroupBuyer = None
         self.erpGroupSupplier = None

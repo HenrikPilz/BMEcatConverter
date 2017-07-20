@@ -40,6 +40,12 @@ class TestFeatureSet(unittest.TestCase):
         featureSet.addFeature(feature)                
         assert len(featureSet) == 0        
 
+        feature = Feature()
+        feature.name = "Name"
+        assert len(featureSet) == 0
+        featureSet.addFeature(feature)                
+        assert len(featureSet) == 0        
+
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

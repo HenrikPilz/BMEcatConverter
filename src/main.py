@@ -1,5 +1,6 @@
 from xml.sax import make_parser, handler
 from importHandler.xml.bmecatHandler import BMEcatHandler as BMEcatImportHandler
+from importHandler.excel.excelImporter import ExcelImporter
 '''from exportHandler.xml.bmecatHandler import BMEcatExportHandler'''
 from exportHandler.excel.pyxelHandler import PyxelHandler
 from resolver.dtdResolver import DTDResolver
@@ -92,8 +93,8 @@ def xmlToExcel(bmecatFilename, excelFilename, dateFormat, separatorMode="detect"
 '''
 convert Excel-File to XML BMEcat
 '''
-def excelToXml(inputPath, bmecatFilename):
-    if inputPath is None or not os.inputPath.exists(inputPath):
+def excelToXml(inputPath, bmecatFilename, dateFormat, separatorMode, manufacturerName, merchantName):
+    if inputPath is None or not os.path.exists(inputPath):
         raise Exception("Kein gültiger Pfad angegeben.") 
 
     importer = ExcelImporter()
@@ -103,7 +104,8 @@ def excelToXml(inputPath, bmecatFilename):
         articles = importer._articles
     else:
         for filename in os.listdir(inputPath):
-            importer.readWorkbook(os.path.join(inputPath,filename))
+            print ("Reading filee: ", os.path.join(inputPath,filename))
+            importer.readWorkbook(os.path.join(inputPath,filename), "FInal")
             for articleType in importer._articles.keys():
                 if len(importer._articles[articleType]) > 0:
                     articles[articleType].extend(importer._articles[articleType]) 
@@ -166,6 +168,7 @@ def determineArguments(argv):
     return inputfile, outputfile, merchant, manufacturer, dateformat, separatorMode
 
 def printHelp():
+    ''' Hilfe ausgeben'''
     print("python main.py -i <inputfile> -o <outputfile> --dateformat \"%Y-%m-%d\" --separators english")
     print("\t--dateformat <dateformat>")
     print("\t\te.g. '%Y-%m-%d' or '%d.%m.%Y' or anything else with Y as Year, d as day and m as month ")
@@ -180,15 +183,25 @@ def printHelp():
     sys.exit()
 
 def main(argv):
-    setUpLogging()
     inputFilename, outputFilename, merchantName, manufacturerName, dateFormat, separatorMode = determineArguments(argv)
-    xmlToExcel(inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName)
+    if inputFilename.endswith(".xml") and outputFilename.endswith(".xlsx"):
+        xmlToExcel(inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName)
+    elif (inputFilename.endswith(".xlsx") or os.path.isdir(inputFilename)) and outputFilename.endswith(".xml"):
+        excelToXml(inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName)
+    else:
+        print("Mode not supported")
+        printHelp()
     
 if __name__ == '__main__':
+    # Loging einstgellen: zwei Outputdateien plus Konsole 
+    setUpLogging()
+
     logging.debug('Number of arguments:', len(sys.argv), 'arguments.')
     logging.debug('Argument List:', str(sys.argv))
     t1 = time.clock()
+    
     main(sys.argv[1:])
+    
     t2 = time.clock()
     duration = t2-t1
     if duration < 60:
