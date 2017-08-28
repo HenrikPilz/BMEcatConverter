@@ -413,7 +413,7 @@ class BMEcatHandler(handler.ContentHandler):
     ''' ---------------------------------------------------------------------'''
     ''' Referenz ID speichern'''
     def addReferenceArticleId(self, attrs = None):
-        self.__currentReference.supplierArticleIds.append(self.__currentContent)
+        self.__currentReference.addSupplierArticleId(self.__currentContent)
         
     ''' Referenz Beschreibung speichern'''
     def addReferenceDescription(self, attrs = None):

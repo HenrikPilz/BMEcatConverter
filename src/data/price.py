@@ -29,6 +29,6 @@ class Price(ValidatingObject):
             logging.warning("Ungueltige Steuerangabe: {t:f}. Steuer auf 0.19 gesetzt.".format(t=self.tax))
             self.tax = 0.19
         if self.currency != "EUR":
-            logging.warning("Waehrung nicht in EURO: " + self.currency)
+            logging.warning("Waehrung nicht in EURO: " + str(self.currency))
         if float(self.lowerBound) < 1:
             logging.warning("Staffelmenge falsch!")

@@ -38,3 +38,6 @@ class Reference(ValidatingObject):
 
     def addMime(self, mime):
         self.mimeInfo.append(mime)
+        
+    def addSupplierArticleId(self, supplierArticleId):
+        self.supplierArticleIds.append(supplierArticleId)

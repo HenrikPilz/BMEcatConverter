@@ -4,9 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
+from data import ValidatingObject
 
 
-class Product():
+class Product(ValidatingObject):
 
     def __init__(self):        
         self.productId = None
@@ -21,33 +22,33 @@ class Product():
         self.variants = []
         self.numberOfVariants = 1
    
-    def validate(self):
+    def validate(self, raiseException=False):
         if self.productId is None:
-            logging.error("Der Artikel hat keine Artikelnummer.")
+            super().logError("Der Artikel hat keine Artikelnummer.", raiseException)
         if self.details is None:
-            logging.error("Der Artikel hat Artikeldetails.")
+            super().logError("Der Artikel hat keine Artikeldetails.", raiseException)
         else:
-            self.details.validate()
+            self.details.validate(raiseException)
         if self.orderDetails is None:
-            logging.error("Der Artikel hat Bestellinformation.")
+            super().logError("Der Artikel hat keine Bestellinformation.", raiseException)
         else:
-            self.orderDetails.validate()
+            self.orderDetails.validate(raiseException)
         if self.priceDetails is None or len(self.priceDetails) == 0:
-            logging.error("Der Artikel hat keine Preisinformationen.")
+            super().logError("Der Artikel hat keine Preisinformationen.", raiseException)
         else:
             for priceDetail in self.priceDetails:
-                priceDetail.validate()
+                priceDetail.validate(raiseException)
             
         if self.mimeInfo is None or len(self.mimeInfo) == 0:
             logging.info("Es wurden keine Bilder gefunden.")
         else:
             for mime in self.mimeInfo:
-                mime.validate()
+                mime.validate(raiseException)
         if self.featureSets is None or len(self.featureSets) == 0:
             logging.info("Es wurden keine Attribute gefunden.")
         else:
             for featureSet in self.featureSets:
-                featureSet.validate()
+                featureSet.validate(raiseException)
                 for feature in featureSet.features:
                     if feature.variants is not None and len(feature.variants) > 0:
                         self.hasVariants = True

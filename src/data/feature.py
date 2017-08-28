@@ -20,7 +20,6 @@ class Feature(ValidatingObject):
         if self.name is None or len(self.name.strip()) == 0:
             errMsg = "Der Merkmalsname fehlt."
             super().logError(errMsg, raiseException)
-                
         if (self.values is None or len(self.values) == 0) and (self.variants is None or len(self.variants) == 0):
             errMsg = "Es wurden weder Attributswerte noch Varianten angegeben."
             super().logError(errMsg, raiseException)
@@ -29,7 +28,7 @@ class Feature(ValidatingObject):
             super().logError(errMsg, raiseException)
         else:
             if self.variants is not None:
-                self.variants.validate()
+                self.variants.validate(raiseException)
     
     def addValue(self, value):
         if value is not None:

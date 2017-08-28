@@ -5,9 +5,10 @@ Created on 05.05.2017
 '''
 
 import logging
+from data import ValidatingObject
 
 
-class OrderDetails():
+class OrderDetails(ValidatingObject):
     allowedOrderUnits = [ "C62", "MTR", "SET", "BX", "CT", "PF", "BG", "PK", "TN", "DR", "CA", "CS", "RO" ]
     allowedContentUnits = [ "C62", "MTR", "SET", "RO", "DR", "CS", "PR", "RO" ]
     __allowedCombinations = {}
@@ -20,15 +21,15 @@ class OrderDetails():
         self.quantityMin = 1
         self.quantityInterval = 1        
 
-    def validate(self):
+    def validate(self, raiseException=False):
         if self.orderUnit is None or self.orderUnit.strip() == "":
-            raise Exception("Keine Bestelleinheit angeben.")
-        if self.contentUnit is None or self.orderUnit.strip() == "":
-            raise Exception("Keine Verpackungseinheit angeben.")
+            super().logError("Keine Bestelleinheit angeben.", raiseException)
         if self.orderUnit not in OrderDetails.allowedOrderUnits:
-            logging.warning("Falsche Bestelleinheit angeben: " + self.orderUnit)
+            super().logError("Falsche Bestelleinheit angeben: " + str(self.orderUnit), raiseException)
+        if self.contentUnit is None or self.contentUnit.strip() == "":
+            super().logError("Keine Verpackungseinheit angeben.", raiseException)
         if self.contentUnit not in OrderDetails.allowedContentUnits:
-            logging.warning("Falsche Verpackungseinheit angeben: " + self.contentUnit)
+            super().logError("Falsche Verpackungseinheit angeben: " + str(self.contentUnit), raiseException)
         if float(self.quantityMin) != float(self.quantityInterval):
             logging.info("Mindestbestellmenge und Bestellintervall sollten gleich sein.")
         if float(self.packingQuantity) > 1 and float(self.quantityMin) > 1:

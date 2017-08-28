@@ -14,12 +14,12 @@ class TestFeatureSet(unittest.TestCase):
     def testInit(self):
         featureSet = FeatureSet()
         # Default: kein Referenzsystem
-        assert featureSet.referenceSytem is None
+        self.assertIsNone(featureSet.referenceSytem)
         # keine Referenzgruppen ID
-        assert featureSet.referenceGroupId is None
+        self.assertIsNone(featureSet.referenceGroupId)
         # Leerer Array ohne Features
-        assert featureSet.features is not None
-        assert len(featureSet.features) == 0
+        self.assertIsNotNone(featureSet.features)
+        self.assertEqual(len(featureSet.features), 0) 
 
     def testAddFeature(self):
         # Single Feature, Single Value per Feature
@@ -27,24 +27,24 @@ class TestFeatureSet(unittest.TestCase):
         feature = Feature()
         feature.name = "Name"
         feature.addValue("Value")
-        assert len(featureSet) == 0
+        self.assertEqual(len(featureSet), 0)
         featureSet.addFeature(feature)                
-        assert len(featureSet) == 1        
+        self.assertEqual(len(featureSet), 1)        
 
     def testAddFeatureFailure(self):
         # Single Feature, Single Value per Feature
         featureSet = FeatureSet()
         feature = Feature()
         feature.addValue("Value")
-        assert len(featureSet) == 0
+        self.assertEqual(len(featureSet), 0)
         featureSet.addFeature(feature)                
-        assert len(featureSet) == 0        
+        self.assertEqual(len(featureSet), 0)       
 
         feature = Feature()
         feature.name = "Name"
-        assert len(featureSet) == 0
+        self.assertEqual(len(featureSet), 0)
         featureSet.addFeature(feature)                
-        assert len(featureSet) == 0        
+        self.assertEqual(len(featureSet), 0)       
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

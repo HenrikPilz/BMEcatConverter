@@ -25,8 +25,8 @@ class Mime(ValidatingObject):
         if self.source is None:
             super().logError("Kein Bildpfad angegeben.", raiseException)
         if int(self.order) < 1:
-            logging.info("Bildreihenfolge fehlerhaft: " + self.order)
+            logging.info("Bildreihenfolge fehlerhaft: " + str(self.order))
         if not self.mimeType is None and self.mimeType not in Mime.__allowedTypes:
-            logging.info("Bildtyp fehlerhaft: " + self.mimeType)
+            logging.info("Bildtyp fehlerhaft: " + str(self.mimeType))
         if not self.purpose is None and self.purpose not in Mime.__allowedPurposes:
-            logging.info("Bildverwendung fehlerhaft: " + self.purpose)
+            logging.info("Bildverwendung fehlerhaft: " + str(self.purpose))

@@ -11,33 +11,29 @@ class TestPrice(unittest.TestCase):
 
     def testInit(self):
         price = Price()
-        assert price.priceType == None
-        assert price.amount == None
-        assert price.currency == "EUR"
-        assert price.tax == 0.19
-        assert price.lowerBound == 1
-        assert price.factor == 1.0
-        assert price.territory == "DEU"
+        self.assertIsNone(price.priceType)
+        self.assertIsNone(price.amount)
+        self.assertEqual(price.currency, "EUR")
+        self.assertEqual(price.tax, 0.19)
+        self.assertEqual(price.lowerBound, 1)
+        self.assertEqual(price.factor, 1.0)
+        self.assertEqual(price.territory, "DEU")
 
     def testValidateExceptionNoAmount(self):
         price = Price()
-        try:
+        with self.assertRaisesRegex(Exception, "Kein Preis angegeben!"): 
             price.validate(True)
-        except Exception as ve:
-            assert str(ve) == "Kein Preis angegeben!"
         
     def testValidateExceptionNegativeAmount(self):
         price = Price()
         price.amount = -1.0
-        try:
+        with self.assertRaisesRegex(Exception, "Negativer Preis angegeben!"):
             price.validate(True)
-        except Exception as ve:
-            assert str(ve) == "Negativer Preis angegeben!"
 
     def testValidate(self):
         price = Price()
         price.amount = 1.0
-        price.validate()
+        price.validate(True)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

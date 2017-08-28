@@ -5,12 +5,6 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data.feature import Feature
-from data.featureSet import FeatureSet
-from data.mime import Mime
-from data.product import Product
-from data.productDetails import ProductDetails
-from data.reference import Reference
 from data.variant import Variant
 
 
@@ -18,22 +12,25 @@ class TestVariant(unittest.TestCase):
 
     def testInit(self):
         variant = Variant()
-        assert variant.value == None
-        assert variant.productIdSuffix == None
+        self.assertIsNone(variant.value)
+        self.assertIsNone(variant.productIdSuffix)
+
+    def testValidateExceptionVariantNotDefined(self):
+        variant = Variant()
+        with self.assertRaisesRegex(Exception, "Die Variante wurde nicht definiert."): 
+            variant.validate(True)
+
+    def testValidateExceptionSuffixForVariantNotDefined(self):
+        variant = Variant()
+        variant.value = "10"
+        with self.assertRaisesRegex(Exception, "Das Suffix fuer die Variante " + variant.value + " wurde nicht definiert."): 
+            variant.validate(True)
 
     def testValidate(self):
         variant = Variant()
-        try:
-            variant.validate(True)
-        except Exception as ve:
-            assert str(ve) ==  "Die Variante wurde nicht definiert."
-
         variant.value = "10"
-        try:
-            variant.validate(True)
-        except Exception as ve:
-            assert str(ve) == "Das Suffix fuer die Variante " + self.value + " wurde nicht definiert."
-
+        variant.productIdSuffix = "IT"
+        variant.validate(True)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

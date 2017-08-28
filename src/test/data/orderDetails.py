@@ -12,165 +12,66 @@ from data.product import Product
 from data.productDetails import ProductDetails
 from data.reference import Reference
 from data.variant import Variant
+from data.orderDetails import OrderDetails
 
 
-class TestProduct(unittest.TestCase):
+class TestOrderDetails(unittest.TestCase):
 
     def testInit(self):
-        product = Product()
-        # Default: keine ProductID
-        assert product.productId is None
-        # keine Details
-        assert product.details is None
-        # keine OrderDetails
-        assert product.orderDetails is None
-        # Leerer Array ohne Preisdetails
-        assert product.priceDetails is not None
-        assert len(product.priceDetails) == 0
-        # Leerer Array ohne Bilder
-        assert product.mimeInfo is not None
-        assert len(product.mimeInfo) == 0
-        # Leerer Array ohne Attribute
-        assert product.featureSets is not None
-        assert len(product.featureSets) == 0
-        # Leerer Array ohne Referenzen
-        assert product.references is not None
-        assert len(product.references) == 0
-        # Leerer Array ohne Varianten
-        assert product.variants is not None
-        assert len(product.variants) == 0
-        # Leerer Array ohne UserDefinedExtensions
-        assert product.userDefinedExtensions is not None
-        assert len(product.userDefinedExtensions.keys()) == 0
-        # Keine Varianten gegeben
-        assert product.hasVariants == False
-        # Anzahl der Varianten ist mindestens 1, da der Artikel selber auch eine Variante darstellt.
-        assert product.numberOfVariants == 1
-
-    def testDetails(self):
-        product = Product()
+        orderDetails = OrderDetails()
         
-        # setzen der Product ID       
-        product.productId = "12345"
-        assert product.productId == "12345"
-        # Productdetails
-        product.details = ProductDetails()
-        
-        product.addTitle("TestTitel")
-        assert product.details.title == "TestTitel"
-        
-        product.addDescription("TestBeschreibung")
-        assert product.details.description == "TestBeschreibung"
+        self.assertEqual(orderDetails.orderUnit, "C62")
+        self.assertEqual(orderDetails.contentUnit, "C62")
+        self.assertEqual(orderDetails.packingQuantity, 1)
+        self.assertEqual(orderDetails.priceQuantity, 1)
+        self.assertEqual(orderDetails.quantityMin, 1)
+        self.assertEqual(orderDetails.quantityInterval, 1)        
 
-        product.addManufacturerId("12345")
-        assert product.details.manufacturerId == "12345"
+    def testValidateExceptionNoOrderUnitSet(self):
+        orderDetails = OrderDetails()
+        orderDetails.orderUnit = None
+        with self.assertRaisesRegex(Exception, "Keine Bestelleinheit angeben."):
+            orderDetails.validate(True)
+        orderDetails.orderUnit = ""
+        with self.assertRaisesRegex(Exception, "Keine Bestelleinheit angeben."):
+            orderDetails.validate(True)
 
-        product.addManufacturerName("Test")
-        assert product.details.manufacturerName == "Test"
+    def testValidateExceptionWrongOrderUnitSet(self):
+        orderDetails = OrderDetails()
+        orderDetails.orderUnit = "Bla"
+        with self.assertRaisesRegex(Exception, "Falsche Bestelleinheit angeben: " + str(orderDetails.orderUnit)):
+            orderDetails.validate(True)
 
-        product.addEAN("1234567890123")
-        assert product.details.ean == "1234567890123"
+    def testValidateExceptionNoContentUnitSet(self):
+        orderDetails = OrderDetails()
+        orderDetails.orderUnit = "C62"
+        orderDetails.contentUnit = None
+        with self.assertRaisesRegex(Exception, "Keine Verpackungseinheit angeben."):
+            orderDetails.validate(True)
+        orderDetails.contentUnit = ""
+        with self.assertRaisesRegex(Exception, "Keine Verpackungseinheit angeben."):
+            orderDetails.validate(True)
 
-        product.addDeliveryTime(2)
-        assert product.details.deliveryTime == 2
+    def testValidateExceptionWrongContentUnitSet(self):
+        orderDetails = OrderDetails()
+        orderDetails.orderUnit = "C62"
+        orderDetails.contentUnit = "Blubb"
+        with self.assertRaisesRegex(Exception, "Falsche Verpackungseinheit angeben: " + str(orderDetails.contentUnit)):
+            orderDetails.validate(True)
 
-        assert len(product.details.keywords) == 0
-        product.addKeyword("TestKeyword")
-        assert len(product.details.keywords) == 1
-        assert "TestKeyword" in product.details.keywords
-
-        assert len(product.details.specialTreatmentClasses) == 0
-        product.addSpecialTreatmentClass("TestClass")
-        assert len(product.details.specialTreatmentClasses) == 1
-        assert "TestClass" in product.details.specialTreatmentClasses
-
-    def testAddMime(self):
-        product = Product()
-        assert len(product.mimeInfo) == 0
-        product.addMime(Mime())
-        assert len(product.mimeInfo) == 1        
-            
-    def testAddReference(self):
-        product = Product()
-        assert len(product.references) == 0
-        product.addReference(Reference())
-        assert len(product.references) == 1        
-
-    def testAddUserDefinedExtension(self):
-        product = Product()
-        assert len(product.userDefinedExtensions) == 0
-        product.addUserDefinedExtension("")
-        assert len(product.userDefinedExtensions) == 0
-        # Aktuell passiert hier noch nichts        
-
-    def testAddFeatureSetSingleValueFeature(self):
-        # Single Feature, Single Value per Feature
-        product = Product()
-        featureSet = FeatureSet()
-        feature = Feature()
-        feature.name = "Name"
-        feature.addValue("Value")
-        featureSet.addFeature(feature)                
-        assert len(product.featureSets) == 0
-        product.addFeatureSet(featureSet)
-        assert len(product.featureSets) == 1        
-        # Leerer Array ohne Varianten
-        assert product.variants is not None
-        assert len(product.variants) == 0
-        # Keine Varianten gegeben
-        assert product.hasVariants == False
-        # Anzahl der Varianten ist mindestens 1, da der Artikel selber auch eine Variante darstellt.
-        assert product.numberOfVariants == 1
-
-    def testAddFeatureSetSingleValueVariantFeature(self):
-        # Single Feature, Single ValueVariant
-        product = Product()
-        featureSet = FeatureSet()
-        feature = Feature()
-        feature.name = "Name"
-        variant = Variant()
-        variant.productIdSuffix= "1L"
-        variant.value = "Value" 
-        feature.addVariant(variant)
-        feature.addVariantOrder(1)
-        featureSet.addFeature(feature)                
-        assert len(product.featureSets) == 0
-        product.addFeatureSet(featureSet)
-        assert len(product.featureSets) == 1        
-        # Leerer Array ohne Varianten
-        assert product.variants is not None
-        assert len(product.variants) == 1
-        # Keine Varianten gegeben
-        assert product.hasVariants == True
-        # Anzahl der Varianten ist mindestens 1, da der Artikel selber auch eine Variante darstellt.
-        assert product.numberOfVariants == 1
-
-    def testAddFeatureSetMultiValueVariantFeature(self):
-        # Single Feature, Multi ValueVariant
-        product = Product()
-        featureSet = FeatureSet()
-        feature = Feature()
-        feature.name = "Name"
-        variant = Variant()
-        variant.productIdSuffix= "1L"
-        variant.value = "Value" 
-        feature.addVariant(variant)
-        variant = Variant()
-        variant.productIdSuffix= "2L"
-        variant.value = "Value2" 
-        feature.addVariant(variant)
-        feature.addVariantOrder(1)
-        featureSet.addFeature(feature)                
-        assert len(product.featureSets) == 0
-        product.addFeatureSet(featureSet)
-        assert len(product.featureSets) == 1        
-        # Array mit 1 Variante
-        assert product.variants is not None
-        assert len(product.variants) == 1
-        # Varianten gegeben
-        assert product.hasVariants == True
-        # Anzahl der Varianten sollte 2 sein.
-        assert product.numberOfVariants == 2
+    def testValidate(self):
+        orderDetails = OrderDetails()
+        orderDetails.orderUnit = "C62"
+        orderDetails.contentUnit = "C62"
+        orderDetails.validate(True)
+        orderDetails.quantityMin = 11
+        orderDetails.validate(True)
+        orderDetails.quantityInterval = 12
+        orderDetails.validate(True)
+        orderDetails.packingQuantity = 2
+        orderDetails.validate(True)
+        orderDetails.priceQuantity= 18
+        orderDetails.validate(True)
 
 
 if __name__ == "__main__":

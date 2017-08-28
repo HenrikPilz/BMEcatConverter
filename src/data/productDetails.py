@@ -4,9 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
+from data import ValidatingObject
 
 
-class ProductDetails():
+class ProductDetails(ValidatingObject):
     
     def __init__(self):
         self.title = None
@@ -28,9 +29,9 @@ class ProductDetails():
         self.articleOrder = 1
         self.articleStatus = None        
 
-    def validate(self):
+    def validate(self, raiseException=False):
         if self.title is None or self.title.strip() == "":
-            logging.error("Ein Artikelname fehlt")
+            super().logError("Ein Artikelname fehlt", raiseException)
         if self.description is None or self.description.strip() == "":
             logging.warning("Die Artikelbeschreibung fehlt.")
         if self.ean is None or self.ean.strip() == "":

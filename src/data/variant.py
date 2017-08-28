@@ -24,6 +24,6 @@ class Variant(ValidatingObject):
         if self.value is None:
             errMsg = "Die Variante wurde nicht definiert."
             super().logError(errMsg, raiseException)
-        if self.value is None:
-            errMsg= "Das Suffix fuer die Variante " + self.value + " wurde nicht definiert."
+        if self.productIdSuffix is None:
+            errMsg= "Das Suffix fuer die Variante " + str(self.value) + " wurde nicht definiert."
             super().logError(errMsg, raiseException)

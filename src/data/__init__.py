@@ -11,7 +11,7 @@ class ValidatingObject(object):
         super().__init__()
     
     @abstractmethod
-    def validate(self, throwingException=False):
+    def validate(self, raiseException=False):
         raise NotImplementedError("Please implement 'validate' in your class '{0}".format(__file__))
     
     def logError(self, errMsg, raiseException=False):

@@ -4,9 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
+from data import ValidatingObject
 
 
-class TreatmentClass(object):
+class TreatmentClass(ValidatingObject):
     '''
     classdocs
     '''
@@ -19,8 +20,8 @@ class TreatmentClass(object):
         self.classType = None
         self.value = None
         
-    def validate(self):
+    def validate(self, raiseException=False):
         if self.classType is None:
-            logging.error("Es muss eine Klassifizierung angegeben werden.")
+            super().logError("Es muss eine Klassifizierung angegeben werden.", raiseException)
         if self.value is None:
             logging.info("Es wurde kein Wert zur Klassifizierung angegeben.")

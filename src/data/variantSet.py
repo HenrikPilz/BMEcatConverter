@@ -4,21 +4,22 @@ Created on 17.05.2017
 @author: henrik.pilz
 '''
 import logging
+from data import ValidatingObject
 
 
-class VariantSet():
+class VariantSet(ValidatingObject):
     def __init__(self):
         self.order = None
         self.variants = []
         
-    def validate(self):
+    def validate(self, raiseException=False):
         if self.order is None:
-            logging.error("Die Reihenfolge der Suffixe ist nicht definitiert.")
+            super().logError("Die Reihenfolge der Suffixe ist nicht definitiert.", raiseException)
         if self.variants is None or len(self.variants)==0:
-            logging.warning("Keine Varianten fuer diesen Artikel vorhanden!")
+            super().logError("Keine Varianten fuer diesen Artikel vorhanden!", raiseException)
         else:
             for variant in self.variants:
-                variant.validate()
+                variant.validate(raiseException)
 
     def addVariant(self, variant):
         self.variants.append(variant)

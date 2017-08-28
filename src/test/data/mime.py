@@ -11,21 +11,18 @@ class TestMime(unittest.TestCase):
 
     def testInit(self):
         mime = Mime()
-        assert mime.source == None
-        assert mime.mimeType == None
-        assert mime.description == None
-        assert mime.altenativeContent == None
-        assert mime.purpose == None
-        assert mime.order == 1
+        self.assertIsNone( mime.source )
+        self.assertIsNone( mime.mimeType )
+        self.assertIsNone( mime.description )
+        self.assertIsNone( mime.altenativeContent )
+        self.assertIsNone( mime.purpose )
+        self.assertEqual( mime.order, 1 )
 
-    def testValidateException(self):
-        mime = Mime()
-        try:
+    def testValidateException(self):       
+        with self.assertRaisesRegex(Exception, "Kein Bildpfad angegeben."):
+            mime = Mime()
             mime.validate(True)
-            assert False
-        except Exception as ve:
-            assert str(ve) == "Kein Bildpfad angegeben."
-
+        
     def testValidate(self):
         mime = Mime()
         mime.source = "Test"
