@@ -63,9 +63,12 @@ class PyxelHandler(object):
         self.createArtikelSheet(wb)
         wb.save(self._filename)
         self.createReferencesSheet(wb)
+        wb.save(self._filename)        
+        self.createKeywordsSheet(wb)
         wb.save(self._filename)
 
     def createArtikelSheet(self, wb):
+        logging.info("Übertrage Artikel.")
         sheet = wb.create_sheet("Artikel", 0)
         self.createArtikelHeader(sheet)
         self.writeArticlesToSheet(sheet)
@@ -248,10 +251,10 @@ class PyxelHandler(object):
             classCount += 1
 
     def createReferencesSheet(self, wb):
+        logging.info("Übertrage Artikelbeziehungen.")
         sheet = wb.create_sheet("Artikelbeziehungen", 1)
         self.createReferencesHeader(sheet)
         self.writeReferencesToSheet(sheet)
-
 
     def createReferencesHeader(self, sheet):
         columnIndex = 1
@@ -278,4 +281,32 @@ class PyxelHandler(object):
                 columnIndex += 1
                 sheet.cell(row=rowIndex+count, column=columnIndex, value=referencedArticleId)
                 count += 1
+        return count
+
+    def createKeywordsSheet(self, wb):
+        logging.info("Übertrage Artikelsuchbegriffe.")
+        sheet = wb.create_sheet("Artikelsuchbegriffe", 1)
+        self.createKeywordsHeader(sheet)
+        self.writeKeywordsToSheet(sheet)
+
+    def createKeywordsHeader(self, sheet):
+        columnIndex = 1
+        sheet.cell(row=self._headerRowIndex, column=columnIndex, value="supplierArticleId")
+        columnIndex += 1
+        sheet.cell(row=self._headerRowIndex, column=columnIndex, value="keywords")
+
+    def writeKeywordsToSheet(self, sheet):
+        rowIndex = self._headerRowIndex + 1
+        for articleType in self._articles.keys():
+            for article in self._articles[articleType]:
+                if len(article.details.keywords) > 0:
+                    rowIndex += self.writeKeywordsForOneArticle(article, rowIndex, sheet)
+
+    def writeKeywordsForOneArticle(self, article, rowIndex, sheet):
+        count = 0
+        columnIndex = 1
+        sheet.cell(row=rowIndex+count, column=columnIndex, value=article.productId)
+        columnIndex += 1
+        sheet.cell(row=rowIndex+count, column=columnIndex, value=",".join(['"{0}"'.format(keyword) for keyword in article.details.keywords]) )
+        count += 1
         return count
