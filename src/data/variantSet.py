@@ -3,7 +3,6 @@ Created on 17.05.2017
 
 @author: henrik.pilz
 '''
-import logging
 from data import ValidatingObject
 
 

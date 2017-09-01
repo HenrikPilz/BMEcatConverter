@@ -1,30 +1,37 @@
-from xml.sax import make_parser, handler
-from importHandler.xml.bmecatHandler import BMEcatHandler as BMEcatImportHandler
-from importHandler.excel.excelImporter import ExcelImporter
-'''from exportHandler.xml.bmecatHandler import BMEcatExportHandler'''
-from exportHandler.excel.pyxelHandler import PyxelHandler
-from resolver.dtdResolver import DTDResolver
-import logging
-import sys
+from __future__ import print_function
+
 import os
 import sys
+import logging
 import getopt
+
 import time
+
+from subprocess import call
+from ArgumentParser import ArgumentParser
+from ArgumentParser import MissingArgumentException
+import PackageInstaller
+from Converter import Converter
+from Converter import ConversionModeException
 
 loggingLevel = logging.WARNING
 
-'''
-Einstellungen für die zu erwartenden Daten:
+def printHelp():
+    """
+    Hilfe ausgeben
+    """
+    print("python main.py -i <inputfile> -o <outputfile> --dateformat \"%Y-%m-%d\" --separators english")
+    print("\t--dateformat <dateformat>")
+    print("\t\te.g. '%Y-%m-%d' or '%d.%m.%Y' or anything else with Y as Year, d as day and m as month ")
+    print("\t--separators <english|german|detect>")
+    print("\t\te.g. -separators german leads to numbers beeing expected like 10.000,00")
+    print("\t\t     -separators english leads to numbers beeing expected like 10,000.00")
+    print("\t\t     -separators detect tries to detect what could be there (unsafe).")
+    print("Optionally:")
+    print("\t--merchant <Merchantname>")
+    print("\t--manufacturer <Manufacturername>")
+    print("\ti.e. python main.py -i makita_bmecat.xml -o makita_excelfilname.xlsx -merchant \"Contorion\" -manufacturer \"Makita\"")
 
- - Welches Datumsformat haben wir?
- - Welches Dezimaltrennzeichen wird genutzt?
- - Welches tausendertrennzeichen wird genutzt?
- 
- Tausendertrennzeichen und Dezimalkennzeichen dürfen nicht gleich sein. 
-'''
-separators = { "german" : { "decimalSeparator" : ",", "thousandSeparator" : "." },
-               "english" : { "decimalSeparator" : ".", "thousandSeparator" : "," }
-             }
 
 '''
     setUp Logging for File and Console
@@ -64,135 +71,12 @@ def setUpLogging():
 
     logger.addHandler(stdOutHandler) 
     logger.setLevel(loggingLevel)
- 
-'''
-convert XML BMEcat to Excel-File
-'''
-def xmlToExcel(bmecatFilename, excelFilename, dateFormat, separatorMode="detect", manufacturerName=None, merchant=None):
-    parser = make_parser()
-    
-    decimalSeparator = separators[separatorMode]["decimalSeparator"]
-    thousandSeparator = separators[separatorMode]["thousandSeparator"]
-
-    
-    importer = BMEcatImportHandler(dateFormat, decimalSeparator, thousandSeparator)
-    parser.setContentHandler(importer)
-    parser.setEntityResolver(DTDResolver())
-    if bmecatFilename.startswith(".") or bmecatFilename.startswith(".."):
-        bmecatFilename = os.getcwd() + "//" + bmecatFilename
-    if excelFilename.startswith(".") or excelFilename.startswith(".."):
-        excelFilename = os.getcwd() + "//" + excelFilename
-    parser.parse("file:" + bmecatFilename)
-    logging.info("Daten eingelesen")
-
-    exporter = PyxelHandler(importer.articles, excelFilename, manufacturerName)
-    logging.info("Erstelle Excel-Datei")
-    exporter.createNewWorkbook()
-    logging.info("Fertig.")
-    
-'''
-convert Excel-File to XML BMEcat
-'''
-def excelToXml(inputPath, bmecatFilename, dateFormat, separatorMode, manufacturerName, merchantName):
-    if inputPath is None or not os.path.exists(inputPath):
-        raise Exception("Kein gültiger Pfad angegeben.") 
-
-    importer = ExcelImporter()
-    articles = { "new" : [], "update" : [], "delete" : [] }
-    if os.path.isfile(inputPath):
-        importer.readWorkbook(inputPath)
-        articles = importer._articles
-    else:
-        for filename in os.listdir(inputPath):
-            print ("Reading filee: ", os.path.join(inputPath,filename))
-            importer.readWorkbook(os.path.join(inputPath,filename), "FInal")
-            for articleType in importer._articles.keys():
-                if len(importer._articles[articleType]) > 0:
-                    articles[articleType].extend(importer._articles[articleType]) 
-    
-    logging.info("Daten eingelesen")
-    print("Daten eingelesen")
-    
-    exporter = BMEcatExportHandler(dateFormat, decimalSeparator, thousandSeparator, articles, bmecatFilename)
-    
-    logging.info("Erstelle Excel-Datei")
-    print("Erstelle Excel-Datei")
-    
-    logging.info("Fertig.")
-    print("Fertig.")
-
-def determineArguments(argv):
-    inputfile = None
-    outputfile = None
-    merchant = None
-    manufacturer = None
-    dateformat = None
-    separatorMode = None
-    
-    try:
-        opts, args = getopt.getopt(argv,"hi:o:", ["merchant=", "manufacturer=", "dateformat=", "separators="])
-        print("Options: ", opts)
-    except getopt.GetoptError:
-        print("Error: ")
-        printHelp()
-        sys.exit(2)
-
-    for opt, arg in opts:
-        print("Option: " + opt)
-        print("Argument: " + arg)
-        if opt == '-h':
-            printHelp()
-        elif opt == "-i":
-            inputfile = arg
-        elif opt == "-o":
-            outputfile = arg
-        elif opt == "--manufacturer":
-            manufacturer = arg
-        elif opt == "--merchant":
-            merchant = arg
-        elif opt == "--separators":
-            separatorMode = arg
-        elif opt == "--dateformat":
-            dateformat=arg            
-
-    if inputfile is None or outputfile is None or dateformat is None or separatorMode is None:
-        printHelp()
-    
-    logging.info("Input file is {0}".format(inputfile))
-    logging.info("Output file is {0}".format(outputfile))
-    if merchant is not None:
-        logging.info("Merchant: {0}".format(merchant))
-    if manufacturer is not None:
-        logging.info("Manufacturer: {0}".format(manufacturer))
-
-    return inputfile, outputfile, merchant, manufacturer, dateformat, separatorMode
-
-def printHelp():
-    ''' Hilfe ausgeben'''
-    print("python main.py -i <inputfile> -o <outputfile> --dateformat \"%Y-%m-%d\" --separators english")
-    print("\t--dateformat <dateformat>")
-    print("\t\te.g. '%Y-%m-%d' or '%d.%m.%Y' or anything else with Y as Year, d as day and m as month ")
-    print("\t--separators <english|german|detect>")
-    print("\t\te.g. -separators german leads to numbers beeing expected like 10.000,00")
-    print("\t\t     -separators english leads to numbers beeing expected like 10,000.00")
-    print("\t\t     -separators detect tries to detect what could be there (unsafe).")
-    print("Optionally:")
-    print("\t--merchant <Merchantname>")
-    print("\t--manufacturer <Manufacturername>")
-    print("\ti.e. python main.py -i makita_bmecat.xml -o makita_excelfilname.xlsx -merchant \"Contorion\" -manufacturer \"Makita\"")
-    sys.exit()
-
-def main(argv):
-    inputFilename, outputFilename, merchantName, manufacturerName, dateFormat, separatorMode = determineArguments(argv)
-    if inputFilename.endswith(".xml") and outputFilename.endswith(".xlsx"):
-        xmlToExcel(inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName)
-    elif (inputFilename.endswith(".xlsx") or os.path.isdir(inputFilename)) and outputFilename.endswith(".xml"):
-        excelToXml(inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName)
-    else:
-        print("Mode not supported")
-        printHelp()
     
 if __name__ == '__main__':
+    # Check for openpyxl
+    PackageInstaller.installIfNeeded("openpyxl")
+    PackageInstaller.installIfNeeded("regex")
+
     # Loging einstgellen: zwei Outputdateien plus Konsole 
     setUpLogging()
 
@@ -200,7 +84,23 @@ if __name__ == '__main__':
     logging.debug('Argument List:', str(sys.argv))
     t1 = time.clock()
     
-    main(sys.argv[1:])
+    try:
+        argv = sys.argv[1:]
+        inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName = ArgumentParser.parse(argv)
+        converter = Converter(inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName)        
+        converter.convert()
+    except ConversionModeException as cme:
+        print("Wrong Conversion Mode: ", str(mae))
+        printHelp()
+        sys.exit(2)
+    except MissingArgumentException as mae:
+        print("MIssing Arguments: ", str(mae))
+        printHelp()
+        sys.exit(3)
+    except getopt.GetoptError:
+        print("Error: ")
+        printHelp()
+        sys.exit(4)
     
     t2 = time.clock()
     duration = t2-t1
