@@ -1,0 +1,115 @@
+Einheit_ID;Einheitcode;Einheitkurzbezeichnung;Einheitbezeichnung;Klassifikationssystem_ID
+AAA001u001;MMT;mm;Millimeter;pc-7.0
+AAA002u001;GRM;g;Gramm;pc-7.0
+AAA003u001;MMK;mm²;Quadratmillimeter;pc-7.0
+AAA004u001;DD;°;Winkelgrad;pc-7.0
+AAA005u001;VLT;V;Volt;pc-7.0
+AAA008u001;B75;M;Metrisch;pc-7.0
+AAA009u001;KGM;kg;Kilogramm;pc-7.0
+AAA010u001;AMH;Ah;Amperestunde;pc-7.0
+AAA011u001;NEW;N;Newton;pc-7.0
+AAA012u001;NU;Nm;Newtonmeter;pc-7.0
+AAA013u001;;U/min;Umdrehungen pro Minute;pc-7.0
+AAA014u001;MIN;min;Minuten;pc-7.0
+AAA015u001;WTT;W;Watt;pc-7.0
+AAA016u001;AMP;A;Ampere;pc-7.0
+AAA017u001;C62;St;Stück;pc-7.0
+AAA018u001;HUR;h;Stunden;pc-7.0
+AAA019u001;JOU;J;Joule;pc-7.0
+AAA020u001;F28;g/min;Gramm pro Minute;pc-7.0
+AAA021u001;L2;l/min;Liter pro Minute;pc-7.0
+AAA022u001;LTR;l;Liter;pc-7.0
+AAA023u001;MTK;m²;Quadratmeter;pc-7.0
+AAA026u001;;l/sec;Liter pro Sekunde;pc-7.0
+AAA027u001;CEL;°C;Grad Celsius;pc-7.0
+AAA028u001;;1/min;pro Minute;pc-7.0
+AAA030u001;MTQ;m³;Kubikmeter;pc-7.0
+AAA032u001;CMT;cm;Zentimeter;pc-7.0
+AAA034u001;2X;m/min;Meter pro Minute;pc-7.0
+AAA035u001;MLT;ml;Milliliter;pc-7.0
+AAA036u001;BAR;bar;Bar;pc-7.0
+AAA038u001;MTR;m;Meter;pc-7.0
+AAA041u001;KWT;kW;Kilowatt;pc-7.0
+AAA042u001;GM;g/m²;Gramm pro Quadratmeter;pc-7.0
+AAA043u001;2N;dB;Dezibel;pc-7.0
+AAA044u001;HTZ;Hz;Hertz;pc-7.0
+AAA046u001;P1;%;Prozent;pc-7.0
+AAA047u001;23;g/cm³;Gramm pro Kubikzentimeter;pc-7.0
+AAA055u001;KVT;kV;Kilovolt;pc-7.0
+AAA056u001;B47;kN;Kilonewton;pc-7.0
+AAA057u001;;Level;Level;pc-7.0
+AAA058u001;B51;kp;Kilopond (Zugkraft);pc-7.0
+AAA060u001;MTS;m/s;Meter pro Sekunde;pc-7.0
+AAA061u001;;kg/m²;Kilogramm pro Quadratmeter;pc-7.0
+AAA062u001;MBR;mbar;Millibar;pc-7.0
+AAA064u001;;Paar;Paar;pc-7.0
+AAA065u001;;Satz;Satz;pc-7.0
+AAA066u001;;m³/h;Kubikmeter pro Stunde;pc-7.0
+AAA070u001;;kg/m;Kilogramm pro Meter;pc-7.0
+AAA074u001;;s;Sekunden;pc-7.0
+AAA075u001;;cm³;Kubikzentimeter;pc-7.0
+AAA076u001;4H;µm;Micrometer;pc-7.0
+AAA077u001;;mm/m;Millimeter pro Meter;pc-7.0
+AAA078u001;;mm/km;Millimeter pro Kilometer;pc-7.0
+AAA079u001;;Winkelsekunden;Winkelsekunden;pc-7.0
+AAA082u001;;g/m;Gramm pro Meter;pc-7.0
+AAA084u001;;mm/min;Millimeter pro Minute;pc-7.0
+AAA085u001;;daN;Dekanewton;pc-7.0
+AAA086u001;;t;Tonnen;pc-7.0
+AAA087u001;;cm²;Quadrat-Zentimeter;pc-7.0
+AAA089u001;;m²/h;Quadratmeter pro Stunde;pc-7.0
+AAA090u001;;mg/m³;Milligramm pro Kubikmeter;pc-7.0
+AAA091u001;;psi;pounds per square inch;pc-7.0
+AAA092u001;;dB(A);Dezibel (A);pc-7.0
+AAA093u001;;kg/cm²;Kilogramm pro Quadratzentimeter;pc-7.0
+AAA094u001;;km/h;Kilometer pro Stunde;pc-7.0
+AAA095u001;;m³/min;Kubikmeter pro Minute;pc-7.0
+AAA096u001;;N/mm²;Newton pro Quadratmillimeter;pc-7.0
+AAA097u001;;kg/h;Kilogramm pro Stunde;pc-7.0
+AAA098u001;;l/h;Liter pro Stunde;pc-7.0
+AAA099u001;;mPa;Millipascal;pc-7.0
+AAA100u001;;m/sec²;Meter pro Sekunde Quadrat;pc-7.0
+AAA103u001;;Nl/min;Normliter pro Minute;pc-7.0
+AAA104u001;;l/Nagelung;Liter pro Nagelung;pc-7.0
+AAA105u001;;pro Hub;pro Hub;pc-7.0
+AAA106u001;;cm³/min;Kubikzentimeter pro Minute;pc-7.0
+AAA107u001;;sec;Sekunden;pc-7.0
+AAA108u001;;mPa·s;Millipascalsekunde;pc-7.0
+AAA109u001;;mm/24h;Millimeter pro 24 Stunden;pc-7.0
+AAA110u001;;W/(m·K);Watt pro Meter und Kelvin;pc-7.0
+AAA111u001;;kg/l;Kilogramm pro Liter;pc-7.0
+AAA113u001;;N/mm;Newton pro Millimeter;pc-7.0
+EAA003u001;4O;µF;Microfarad;pc-7.0
+EAA005u001;CDL;cd;Candela;pc-7.0
+EAA007u001;;lm/W;Lumen pro Watt;pc-7.0
+EAA008u001;KEL;K;Kelvin;pc-7.0
+EAA011u001;LUM;lm;Lumen;pc-7.0
+EAA015u001;OHM;Ohm;Ohm;pc-7.0
+EAA024u001;;MHz;Megahertz;pc-7.0
+EAA031u001;;kA;Kiloampere;pc-7.0
+EAA032u001;;µH;Microhenry (Induktivität);pc-7.0
+EAA033u001;;mA;Milliampere;pc-7.0
+EAA035u001;;Wp;Wattpeak;pc-7.0
+EAA036u001;;kW/h;Kilowatt pro Stunde;pc-7.0
+EAA037u001;;kVA;Kilovoltampere;pc-7.0
+EAA038u001;;VA;Voltampere;pc-7.0
+EAA039u001;;Zoll;Zoll;pc-7.0
+EAA040u001;;DIN/s;DIN/Sekunde;pc-7.0
+EAA041u001;;m/Pas;Meter pro Pascal;pc-7.0
+EAA042u001;;l/Tag;Liter pro Tag;pc-7.0
+EAA043u001;;kPa;Kilopascal;pc-7.0
+EAA044u001;;AX;Schaltstrom;pc-7.0
+EAA045u001;;lx;Lux;pc-7.0
+EAA046u001;;Bft;Beaufort;pc-7.0
+EAA047u001;;Schlag/min;Schlag pro Minute;pc-7.0
+EAA048u001;;GB;Gigabyte;pc-7.0
+EAA049u001;;DPI;Dots per Inch;pc-7.0
+EAB000u001;;ppm;parts per million;pc-7.0
+EAB001u001;;mAh;Milliamperestunde;pc-7.0
+EAB002u001;;kOhm;Kiloohm;pc-7.0
+EAB003u001;;mV;Millivolt;pc-7.0
+EAB004u001;;MOhm;Megaohm;pc-7.0
+EAB005u001;;AirWatt;Airwatt;pc-7.0
+EAB006u001;;° Shore A;Grad Shore A;pc-7.0
+EAB007u001;;g/mm³;Gramm pro Kubikmillimeter;pc-7.0
+EAC001u001;;kV/mm;Durchschlagsfestigkeit je Millimeter;pc-7.0
