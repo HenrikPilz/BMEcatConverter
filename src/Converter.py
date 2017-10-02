@@ -67,34 +67,23 @@ class Converter(object):
         '''
         convert Excel-File to XML BMEcat
         '''
-        '''
-        if inputPath is None or not os.path.exists(inputPath):
-            raise Exception("Kein gültiger Pfad angegeben.") 
-    
+
         importer = ExcelImporter()
-        articles = { "new" : [], "update" : [], "delete" : [] }
-        if os.path.isfile(inputPath):
-            importer.readWorkbook(inputPath)
-            articles = importer._articles
-        else:
-            for filename in os.listdir(inputPath):
-                print ("Reading filee: ", os.path.join(inputPath,filename))
-                importer.readWorkbook(os.path.join(inputPath,filename), "FInal")
-                for articleType in importer._articles.keys():
-                    if len(importer._articles[articleType]) > 0:
-                        articles[articleType].extend(importer._articles[articleType]) 
         
-        logging.info("Daten eingelesen")
-        print("Daten eingelesen")
+        if os.path.isfile(self.inputfile):
+            importer.readWorkbook(self.inputfile, )
+            articles = importer.articles
         
-        exporter = BMEcatExportHandler(dateFormat, decimalSeparator, thousandSeparator, articles, bmecatFilename)
+            logging.info("Daten eingelesen")
+            print("Daten eingelesen")
         
-        logging.info("Erstelle Excel-Datei")
-        print("Erstelle Excel-Datei")
+            exporter = BMEcatExportHandler(dateFormat, ".", ",", articles, self.outputfile)
+        
+            logging.info("Erstelle XML-Datei")
+            print("Erstelle XML-Datei")
         
         logging.info("Fertig.")
         print("Fertig.")
-        '''
         
     def convert(self):
         if self.inputfile.endswith(".xml") and self.outputfile.endswith(".xlsx"):

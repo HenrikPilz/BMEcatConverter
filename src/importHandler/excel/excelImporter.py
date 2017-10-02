@@ -13,15 +13,21 @@ from inspect import currentframe
 from data.product import Product
 from data.productDetails import ProductDetails
 from data.orderDetails import OrderDetails
+from data.featureSet import FeatureSet
+from data.priceDetails import PriceDetails
 
 class ExcelImporter(object):
+    
+    # Namen der mögliche Tabellen mit Artikeln
+    __allowedTablenames = [ 'Artikel', 'Tabelle1', 'Mapping-Master' ]
+    
     # Grunddaten eines Artikels. Mindestens die Artikelnummer
     basefieldMapping = {
         # Produktrumpf
         "supplierArticleId" : "productId"
     }
     
-    # Artiekldetails
+    # Artikeldetails
     productDetailMapping = {
         # Produktdetails
         "descriptionShort" : "title",
@@ -76,20 +82,33 @@ class ExcelImporter(object):
         '''
         Constructor
         '''
-        self.indexForProduct = {}
-        self.indexForProductDetails = {}
-        self.indexForOrderDetails = {}
-        self.indexPairsForFeatures = {}
-        self.indexTuplesForPrices = {}
-        self.indexTuplesForMimes = {}
+        self.__indexForProduct = {}
+        self.__indexForProductDetails = {}
+        self.__indexForOrderDetails = {}
+        self.__indexPairsForFeatures = {}
+        self.__indexTuplesForPrices = {}
+        self.__indexTuplesForMimes = {}
+        self.articles = []
         
-    def readWorkbook(self, filename, tablename):
+    def readWorkbook(self, filename):
         wb = load_workbook(filename)
-        articleSheet =  wb[tablename]
+        countPossibleCandidates = 0
+        tablename = None
+        for allowedSheetname in self.__allowedTablenames:
+            if allowedSheetname in wb.sheetnames:
+                countPossibleCandidates += 1
+                tablename = allowedSheetname
         
-        self.determineIndexMappings(articleSheet)
+        if tablename is None:
+            raise Exception("Das Tabellenblatt mit den Artikelnamen sollte einen der folgenden Namen tragen: '{0}'".format(", ".join(self.__allowedTablenames)))
+        if countPossibleCandidates > 1:
+            raise Exception("Es darf nur ein Tabellenblatt mit den folgenden Artikelnamen existieren: '{0}'".format(", ".join(self.__allowedTablenames)))
         
-    def determineIndexMappings(self, sheet):
+        articleSheet = wb[tablename]
+        self.__determineIndexMappings(articleSheet)
+        self.__readArticles(articleSheet)
+        
+    def __determineIndexMappings(self, sheet):
         # gehe durch alle Spalten in Zeile 1 (Headerzeile)
         for colIndex in range(1,sheet.max_column):        
             # hole den aktuellen Feldnamen    
@@ -100,13 +119,13 @@ class ExcelImporter(object):
                 print (currentFieldname)
                 # ist er in den basefieldKeys (Grunddatenfelder des Artikels)
                 if currentFieldname in self.basefieldMapping.keys():
-                    self.indexForProduct[self.basefieldMapping[currentFieldname]] = colIndex
+                    self.__indexForProduct[self.basefieldMapping[currentFieldname]] = colIndex
                 # ist er product detail relevant
                 elif currentFieldname in self.productDetailMapping.keys():                    
-                    self.indexForProductDetails[self.productDetailMapping[currentFieldname]] = colIndex
+                    self.__indexForProductDetails[self.productDetailMapping[currentFieldname]] = colIndex
                 # bestelldetails
                 elif currentFieldname in self.orderDetailMapping.keys():
-                    self.indexForOrderDetails[self.orderDetailMapping[currentFieldname]] = colIndex
+                    self.__indexForOrderDetails[self.orderDetailMapping[currentFieldname]] = colIndex
                 # andere Daten?                
                 else:
                     # dann muessen wir splitten, da der Zahlenanteil
@@ -122,13 +141,13 @@ class ExcelImporter(object):
                     
                     # sind es preisdetails ?
                     if fieldName in self.priceMapping.keys():
-                        indexForClassFieldName = self.indexTuplesForPrices
+                        indexForClassFieldName = self.__indexTuplesForPrices
                         columnNameToClassFieldName = self.priceMapping
                     elif fieldName in self.mimeMapping.keys():
-                        indexForClassFieldName = self.indexTuplesForMimes
+                        indexForClassFieldName = self.__indexTuplesForMimes
                         columnNameToClassFieldName = self.mimeMapping
                     elif fieldName in self.featureMapping.keys():
-                        indexForClassFieldName = self.indexPairsForFeatures
+                        indexForClassFieldName = self.__indexPairsForFeatures
                         columnNameToClassFieldName = self.featureMapping
                     else:
                         logging.debug("'{0}' : '{1}'".format(columnNameToClassFieldName[fieldName], fieldCount))
@@ -140,16 +159,50 @@ class ExcelImporter(object):
                     else:
                         indexForClassFieldName[classFieldName][fieldCount] = colIndex
 
-    def readArticles(self, sheet):
-        for rowIndex in range(2, sheet.max_row):
-            currentProduct = Product()
-            self.addInformationForMapping(self.indexForProduct, currentProduct, rowIndex, sheet)
-            currentProduct.details = ProductDetails()
-            self.addInformationForMapping(self.indexForProductDetails, currentProduct.details, rowIndex, sheet)
-            currentProduct.orderDetails = OrderDetails()
-            self.addInformationForMapping(self.indexForOrderDetails, currentProduct.orderDetails, rowIndex, sheet)
-            
 
-    def addInformationForMapping(self, mapping, objectForValue, rowIndex, sheet):
+    def __createProduct(self, sheet, rowIndex):
+        currentProduct = Product()
+        self.__transferInformationForMapping(self.__indexForProduct, currentProduct, rowIndex, sheet)
+        currentProduct.details = ProductDetails()
+        self.__transferInformationForMapping(self.__indexForProductDetails, currentProduct.details, rowIndex, sheet)
+        currentProduct.orderDetails = OrderDetails()
+        self.__transferInformationForMapping(self.__indexForOrderDetails, currentProduct.orderDetails, rowIndex, sheet)
+        self.__addMultipleOrderedObjects(self.__indexTuplesForMimes, currentProduct, "Mime", rowIndex, sheet)
+        priceDetails = PriceDetails()
+        self.__addMultipleOrderedObjects(self.__indexPairsForFeatures, priceDetails, "Price", rowIndex, sheet)
+        currentProduct.addPriceDetails(priceDetails)
+        featureSet = FeatureSet()
+        self.__addMultipleOrderedObjects(self.__indexPairsForFeatures, featureSet, "Feature", rowIndex, sheet)
+        currentProduct.addFeatureSet(featureSet)
+        return currentProduct
+
+    def __readArticles(self, sheet):
+        for rowIndex in range(2, sheet.max_row):
+            currentProduct = self.__createProduct(sheet, rowIndex)
+            self.articles.append(currentProduct)
+
+    def __addMultipleOrderedObjects(self, mapping, objectToAddMultiplesTo, typeOfMultiplesAsString, rowIndex, sheet):
+        typeOfMultiples = globals()[typeOfMultiplesAsString]
+        itemsToAddByOrder = {}
+        for fieldname in mapping.keys():
+            for order, colIndex in mapping[fieldname].iteritems():
+                if order not in itemsToAddByOrder.keys(): 
+                    itemsToAddByOrder[order]= typeOfMultiples()                
+                setattr(itemsToAddByOrder[order], fieldname, sheet.cell(columnIndex=colIndex, row=rowIndex))
+        
+        for key in sorted(itemsToAddByOrder.keys()):
+            self.__exectueAddMethod(objectToAddMultiplesTo, "add" + str(typeOfMultiples), itemsToAddByOrder[key]) 
+
+    def __transferInformationForMapping(self, mapping, objectForValue, rowIndex, sheet):
         for fieldname in mapping.keys():
             setattr(objectForValue, fieldname, sheet.cell(columnIndex=mapping[fieldname], row=rowIndex))
+            
+    def __exectueAddMethod(self, objectWithAddMethod ,addMethodName, arg):
+        elementHandler = None
+        try:
+            if not addMethodName is None:
+                elementHandler = getattr(objectWithAddMethod, addMethodName)
+                elementHandler(arg)
+            self.__currentContent = ""
+        except AttributeError:
+            raise NotImplementedError("Class [" + objectWithAddMethod.__class__.__name__ + "] does not implement [" + addMethodName + "]")
