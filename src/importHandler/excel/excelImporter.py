@@ -10,14 +10,18 @@ import regex
 from openpyxl import load_workbook
 from multiprocessing.connection import arbitrary_address
 from inspect import currentframe
+from data.product import Product
+from data.productDetails import ProductDetails
+from data.orderDetails import OrderDetails
 
 class ExcelImporter(object):
-    
+    # Grunddaten eines Artikels. Mindestens die Artikelnummer
     basefieldMapping = {
         # Produktrumpf
         "supplierArticleId" : "productId"
     }
     
+    # Artiekldetails
     productDetailMapping = {
         # Produktdetails
         "descriptionShort" : "title",
@@ -30,6 +34,7 @@ class ExcelImporter(object):
         "deliveryTime" : "deliveryTime"
     }
     
+    # Bestelldetails
     orderDetailMapping = {
         # Order Details
         "orderUnit" : "orderUnit",
@@ -40,8 +45,10 @@ class ExcelImporter(object):
         "quantityInterval" : "quantityInterval"
     }
     
+    # technische Daten
     featureMapping = { "attributeName" : "name", "attributeValue" : "value" }
     
+    # Preisdaten
     priceMapping = {
         "priceType" : "priceType",
         "priceAmount" : "amount",
@@ -52,6 +59,7 @@ class ExcelImporter(object):
         "currency" : "currency"
         }
 
+    # Bilddaten
     mimeMapping = {
         "mimeType" : "mimeType",
         "mimeSource" : "source",
@@ -82,39 +90,66 @@ class ExcelImporter(object):
         self.determineIndexMappings(articleSheet)
         
     def determineIndexMappings(self, sheet):
-        for colIndex in range(1,sheet.max_column):
+        # gehe durch alle Spalten in Zeile 1 (Headerzeile)
+        for colIndex in range(1,sheet.max_column):        
+            # hole den aktuellen Feldnamen    
             currentFieldname = sheet.cell(column=colIndex, row=1).value
+            # wenn der Feldnam nicht leer ist
             if currentFieldname is not None and currentFieldname.strip() is not None and len(currentFieldname.strip()) > 0:
+                # gib ihn aus
                 print (currentFieldname)
+                # ist er in den basefieldKeys (Grunddatenfelder des Artikels)
                 if currentFieldname in self.basefieldMapping.keys():
-                    self.indexForProduct[colIndex] = self.basefieldMapping[currentFieldname]
-                elif currentFieldname in self.productDetailMapping.keys():
-                    self.indexForProductDetails[colIndex] = self.productDetailMapping[currentFieldname]
+                    self.indexForProduct[self.basefieldMapping[currentFieldname]] = colIndex
+                # ist er product detail relevant
+                elif currentFieldname in self.productDetailMapping.keys():                    
+                    self.indexForProductDetails[self.productDetailMapping[currentFieldname]] = colIndex
+                # bestelldetails
                 elif currentFieldname in self.orderDetailMapping.keys():
-                    self.indexForOrderDetails[colIndex] = self.orderDetailMapping[currentFieldname]                
+                    self.indexForOrderDetails[self.orderDetailMapping[currentFieldname]] = colIndex
+                # andere Daten?                
                 else:
-                    firstPart = regex.match("[a-zA-Z]*", currentFieldname).group(0)
-                    secondPart = currentFieldname.replace(firstPart, "")
+                    # dann muessen wir splitten, da der Zahlenanteil
+                    # Sowohl die Zusammengehörigkeit der Daten anzeigt,
+                    # als auch die Reihenfolge bestimmt
+                    fieldName = regex.match("[a-zA-Z]*", currentFieldname).group(0)
+                    fieldCount = currentFieldname.replace(fieldName, "")
                     
-                    print("'{0}' : '{1}'".format(firstPart, secondPart)) #logging.debug
+                    print("'{0}' : '{1}'".format(fieldName, fieldCount)) #logging.debug
                     
                     columnNameToClassFieldName = None
                     indexForClassFieldName = None
                     
-                    if firstPart in self.priceMapping.keys():
+                    # sind es preisdetails ?
+                    if fieldName in self.priceMapping.keys():
                         indexForClassFieldName = self.indexTuplesForPrices
                         columnNameToClassFieldName = self.priceMapping
-                    elif firstPart in self.mimeMapping.keys():
+                    elif fieldName in self.mimeMapping.keys():
                         indexForClassFieldName = self.indexTuplesForMimes
                         columnNameToClassFieldName = self.mimeMapping
-                    elif firstPart in self.featureMapping.keys():
+                    elif fieldName in self.featureMapping.keys():
                         indexForClassFieldName = self.indexPairsForFeatures
                         columnNameToClassFieldName = self.featureMapping
                     else:
-                        logging.debug("'{0}' : '{1}'".format(firstPart, secondPart))
+                        logging.debug("'{0}' : '{1}'".format(columnNameToClassFieldName[fieldName], fieldCount))
                         continue
-                        
-                    if secondPart not in indexForClassFieldName.keys():
-                        indexForClassFieldName[secondPart] = { columnNameToClassFieldName[firstPart] : colIndex } 
+
+                    classFieldName = columnNameToClassFieldName[fieldName]                        
+                    if classFieldName not in indexForClassFieldName.keys():
+                        indexForClassFieldName[classFieldName] = { fieldCount : colIndex } 
                     else:
-                        indexForClassFieldName[secondPart][columnNameToClassFieldName[firstPart]] = colIndex
+                        indexForClassFieldName[classFieldName][fieldCount] = colIndex
+
+    def readArticles(self, sheet):
+        for rowIndex in range(2, sheet.max_row):
+            currentProduct = Product()
+            self.addInformationForMapping(self.indexForProduct, currentProduct, rowIndex, sheet)
+            currentProduct.details = ProductDetails()
+            self.addInformationForMapping(self.indexForProductDetails, currentProduct.details, rowIndex, sheet)
+            currentProduct.orderDetails = OrderDetails()
+            self.addInformationForMapping(self.indexForOrderDetails, currentProduct.orderDetails, rowIndex, sheet)
+            
+
+    def addInformationForMapping(self, mapping, objectForValue, rowIndex, sheet):
+        for fieldname in mapping.keys():
+            setattr(objectForValue, fieldname, sheet.cell(columnIndex=mapping[fieldname], row=rowIndex))

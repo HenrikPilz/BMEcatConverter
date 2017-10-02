@@ -8,6 +8,9 @@ from data import ValidatingObject
 
 
 class PriceDetails(ValidatingObject):
+    
+    neededPriceTypes = [ 'net_customer' ]
+    additionalPriceTypes = [ 'net_list' ]
    
     def __init__(self):
         self.validFrom = None
@@ -22,9 +25,15 @@ class PriceDetails(ValidatingObject):
             logging.warning("Zeitspanne nicht gueltig.")
         if self.dailyPrice:
             super().logError("Tagespreis hinterlegt!", raiseException)
+        pricenames = []
         for price in self.prices:
             price.validate(raiseException)
+            if price.priceType in pricenames:
+                self.logError("Jeder Preistyp darf nur einmal auftreten.s", raiseException)
     
+        if not set(pricenames).issubset(PriceDetails.neededPriceTypes):
+            self.logError("Mindestens ein Pflichtpreis ist nicht vorhanden: '{0}'".format(",".join(PriceDetails.neededPriceTypes)), raiseException)
+
     def addPrice(self, price):
         if price is not None:
             self.prices.append(price)
