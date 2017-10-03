@@ -1,0 +1,11 @@
+[run]
+branch = true
+
+[paths]
+source = src/
+
+[html]
+directory = coverage/report/html
+
+[xml]
+output = coverage/xml/coverage.xml
