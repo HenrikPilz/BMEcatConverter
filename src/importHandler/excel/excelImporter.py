@@ -52,14 +52,17 @@ class ExcelImporter(object):
     }
     
     # technische Daten
-    featureMapping = { "attributeName" : "name", "attributeValue" : "value" }
+    featureMapping = { "attributeName" : "name", "attributeValue" : "value", "attributeUnit" : "unit" }
     
     # Preisdaten
     priceMapping = {
         "priceType" : "priceType",
+        "price_type" : "priceType",
         "priceAmount" : "amount",
+        "price_amount" : "amount",
         "tax" : "tax",
         "lowerBound" : "lowerBound",
+        "lower_bound" : "lowerBound",
         "factor" : "factor",
         "territory" : "territory",
         "currency" : "currency"
@@ -67,12 +70,17 @@ class ExcelImporter(object):
 
     # Bilddaten
     mimeMapping = {
-        "mimeType" : "mimeType",
+        "mime_type" : "mimeType",
         "mimeSource" : "source",
+        "mime_source" : "source",
         "mimeDescription" : "description",
+        "mime_description" : "description",
         "mimeAlt" : "altenativeContent",
+        "mime_alt" : "altenativeContent",
         "mimePurpose" : "purpose",
-        "mimeOrder" : "order"
+        "mime_purpose" : "purpose",
+        "mimeOrder" : "order",
+        "mime_order" : "order"
         }
 
     '''
