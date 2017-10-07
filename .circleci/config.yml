@@ -44,14 +44,14 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            python test_main.py
+            python src/test_main.py
 
       # run coverage!
       - run:
           name: run coverage
           command: |
             . venv/bin/activate
-            coverage run test_main.py
+            coverage run src/test_main.py
             coverage report
             coverage xml
             coverage html
