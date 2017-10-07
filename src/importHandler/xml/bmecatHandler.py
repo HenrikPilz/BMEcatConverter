@@ -8,20 +8,8 @@ import logging
 import os
 from xml.sax import handler
 
-from data.feature import Feature
-from data.featureSet import FeatureSet
-from data.mime import Mime
-from data.orderDetails import OrderDetails
-from data.price import Price
-from data.priceDetails import PriceDetails
-from data.product import Product
-from data.productDetails import ProductDetails
-from data.reference import Reference
-from data.treatmentClass import TreatmentClass
-from data.variant import Variant
-from data.variantSet import VariantSet
-from mapping.blacklist import Blacklist
-from mapping.units import UnitMapper
+from data import Feature, FeatureSet, Mime, OrderDetails, Price, PriceDetails, Product, ProductDetails, Reference, TreatmentClass, Variant, VariantSet
+from mapping import Blacklist, UnitMapper
 
 
 class BMEcatHandler(handler.ContentHandler):

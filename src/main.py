@@ -7,14 +7,14 @@ import getopt
 
 import time
 
-from subprocess import call
-from ArgumentParser import ArgumentParser
-from ArgumentParser import MissingArgumentException
-import PackageInstaller
-from Converter import Converter
-from Converter import ConversionModeException
+from argumentParser import ArgumentParser
+from argumentParser import MissingArgumentException
+from argumentParser import HelpCalledException
+import packageInstaller
+from converter import Converter
+from converter import ConversionModeException
 
-loggingLevel = logging.WARNING
+loggingLevel = logging.INFO
 
 def printHelp():
     """
@@ -36,46 +36,45 @@ def printHelp():
 '''
     setUp Logging for File and Console
 '''
+
+def createFileLoggingHandler(logfilename, logLevel=logging.DEBUG, logFormat='%(levelname)7s: %(message)s'):
+    if os.path.exists(logfilename):
+        os.remove(logfilename)
+    ''' log File'''
+    logFileHandler = logging.FileHandler(filename=logfilename)
+    logFileFormatter = logging.Formatter(logFormat)
+    logFileHandler.setFormatter(logFileFormatter)
+    logFileHandler.setLevel(logLevel)
+    return logFileHandler
+
+
+def configureStdoutLogging():
+    frmStdOut = logging.Formatter('%(levelname)7s - %(message)s')
+    ''' Console out '''
+    stdOutHandler = logging.StreamHandler(sys.stdout)
+    stdOutHandler.setFormatter(frmStdOut)
+    stdOutHandler.setLevel(loggingLevel)
+    return stdOutHandler
+
 def setUpLogging():
     logger = logging.getLogger()
     
-    debugLogFilename = "convert_debug.log"
-    if os.path.exists(debugLogFilename):
-        os.remove(debugLogFilename)
-
-    frmLogFile = logging.Formatter('%(levelname)7s - [%(filename)20s:%(lineno)s - %(funcName)20s()]: %(message)s')
-    ''' Debug log File'''
-    debugLogFileHandler = logging.FileHandler(filename=debugLogFilename )
-    debugLogFileHandler.setFormatter(frmLogFile)
-    debugLogFileHandler.setLevel(logging.DEBUG)
-
+    ''' Debug Log File '''
+    debugLogFileHandler = createFileLoggingHandler(logfilename="convert_debug.log", logFormat='%(levelname)7s - [%(filename)20s:%(lineno)s - %(funcName)20s()]: %(message)s')
     logger.addHandler(debugLogFileHandler)
 
-    commonLogFilename = "convert.log"
-    if os.path.exists(commonLogFilename):
-        os.remove(commonLogFilename)
-
-    frmLogFile = logging.Formatter('%(levelname)7s: %(message)s')
     ''' Common Log File for Validation etc.'''
-    logFileHandler = logging.FileHandler(filename=commonLogFilename )
-    logFileHandler.setFormatter(frmLogFile)
-    logFileHandler.setLevel(logging.WARNING)
-
+    logFileHandler = createFileLoggingHandler(logfilename="convert.log", logLevel=logging.WARNING) 
     logger.addHandler(logFileHandler)
     
-    frmStdOut = logging.Formatter('%(levelname)7s - %(message)s') 
-    ''' Console out '''
-    stdOutHandler = logging.StreamHandler(sys.stdout) 
-    stdOutHandler.setFormatter(frmStdOut)
-    stdOutHandler.setLevel(loggingLevel)
-
+    stdOutHandler = configureStdoutLogging()
     logger.addHandler(stdOutHandler) 
     logger.setLevel(loggingLevel)
     
 if __name__ == '__main__':
     # Check for openpyxl
-    PackageInstaller.installIfNeeded("openpyxl")
-    PackageInstaller.installIfNeeded("regex")
+    packageInstaller.installIfNeeded("openpyxl")
+    packageInstaller.installIfNeeded("regex")
 
     # Loging einstgellen: zwei Outputdateien plus Konsole 
     setUpLogging()
@@ -89,12 +88,14 @@ if __name__ == '__main__':
         inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName = ArgumentParser.parse(argv)
         converter = Converter(inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName)        
         converter.convert()
+    except HelpCalledException:
+        printHelp()
     except ConversionModeException as cme:
-        print("Wrong Conversion Mode: ", str(mae))
+        print("Wrong Conversion Mode: ", str(cme))
         printHelp()
         sys.exit(2)
     except MissingArgumentException as mae:
-        print("MIssing Arguments: ", str(mae))
+        print("Missing Arguments: ", str(mae))
         printHelp()
         sys.exit(3)
     except getopt.GetoptError:

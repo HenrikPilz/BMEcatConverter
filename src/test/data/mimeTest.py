@@ -5,9 +5,9 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data.mime import Mime
+from data import Mime
 
-class TestMime(unittest.TestCase):
+class MimeTest(unittest.TestCase):
 
     def testInit(self):
         mime = Mime()

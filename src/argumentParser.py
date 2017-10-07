@@ -7,6 +7,11 @@ Created on 01.09.2017
 import getopt
 import logging
 
+class HelpCalledException(Exception):
+    '''
+    Exception if Help is called
+    '''
+
 class MissingArgumentException(Exception):
     '''
     Exception if an argument is Missing
@@ -30,10 +35,10 @@ class ArgumentParser():
         print("Options: ", opts)
     
         for opt, arg in opts:
-            print("Option: " + opt)
-            print("Argument: " + arg)
+            logging.debug("Option: " + opt)
+            logging.debug("Argument: " + arg)
             if opt == '-h':
-                ArgumentParser.printHelp()
+                raise HelpCalledException()
             elif opt == "-i":
                 inputfile = arg
             elif opt == "-o":

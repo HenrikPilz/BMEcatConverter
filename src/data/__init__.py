@@ -1,23 +1,15 @@
-from abc import abstractmethod
-import logging
+__all__ = [ 'Feature', 'FeatureSet', 'Mime', 'Product', 'ProductDetails', 'OrderDetails', 'PriceDetails', 'Price', 'Reference', 'TreatmentClass', 'Variant', 'VariantSet']
 
-
-class ValidatingObject(object):
-    '''
-    Interface Class for a validating Object
-    '''
-    
-    def __init__(self):
-        super().__init__()
-    
-    @abstractmethod
-    def validate(self, raiseException=False):
-        raise NotImplementedError("Please implement 'validate' in your class '{0}".format(__file__))
-    
-    def logError(self, errMsg, raiseException=False):
-        '''
-         Taking an ErrorMessage, logging it and if wanted throwing an Exception
-        '''
-        logging.error(errMsg)
-        if raiseException:
-            raise Exception(errMsg)
+from .validatingObject import ValidatingObject
+from .feature import Feature
+from .featureSet import FeatureSet
+from .mime import Mime
+from .orderDetails import OrderDetails
+from .price import Price
+from .priceDetails import PriceDetails
+from .product import Product
+from .productDetails import ProductDetails
+from .reference import Reference
+from .treatmentClass import TreatmentClass
+from .variant import Variant
+from .variantSet import VariantSet

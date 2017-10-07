@@ -5,11 +5,10 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data.feature import Feature
-from data.variant import Variant
+from data import Feature, Variant
 
 
-class TestFeature(unittest.TestCase):
+class FeatureTest(unittest.TestCase):
 
     def testInit(self):
         feature = Feature()

@@ -5,7 +5,7 @@ Created on 05.05.2017
 '''
 
 import logging
-from data import ValidatingObject
+from . import ValidatingObject
 
 
 class OrderDetails(ValidatingObject):

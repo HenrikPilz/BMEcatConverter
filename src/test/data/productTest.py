@@ -5,18 +5,10 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data.feature import Feature
-from data.featureSet import FeatureSet
-from data.mime import Mime
-from data.product import Product
-from data.productDetails import ProductDetails
-from data.reference import Reference
-from data.variant import Variant
-from data.orderDetails import OrderDetails
-from data.priceDetails import PriceDetails
+from data import Feature, FeatureSet, Mime, Product, ProductDetails, Reference, Variant, OrderDetails, PriceDetails
 
 
-class TestProduct(unittest.TestCase):
+class ProductTest(unittest.TestCase):
 
     def testInit(self):
         product = Product()

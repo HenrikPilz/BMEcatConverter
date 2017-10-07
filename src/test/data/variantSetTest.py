@@ -5,11 +5,10 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data.variant import Variant
-from data.variantSet import VariantSet
+from data import Variant, VariantSet
 
 
-class TestVariantSet(unittest.TestCase):
+class VariantSetTest(unittest.TestCase):
 
     def testInit(self):
         variantSet = VariantSet()

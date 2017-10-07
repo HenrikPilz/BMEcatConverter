@@ -5,9 +5,9 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data.priceDetails import PriceDetails
+from data import PriceDetails
 
-class TestPriceDetails(unittest.TestCase):
+class PriceDetailsTest(unittest.TestCase):
 
     def testInit(self):
         priceDetails = PriceDetails()

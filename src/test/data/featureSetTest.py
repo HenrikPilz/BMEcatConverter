@@ -5,11 +5,10 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data.feature import Feature
-from data.featureSet import FeatureSet
+from data import Feature, FeatureSet
 
 
-class TestFeatureSet(unittest.TestCase):
+class FeatureSetTest(unittest.TestCase):
 
     def testInit(self):
         featureSet = FeatureSet()

@@ -5,11 +5,10 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data.mime import Mime
-from data.reference import Reference
+from data import Mime, Reference
 
 
-class TestReference(unittest.TestCase):
+class ReferenceTest(unittest.TestCase):
 
     def testInit(self):
         reference = Reference()

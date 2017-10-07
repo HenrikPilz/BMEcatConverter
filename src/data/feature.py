@@ -3,8 +3,8 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
-from data import ValidatingObject
-from data.variantSet import VariantSet
+from . import ValidatingObject
+from .variantSet import VariantSet
 
 class Feature(ValidatingObject):
     def __init__(self):

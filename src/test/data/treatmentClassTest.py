@@ -5,9 +5,9 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data.treatmentClass import TreatmentClass
+from data import TreatmentClass
 
-class TestTreatmentClass(unittest.TestCase):
+class TreatmentClassTest(unittest.TestCase):
 
     def testInit(self):        
         treatmentClass = TreatmentClass()

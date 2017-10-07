@@ -12,16 +12,7 @@ from ElementTree_pretty import prettify
 import datetime
 
 
-from data.feature import Feature
-from data.featureSet import FeatureSet
-from data.mime import Mime
-from data.orderDetails import OrderDetails
-from data.price import Price
-from data.priceDetails import PriceDetails
-from data.product import Product
-from data.productDetails import ProductDetails
-from data.reference import Reference
-from data.treatmentClass import TreatmentClass
+from data import *
 
 from xml.etree import ElementTree
 from xml.dom import minidom

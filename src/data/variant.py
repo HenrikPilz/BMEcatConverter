@@ -3,7 +3,7 @@ Created on 17.05.2017
 
 @author: henrik.pilz
 '''
-from data import ValidatingObject
+from . import ValidatingObject
 
 
 class Variant(ValidatingObject):

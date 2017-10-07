@@ -5,17 +5,9 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data.feature import Feature
-from data.featureSet import FeatureSet
-from data.mime import Mime
-from data.product import Product
-from data.productDetails import ProductDetails
-from data.reference import Reference
-from data.variant import Variant
-from data.orderDetails import OrderDetails
+from data import OrderDetails
 
-
-class TestOrderDetails(unittest.TestCase):
+class OrderDetailsTest(unittest.TestCase):
 
     def testInit(self):
         orderDetails = OrderDetails()
