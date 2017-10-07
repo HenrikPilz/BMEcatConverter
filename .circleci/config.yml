@@ -75,11 +75,15 @@ jobs:
       - run: chmod +x ./cc-test-reporter
       - run: sudo mkdir -p $CIRCLE_TEST_REPORTS/phpunit
       - run: ./cc-test-reporter before-build
-      - run: sudo php vendor/bin/phpunit --coverage-clover clover.xml
+      - run: sudo vendor/bin/phpunit --coverage-clover clover.xml
       - run: ./cc-test-reporter after-build -t clover --exit-code $?
 
 workflows:
   version: 2
+  tests_only:
+    jobs:
+      - test
+
   test_and_coverage:
     jobs:
       - test
