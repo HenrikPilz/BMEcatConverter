@@ -159,9 +159,9 @@ class PyxelHandler(object):
         sheet.cell(row=rowIndex, column=columnIndex, value=article.details.ean)
         columnIndex += 1
         if article.details.manufacturerArticleId is None:
-            sheet.cell(row=rowIndex, column=columnIndex, value=article.productId.strip().replace(" ",""))
+            sheet.cell(row=rowIndex, column=columnIndex, value=article.productId.strip())
         else:
-            sheet.cell(row=rowIndex, column=columnIndex, value=article.details.manufacturerArticleId.replace(" ",""))
+            sheet.cell(row=rowIndex, column=columnIndex, value=article.details.manufacturerArticleId.strip())
         columnIndex += 1
         if article.details.manufacturerName is None:
             sheet.cell(row=rowIndex, column=columnIndex, value=self._defaultManufacturerName)
