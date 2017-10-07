@@ -3,8 +3,9 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2
+
 jobs:
-  build:
+  test:
     docker:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
@@ -57,6 +58,29 @@ jobs:
             coverage html
 
       - store_artifacts:
-          path: test-reports
+          path: ~/repo/coverage/report/html
           destination: test-reports
-          
+
+  coverage:
+    environment:
+      CC_TEST_REPORTER_ID: 7cab17cbed7019019ea4955c73a8099e2d8c1199833546e7b5e9223bbb1e6dc6
+    docker:
+      - image: notnoopci/php:7.1.5-browsers
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: sudo pecl channel-update pecl.php.net
+      - run: sudo pecl install xdebug && sudo docker-php-ext-enable xdebug
+      - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      - run: chmod +x ./cc-test-reporter
+      - run: sudo mkdir -p $CIRCLE_TEST_REPORTS/phpunit
+      - run: ./cc-test-reporter before-build
+      - run: sudo vendor/bin/phpunit --coverage-clover clover.xml
+      - run: ./cc-test-reporter after-build -t clover --exit-code $?
+
+workflows:
+  version: 2
+  test_and_coverage:
+    jobs:
+      - test
+      - coverage
