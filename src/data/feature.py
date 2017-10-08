@@ -15,6 +15,12 @@ class Feature(ValidatingObject):
         self.description = None
         self.valueDetails = None
 
+    def __eq__(self, other):
+        return self.name == other.name and self.variants == self.variants and self.unit == self.unit and self.description == self.description and self.valueDetails == self.valueDetails
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def validate(self, raiseException=False):
         errMsg = None
         if self.name is None or len(self.name.strip()) == 0:

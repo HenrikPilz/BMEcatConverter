@@ -9,6 +9,20 @@ class VariantSet(ValidatingObject):
     def __init__(self):
         self.order = None
         self.variants = []
+
+    def __eq__(self, other):
+        for selfvariant in self.variants:
+            if selfvariant not in other.variants:
+                return False
+
+        for othervariant in other.variants:
+            if othervariant not in self.variants:
+                return False
+                
+        return self.order == other.order
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
         
     def validate(self, raiseException=False):
         if self.order is None:
