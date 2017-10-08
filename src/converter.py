@@ -60,7 +60,7 @@ class Converter(object):
     
         exporter = PyxelHandler(importer.articles, self.outputfile, self.manufacturerName)
         logging.info("Erstelle Excel-Datei")
-        exporter.createNewWorkbook()
+        exporter.createNewWorkbookAndTransferData()
         logging.info("Fertig.")
     
     def excelToXml(self):
