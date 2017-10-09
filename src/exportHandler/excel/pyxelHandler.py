@@ -150,7 +150,7 @@ class PyxelHandler(object):
         columnIndex += 1
         sheet.cell(row=rowIndex, column=columnIndex, value="")
         columnIndex += 1
-        sheet.cell(row=rowIndex, column=columnIndex, value=article.productId.strip().replace(" ",""))
+        sheet.cell(row=rowIndex, column=columnIndex, value=article.productId.strip())
         columnIndex += 1
         sheet.cell(row=rowIndex, column=columnIndex, value=article.details.title)
         columnIndex += 1
