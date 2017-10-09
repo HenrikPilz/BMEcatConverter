@@ -2,3 +2,4 @@ openpyxl
 regex
 coverage
 lxml
+codeclimate-test-reporter
