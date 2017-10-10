@@ -6,8 +6,10 @@ Created on 12.05.2017
 from datetime import datetime
 import csv
 import logging
+import os
 
 from lxml.etree import ElementTree, Element, SubElement, Comment, tostring
+from _elementtree import Element
 
 
 
@@ -30,24 +32,54 @@ class BMEcatHandler(ElementTree):
                 }
 
     def createHeader(self):
-        ''' Create Header of BMEcat'''
-        top = Element('top')
-
-        comment = Comment('Generated for PyMOTW')
-        top.append(comment)
+        ''' Create Header of BMEcat
+        <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE BMECAT SYSTEM "bmecat_new_catalog.dtd">
+<BMECAT version="
+1.2
+" xml:lang="de" xmlns="
+http://www.bmecat.org/bmecat/1.2/bmecat_new_catalog
+">
+<HEADER>
+...
+</HEADER>
+<T_NEW_CATALOG>
+...
+</T_NEW_CATALOG>
+</BMECAT>
+        '''
         
-        child = SubElement(top, 'child')
-        child.text = 'This child contains text.'
+        userName = os.environ["USERNAME"]
+        usplit = userName.split(" ")
+        initals = usplit[0][0] + usplit[1][0]
         
-        child_with_tail = SubElement(top, 'child_with_tail')
-        child_with_tail.text = 'This child has regular text.'
-        child_with_tail.tail = 'And "tail" text.'
+        generationDate = datetime.date.today().isoformat()
+        dateKz = datetime.date.today().
+        generationTIme = datetime.time.time().isoformat(timespec='seconds')
+                
+        header = Element.XML("<HEADER> " &
+"<GENERATOR_INFO>BMEcatConverter Contorion</GENERATOR_INFO>" &
+"<CATALOG>" &
+"<LANGUAGE>deu</LANGUAGE>" &
+"<CATALOG_ID>" + "</CATALOG_ID>" &
+"<CATALOG_VERSION>1.0</CATALOG_VERSION>" &
+"<CATALOG_NAME>" + "</CATALOG_NAME>" &
+'<DATETIME type="generation_date">' &
+"<DATE>" + "</DATE>" &
+"<TIME>"+ "</TIME>" &
+"</DATETIME>" &
+"<CURRENCY>EUR</CURRENCY>" &
+"</CATALOG>" &
+"<BUYER>" &
+"<BUYER_NAME>Contorion GmbH</BUYER_NAME>" &
+"</BUYER>" &
+"<SUPPLIER>" &
+"<SUPPLIER_NAME>Contorion GmbH</SUPPLIER_NAME>" &
+"</SUPPLIER>" &
+"</HEADER>")
+
         
-        child_with_entity_ref = SubElement(top, 'child_with_entity_ref')
-        child_with_entity_ref.text = 'This & that'
-
-
-        generated_on = str(datetime.datetime.now())
+        
         
         # Configure one attribute with set()
         root = Element('opml')
@@ -98,7 +130,6 @@ class BMEcatHandler(ElementTree):
     def prettify(self, elem):
         """Return a pretty-printed XML string for the Element.
         """
-        rough_string = ElementTree.tostring(elem, 'utf-8')
-        reparsed = minidom.parseString(rough_string)
-        return reparsed.toprettyxml(indent="  ")
+        reparsed = ElementTree.tostring(elem, 'utf-8')
+        return reparsed.toprettyxml(indent="    ")
     
