@@ -64,6 +64,7 @@ jobs:
       #    name: upload coverage
       #    command: |
       #      codeclimate-test-reporter --file ./coverage/xml/coverage.xml
+      # codeclimate-test-reporter
    
       - store_artifacts:
           path: ~/repo/coverage/report/html
