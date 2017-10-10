@@ -4,10 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject
+from . import ValidatingXmlObject
 
 
-class Mime(ValidatingObject):
+class Mime(ValidatingXmlObject):
     
     __allowedTypes = [ "url", "application/pdf", "image/jpeg", "image/jpg", "image/tif", "text/html", "text/plain" ]
     __allowedPurposes = [ "thumbnail", "normal", "detail", "data_sheet", "logo", "others" ]

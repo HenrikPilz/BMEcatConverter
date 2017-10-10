@@ -3,9 +3,9 @@ Created on 17.05.2017
 
 @author: henrik.pilz
 '''
-from . import ValidatingObject
+from . import ValidatingXmlObject
 
-class VariantSet(ValidatingObject):
+class VariantSet(ValidatingXmlObject):
     def __init__(self):
         self.order = None
         self.variants = []

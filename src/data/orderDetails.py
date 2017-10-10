@@ -5,10 +5,10 @@ Created on 05.05.2017
 '''
 
 import logging
-from . import ValidatingObject
+from . import ValidatingXmlObject
 
 
-class OrderDetails(ValidatingObject):
+class OrderDetails(ValidatingXmlObject):
     allowedOrderUnits = [ "C62", "MTR", "SET", "BX", "CT", "PF", "BG", "PK", "TN", "DR", "CA", "CS", "RO" ]
     allowedContentUnits = [ "C62", "MTR", "SET", "RO", "DR", "CS", "PR", "RO" ]
     __allowedCombinations = {}

@@ -4,10 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject
+from . import ValidatingXmlObject
 
 
-class FeatureSet(ValidatingObject):
+class FeatureSet(ValidatingXmlObject):
     def __init__(self):
         self.referenceSytem = None
         self.referenceGroupId = None

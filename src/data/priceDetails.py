@@ -4,10 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject
+from . import ValidatingXmlObject
 
 
-class PriceDetails(ValidatingObject):
+class PriceDetails(ValidatingXmlObject):
     
     neededPriceTypes = [ 'net_customer' ]
     additionalPriceTypes = [ 'net_list' ]

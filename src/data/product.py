@@ -4,10 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject
+from . import ValidatingXmlObject
 
 
-class Product(ValidatingObject):
+class Product(ValidatingXmlObject):
 
     def __init__(self):        
         self.productId = None

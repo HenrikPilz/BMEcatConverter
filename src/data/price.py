@@ -4,9 +4,9 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject
+from . import ValidatingXmlObject
 
-class Price(ValidatingObject):
+class Price(ValidatingXmlObject):
     
     def __init__(self):
         self.priceType = None

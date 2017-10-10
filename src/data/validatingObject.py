@@ -7,7 +7,7 @@ from abc import abstractmethod
 import logging
 
 
-class ValidatingObject(object):
+class ValidatingXmlObject(object):
     '''
     Interface Class for a Class which validates its content
     '''
@@ -27,3 +27,6 @@ class ValidatingObject(object):
         if raiseException:
             raise Exception(errMsg)
 
+    @abstractmethod
+    def toXml(self):
+        raise NotImplementedError("Please implement 'toXml' in your class '{0}".format(__file__))

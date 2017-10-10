@@ -3,10 +3,10 @@ Created on 17.05.2017
 
 @author: henrik.pilz
 '''
-from . import ValidatingObject
+from . import ValidatingXmlObject
 
 
-class Variant(ValidatingObject):
+class Variant(ValidatingXmlObject):
     '''
     classdocs
     '''

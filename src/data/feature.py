@@ -3,10 +3,10 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
-from . import ValidatingObject
+from . import ValidatingXmlObject
 from .variantSet import VariantSet
 
-class Feature(ValidatingObject):
+class Feature(ValidatingXmlObject):
     def __init__(self):
         self.name = None
         self.values = []

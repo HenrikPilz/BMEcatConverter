@@ -4,10 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject
+from . import ValidatingXmlObject
 
 
-class TreatmentClass(ValidatingObject):
+class TreatmentClass(ValidatingXmlObject):
     '''
     classdocs
     '''
