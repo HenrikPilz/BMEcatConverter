@@ -19,7 +19,7 @@ class BMEcatHandler(handler.ContentHandler):
     
     ''' alle registrierten StartElementhandler '''
     __startElementHandler = {
-                "article" : "__createProduct",
+                "article" : "createProduct",
                 "article_details" : "createProductDetails", 
                 "order_details" : "createOrderDetails",
                 "price_details" : "createPriceDetails",
@@ -215,7 +215,7 @@ class BMEcatHandler(handler.ContentHandler):
     
     ''' ---------------------------------------------------------------------'''
     ''' Anfang Artikel '''
-    def __createProduct(self, attrs):
+    def createProduct(self, attrs):
         logging.debug("Anfang Produkt " + ", ".join(attrs.getNames()))
         if not self.__currentArticle is None:
             raise Exception("Fehler im BMEcat: Neuer Artikel soll erstellt werden. Es wird schon ein Artikel verarbeitet.")

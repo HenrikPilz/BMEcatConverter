@@ -18,7 +18,7 @@ class FeatureSet(ValidatingXmlObject):
             feature.validate(True)
             self.features.append(feature)
         except Exception as ve:
-            logging.info("Das Attribut enthaelt keine validen Werte. Es wird nicht hinzugefuegt. ", ve)
+            logging.info("Das Attribut enthaelt keine validen Werte. Es wird nicht hinzugefuegt. {0}".format(str(ve)))
         
     def validate(self, raiseException=False):
         if self.features is None or len(self.features) == 0:
