@@ -237,7 +237,3 @@ class ProductTest(unittest.TestCase):
         product.addPriceDetails(priceDetails)
         product.validate(True)
 
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()
-    

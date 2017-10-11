@@ -16,8 +16,3 @@ class xmlHandlerTest(unittest.TestCase):
         bmecatHandler.writeBMEcatAsXML("test_bmecat.xml", [])
         
         #bmcatImporter = BMEcatImporter(dateFormat, decimalSeparator, thousandSeparator)
-
-
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()

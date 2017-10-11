@@ -13,6 +13,13 @@ class FeatureSet(ValidatingXmlObject):
         self.referenceGroupId = None
         self.features = []
         
+    def __eq__(self, other):
+        if type(self) != type(other):
+            return False
+
+        featuresEqual = super().checkListForEquality(self.features, other.features)
+        return featuresEqual and self.referenceGroupId == other.referenceGroupId and self.referenceSytem == other.referenceSytem
+
     def addFeature(self,feature):
         try:
             feature.validate(True)

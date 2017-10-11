@@ -23,6 +23,15 @@ class Reference(ValidatingXmlObject):
         self.description = None
         self.mimeInfo = []
 
+    def __eq__(self, other):
+        if type(self) != type(other):
+            return False
+
+        supplierArticleIdsEqual = super().checkListForEquality(self.supplierArticleIds, other.supplierArticleIds)
+        mimeInfoEqual = super().checkListForEquality(self.mimeInfo, other.mimeInfo)
+        
+        return supplierArticleIdsEqual and mimeInfoEqual and self.referenceType == other.referenceType and self.quantity == other.quantity
+
     def validate(self,  raiseException=False):
         if self.referenceType is None:
             super().logError("Der Referenz wurde kein Typ zugewiesen.",  raiseException)

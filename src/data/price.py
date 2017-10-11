@@ -17,6 +17,11 @@ class Price(ValidatingXmlObject):
         self.factor = 1.0
         self.territory = "DEU"
 
+    def __eq__(self, other):
+        if type(self) != type(other):
+            return False
+        return self.priceType == other.priceType and self.amount == other.amount and self.currency == other.currency and self.tax == other.tax and self.lowerBound == other.lowerBound and self.factor == other.factor and self.territory == other.territory
+
     def validate(self, raiseException=False):
         if self.amount is None:
             super().logError("Kein Preis angegeben!", raiseException)

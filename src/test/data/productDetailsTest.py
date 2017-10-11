@@ -56,7 +56,3 @@ class ProductDetailsTest(unittest.TestCase):
         productdetails.title = "Test"
         productdetails.validate(True)
 
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()
-    

@@ -30,7 +30,3 @@ class PriceDetailsTest(unittest.TestCase):
         priceDetails = PriceDetails()
         priceDetails.validate(True)
 
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()
-    

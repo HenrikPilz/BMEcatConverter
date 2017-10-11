@@ -25,7 +25,3 @@ class TreatmentClassTest(unittest.TestCase):
         treatmentClass.classType = "1"
         treatmentClass.validate(True)
         
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()
-    

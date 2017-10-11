@@ -19,6 +19,11 @@ class TreatmentClass(ValidatingXmlObject):
         '''
         self.classType = None
         self.value = None
+
+    def __eq__(self, other):
+        if type(self) != type(other):
+            return False
+        return self.classType == other.classType and self.value == other.value
         
     def validate(self, raiseException=False):
         if self.classType is None:

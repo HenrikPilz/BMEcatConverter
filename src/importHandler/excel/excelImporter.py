@@ -12,7 +12,7 @@ from multiprocessing.connection import arbitrary_address
 from openpyxl import load_workbook
 import regex
 
-from data import FeatureSet, Mime, OrderDetails, PriceDetails, Product, ProductDetails
+from data import FeatureSet, Mime, OrderDetails, PriceDetails, Product, ProductDetails, Price, Feature
 
 
 class ExcelImporter(object):
@@ -44,6 +44,7 @@ class ExcelImporter(object):
         # Order Details
         "orderUnit" : "orderUnit",
         "contentUnit" : "contentUnit",
+        "ContentUnit" : "contentUnit",
         "packingQuantity" : "packingQuantity",
         "priceQuantity" : "priceQuantity",
         "quantityMin" : "quantityMin",
@@ -51,7 +52,14 @@ class ExcelImporter(object):
     }
     
     # technische Daten
-    __featureMapping = { "attributeName" : "name", "attributeValue" : "value", "attributeUnit" : "unit" }
+    __featureMapping = { 
+        "attribute_name" : "name", 
+        "attributeName" : "name", 
+        "attribute_value" : "value", 
+        "attributeValue" : "value", 
+        "attribute_unit" : "unit",
+        "attributeUnit" : "unit"
+    }
     
     # Preisdaten
     __priceMapping = {
@@ -65,10 +73,11 @@ class ExcelImporter(object):
         "factor" : "factor",
         "territory" : "territory",
         "currency" : "currency"
-        }
+    }
 
     # Bilddaten
     __mimeMapping = {
+        "mimeType" : "mimeType",
         "mime_type" : "mimeType",
         "mimeSource" : "source",
         "mime_source" : "source",
@@ -80,7 +89,7 @@ class ExcelImporter(object):
         "mime_purpose" : "purpose",
         "mimeOrder" : "order",
         "mime_order" : "order"
-        }
+    }
 
     '''
     classdocs
@@ -180,14 +189,17 @@ class ExcelImporter(object):
         self.__transferInformationForMapping(self.__indexForOrderDetails, currentProduct.orderDetails, rowIndex, sheet)
         self.__addMultipleOrderedObjects(self.__indexTuplesForMimes, currentProduct, Mime, rowIndex, sheet)
         priceDetails = PriceDetails()
-        self.__addMultipleOrderedObjects(self.__indexPairsForFeatures, priceDetails, "Price", rowIndex, sheet)
+        self.__addMultipleOrderedObjects(self.__indexPairsForFeatures, priceDetails, Price, rowIndex, sheet)
         currentProduct.addPriceDetails(priceDetails)
         featureSet = FeatureSet()
-        self.__addMultipleOrderedObjects(self.__indexPairsForFeatures, featureSet, "Feature", rowIndex, sheet)
+        self.__addMultipleOrderedObjects(self.__indexPairsForFeatures, featureSet, Feature, rowIndex, sheet)
         currentProduct.addFeatureSet(featureSet)
         return currentProduct
 
-    def __addMultipleOrderedObjects(self, mapping, objectToAddMultiplesTo, typeOfMultiples, rowIndex, sheet):        
+    def __addMultipleOrderedObjects(self, mapping, objectContainer, typeOfMultiples, rowIndex, sheet):     
+        """
+        Fügt mehrere Objekte zum Objektcontainer hinzu
+        """   
         itemsToAddByOrder = {}
         for fieldname in mapping.keys():
             for order, colIndex in mapping[fieldname].items():
@@ -196,9 +208,12 @@ class ExcelImporter(object):
                 setattr(itemsToAddByOrder[order], fieldname, sheet.cell(column=colIndex, row=rowIndex).value)
         
         for key in sorted(itemsToAddByOrder.keys()):
-            self.__exectueAddMethod(objectToAddMultiplesTo, "add" + str(typeOfMultiples.__name__), itemsToAddByOrder[key]) 
+            self.__exectueAddMethod(objectContainer, "add" + str(typeOfMultiples.__name__), itemsToAddByOrder[key]) 
 
     def __transferInformationForMapping(self, mapping, objectForValue, rowIndex, sheet):
+        """
+        Überträgt die Informationen vom Objekt über das angegebene Mapping für das Produkt in der Zeile.
+        """
         for fieldname in mapping.keys():
             setattr(objectForValue, fieldname, sheet.cell(column=mapping[fieldname], row=rowIndex).value)
             

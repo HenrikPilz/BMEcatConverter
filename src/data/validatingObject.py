@@ -14,6 +14,20 @@ class ValidatingXmlObject(object):
     
     def __init__(self):
         super().__init__()
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    @classmethod
+    def checkListForEquality(self, lhs, rhs):
+        for leftItem in lhs:
+            if leftItem not in rhs:
+                return False
+
+        for rightItem in rhs:
+            if rightItem not in lhs:
+                return False
+        return True
     
     @abstractmethod
     def validate(self, raiseException=False):

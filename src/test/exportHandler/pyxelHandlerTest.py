@@ -16,29 +16,29 @@ class PyxelHandlerTest(unittest.TestCase):
         article = Product()
         article.productId = '12345'
         article.details = ProductDetails()
-        article.details.deliveryTime = 10
-        article.details.description = 'Test Description'
-        article.details.ean = '12345678901234'
-        article.details.keywords = [ 'Keyword 1', 'Keyword 2']
-        article.details.manufacturerArticleId = '09876'
-        article.details.manufacturerName = 'Manufacturer'
-        tc = TreatmentClass()
-        tc.classType = 'TestClass'
-        tc.value = '12345'
-        article.details.specialTreatmentClasses = [ tc ]
+#        article.details.deliveryTime = 10
+#        article.details.description = 'Test Description'
+#        article.details.ean = '12345678901234'
+#        article.details.keywords = [ 'Keyword 1', 'Keyword 2']
+#        article.details.manufacturerArticleId = '09876'
+#        article.details.manufacturerName = 'Manufacturer'
+#        tc = TreatmentClass()
+#        tc.classType = 'TestClass'
+#        tc.value = '12345'
+#        article.details.specialTreatmentClasses = [ tc ]
         article.details.title = 'Test Article'
-        article.details.supplierAltId = '23456'
-        reference = Reference()
-        reference.referenceType = 'accessory'
-        reference.supplierArticleIds = [ '09876', '7654' ]        
-        article.addReference(reference)
+#        article.details.supplierAltId = '23456'
+#        reference = Reference()
+#        reference.referenceType = 'accessory'
+#        reference.supplierArticleIds = [ '09876', '7654' ]        
+#        article.addReference(reference)
         
-        mime = Mime()
-        mime.mimeType = 'image/jpg'
-        mime.order = 1
-        mime.purpose = 'detail'
-        mime.source = 'manufacturer/Test.jpg'
-        article.addMime(mime)
+#        mime = Mime()
+#        mime.mimeType = 'image/jpg'
+#        mime.order = 1
+#        mime.purpose = 'detail'
+#        mime.source = 'manufacturer/Test.jpg'
+#        article.addMime(mime)
         article.orderDetails = OrderDetails()
         article.orderDetails.contentUnit = 'C62'
         article.orderDetails.orderUnit = 'C62'
@@ -70,26 +70,3 @@ class PyxelHandlerTest(unittest.TestCase):
         article2 = excelImporter.articles[0]
         
         self.assertEqual(article, article2, "Test")
-        
-        self.assertEqual(article.productId, article2.productId, "Product ID not Equal")
-        article.details = ProductDetails()
-        article.details.deliveryTime = 10
-        article.details.description = 'Test Description'
-        article.details.ean = '12345678901234'
-        article.details.keywords = [ 'Keyword 1', 'Keyword 2']
-        article.details.manufacturerArticleId = '09876'
-        article.details.manufacturerName = 'Manufacturer'
-        tc = TreatmentClass()
-        tc.classType = 'TestClass'
-        tc.value = '12345'
-        article.details.specialTreatmentClasses = [ tc ]
-        article.details.title = 'Test Article'
-        article.details.supplierAltId = '23456'
-        reference = Reference()
-        reference.referenceType = 'accessory'
-        reference.supplierArticleIds = [ '09876', '7654' ]
-        
-        
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testInit']
-    unittest.main()

@@ -16,11 +16,12 @@ class Feature(ValidatingXmlObject):
         self.valueDetails = None
 
     def __eq__(self, other):
-        return self.name == other.name and self.variants == self.variants and self.unit == self.unit and self.description == self.description and self.valueDetails == self.valueDetails
-    
-    def __ne__(self, other):
-        return not self.__eq__(other)
+        if type(self) != type(other):
+            return False
 
+        valuesEqual = super().checkListForEquality(self.values, other.values)
+        return valuesEqual and self.name == other.name and self.variants == other.variants and self.unit == other.unit and self.description == other.description and self.valueDetails == other.valueDetails
+    
     def validate(self, raiseException=False):
         errMsg = None
         if self.name is None or len(self.name.strip()) == 0:
@@ -38,9 +39,9 @@ class Feature(ValidatingXmlObject):
     
     def addValue(self, value):
         if value is not None:
-            if type(value) is str and len(value.strip()) > 0:
+            if type(value) is str and len(value.strip()) > 0 and value not in self.values:
                 self.values.append(value)
-            elif type(value) is not str: 
+            elif type(value) is not str and value not in self.values: 
                 self.values.append(value)
             else:
                 pass

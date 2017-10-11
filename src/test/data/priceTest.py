@@ -35,7 +35,3 @@ class PriceTest(unittest.TestCase):
         price.amount = 1.0
         price.validate(True)
 
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()
-    

@@ -23,15 +23,17 @@ class Product(ValidatingXmlObject):
         self.numberOfVariants = 1
 
     def __eq__(self, other):
-        for selfvariant in self.variants:
-            if selfvariant not in other.variants:
-                return False
+        if type(self) != type(other):
+            return False
 
-        for othervariant in other.variants:
-            if othervariant not in self.variants:
-                return False
+        priceDetailsEqual = super().checkListForEquality(self.priceDetails, other.priceDetails)
+        mimeInfoEqual = super().checkListForEquality(self.mimeInfo, other.mimeInfo)        
+        userDefinedExtensionsEqual = super().checkListForEquality(self.userDefinedExtensions, other.userDefinedExtensions)
+        featureSetsEqual = super().checkListForEquality(self.featureSets, other.featureSets)
+        referencesEqual = super().checkListForEquality(self.references, other.references)
+        variantsEqualEqual = super().checkListForEquality(self.variants, other.variants)
                 
-        return self.order == other.order
+        return priceDetailsEqual and mimeInfoEqual and userDefinedExtensionsEqual and featureSetsEqual and referencesEqual and variantsEqualEqual and self.productId == other.productId and self.details == other.details and self.orderDetails == other.orderDetails and self.hasVariants == other.hasVariants
     
     def __ne__(self, other):
         return not self.__eq__(other)

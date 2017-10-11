@@ -45,7 +45,3 @@ class FeatureSetTest(unittest.TestCase):
         featureSet.addFeature(feature)                
         self.assertEqual(len(featureSet), 0)       
 
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()
-    
