@@ -5,7 +5,7 @@
 version: 2
 
 jobs:
-  test_and_coverage:
+  test:
     environment:
       CODECLIMATE_REPO_TOKEN: 7cab17cbed7019019ea4955c73a8099e2d8c1199833546e7b5e9223bbb1e6dc6
     docker:
@@ -49,6 +49,34 @@ jobs:
             . venv/bin/activate
             python src/test_main.py
 
+  coverage:
+    environment:
+      CC_TEST_REPORTER_ID: 7cab17cbed7019019ea4955c73a8099e2d8c1199833546e7b5e9223bbb1e6dc6
+    docker:
+      - image: circleci/python:3.6.1
+    working_directory: ~/repo
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
       # run coverage!
       - run:
           name: run coverage
@@ -66,12 +94,11 @@ jobs:
             coverage html
 
       # upload reports
-      #- run:
-      #    name: upload coverage
-      #    command: |
-      #      codeclimate-test-reporter --file ./coverage/xml/coverage.xml
-      # codeclimate-test-reporter
-   
+      - run:
+          name: upload coverage
+          command: |
+            codeclimate-test-reporter
+
       - store_artifacts:
           path: ~/repo/coverage/report/html
           destination: test-reports
@@ -80,4 +107,5 @@ workflows:
   version: 2
   test_and_coverage:
     jobs:
-      - test_and_coverage
+      - test
+      - coverage
