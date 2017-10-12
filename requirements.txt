@@ -1,5 +1,5 @@
 openpyxl
 regex
-coverage
+coverage==4.3
 lxml
 codeclimate-test-reporter
