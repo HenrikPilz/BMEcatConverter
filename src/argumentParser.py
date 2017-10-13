@@ -46,17 +46,17 @@ class ArgumentParser():
     def _checkAndDetermineArgument(self, opt, arg):
         if opt == '-h':
             raise HelpCalledException()
-        elif opt == "-i":
+        if opt == "-i":
             self._inputfile = arg
-        elif opt == "-o":
+        if opt == "-o":
             self._outputfile = arg
-        elif opt == "--manufacturer":
+        if opt == "--manufacturer":
             self._manufacturer = arg
-        elif opt == "--merchant":
+        if opt == "--merchant":
             self._merchant = arg
-        elif opt == "--separators":
+        if opt == "--separators":
             self._separatorMode = arg
-        elif opt == "--dateformat":
+        if opt == "--dateformat":
             self._dateformat = arg
 
     def _validateArguments(self):
