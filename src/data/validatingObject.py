@@ -31,10 +31,10 @@ class ValidatingObject(object):
             return False
         return True
 
-	def __eq__(self, other):
+    def __eq__(self, other):
         return isinstance(other, self.__class__)
 
-	def __ne__(self, other):
+    def __ne__(self, other):
         return not self.__eq__(other)
 
 

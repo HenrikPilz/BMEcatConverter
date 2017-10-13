@@ -24,8 +24,8 @@ class OrderDetails(ValidatingXmlObject):
     def __eq__(self, other):
         if not super().__eq__(other):
             return False
-		else:
-			return self.orderUnit == other.orderUnit and self.contentUnit == other.contentUnit and self.packingQuantity == other.packingQuantity and self.priceQuantity == other.priceQuantity and self.quantityMin == other.quantityMin and self.quantityInterval == other.quantityInterval
+        else:
+            return self.orderUnit == other.orderUnit and self.contentUnit == other.contentUnit and self.packingQuantity == other.packingQuantity and self.priceQuantity == other.priceQuantity and self.quantityMin == other.quantityMin and self.quantityInterval == other.quantityInterval
 
     def validate(self, raiseException=False):
         if self.orderUnit is None or self.orderUnit.strip() == "":

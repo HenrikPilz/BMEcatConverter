@@ -20,8 +20,8 @@ class Price(ValidatingXmlObject):
     def __eq__(self, other):
         if not super().__eq__(other):
             return False
-		else:
-			return self.priceType == other.priceType and self.amount == other.amount and self.currency == other.currency and self.tax == other.tax and self.lowerBound == other.lowerBound and self.factor == other.factor and self.territory == other.territory
+        else:
+            return self.priceType == other.priceType and self.amount == other.amount and self.currency == other.currency and self.tax == other.tax and self.lowerBound == other.lowerBound and self.factor == other.factor and self.territory == other.territory
 
     def validate(self, raiseException=False):
         if self.amount is None:

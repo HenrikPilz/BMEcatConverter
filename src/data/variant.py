@@ -22,8 +22,8 @@ class Variant(ValidatingXmlObject):
     def __eq__(self, other):
         if not super().__eq__(other):
             return False
-		else:
-			return self.value == other.value and self.productIdSuffix == other.productIdSuffix
+        else:
+            return self.value == other.value and self.productIdSuffix == other.productIdSuffix
                
     def validate(self, raiseException=False):
         errMsg = None

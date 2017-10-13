@@ -20,9 +20,9 @@ class Feature(ValidatingXmlObject):
     def __eq__(self, other):
         if not super().__eq__(other):
             return False
-		else:
-			valuesEqual = super().checkListForEquality(self.values, other.values)
-			return valuesEqual and self.name == other.name and self.variants == other.variants and self.unit == other.unit and self.description == other.description and self.valueDetails == other.valueDetails
+        else:
+            valuesEqual = super().checkListForEquality(self.values, other.values)
+            return valuesEqual and self.name == other.name and self.variants == other.variants and self.unit == other.unit and self.description == other.description and self.valueDetails == other.valueDetails
     
     def validate(self, raiseException=False):
         errMsg = None

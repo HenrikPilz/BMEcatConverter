@@ -12,11 +12,11 @@ class VariantSet(ValidatingXmlObject):
         self.variants = []
 
     def __eq__(self, other):
-		if not super().__eq__(other):
-			return False
-		else:
-			variantsEqual = super().checkListForEquality(self.variants, other.variants)                
-			return variantsEqual and self.order == other.order
+        if not super().__eq__(other):
+            return False
+        else:
+            variantsEqual = super().checkListForEquality(self.variants, other.variants)                
+            return variantsEqual and self.order == other.order
     
     def validate(self, raiseException=False):
         if self.order is None:

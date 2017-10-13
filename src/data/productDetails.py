@@ -32,21 +32,21 @@ class ProductDetails(ValidatingXmlObject):
     def __eq__(self, other):
         if not super().__eq__(other):
             return False
-		else:
-			# Folgende Dinge werden erstmal vernachlässigt.        
-			# specialTreatmentClassesEqual
-			# keywordsEqual
-			# remarksEqual
-			# segmentEqual
-			# self.manufacturerTypeDescription == other.manufacturerTypeDescription
-			# self.erpGroupBuyer == other.erpGroupBuyer
-			# self.erpGroupSupplier == other.erpGroupSupplier
-			# self.supplierAltId == other.supplierAltId
-			# self.buyerId == other.buyerId
-			# self.articleOrder == other.articleOrder
-			# self.articleStatus == other.articleStatus
+        else:
+            # Folgende Dinge werden erstmal vernachlässigt.        
+            # specialTreatmentClassesEqual
+            # keywordsEqual
+            # remarksEqual
+            # segmentEqual
+            # self.manufacturerTypeDescription == other.manufacturerTypeDescription
+            # self.erpGroupBuyer == other.erpGroupBuyer
+            # self.erpGroupSupplier == other.erpGroupSupplier
+            # self.supplierAltId == other.supplierAltId
+            # self.buyerId == other.buyerId
+            # self.articleOrder == other.articleOrder
+            # self.articleStatus == other.articleStatus
         
-			return self.title == other.title and self.description == other.description and self.ean == other.ean and self.manufacturerArticleId == other.manufacturerArticleId and self.manufacturerName == self.manufacturerName and self.deliveryTime == other.deliveryTime
+            return self.title == other.title and self.description == other.description and self.ean == other.ean and self.manufacturerArticleId == other.manufacturerArticleId and self.manufacturerName == self.manufacturerName and self.deliveryTime == other.deliveryTime
 
     def validate(self, raiseException=False):
         if self.title is None or self.title.strip() == "":
