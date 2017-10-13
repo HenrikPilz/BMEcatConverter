@@ -19,11 +19,11 @@ class PriceDetails(ValidatingXmlObject):
         self.prices = []
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if not super().__eq__(other):
             return False
-
-        pricesEqual = super().checkListForEquality(self.prices, other.prices)
-        return pricesEqual and self.validFrom == other.validFrom and self.validTo == other.validTo and self.dailyPrice == other.dailyPrice
+		else:
+			pricesEqual = super().checkListForEquality(self.prices, other.prices)
+			return pricesEqual and self.validFrom == other.validFrom and self.validTo == other.validTo and self.dailyPrice == other.dailyPrice
         
     def validate(self, raiseException=False):
         if self.prices is None or len(self.prices) == 0:

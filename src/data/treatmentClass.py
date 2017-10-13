@@ -21,9 +21,10 @@ class TreatmentClass(ValidatingXmlObject):
         self.value = None
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if not super().__eq__(other):
             return False
-        return self.classType == other.classType and self.value == other.value
+		else:
+			return self.classType == other.classType and self.value == other.value
         
     def validate(self, raiseException=False):
         if self.classType is None:

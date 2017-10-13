@@ -5,10 +5,12 @@ Created on 05.05.2017
 '''
 from . import ValidatingXmlObject
 from .variantSet import VariantSet
+from lxml.etree import Element
 
 class Feature(ValidatingXmlObject):
     def __init__(self):
         self.name = None
+        self.order = None
         self.values = []
         self.variants = None
         self.unit = None
@@ -16,35 +18,38 @@ class Feature(ValidatingXmlObject):
         self.valueDetails = None
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if not super().__eq__(other):
             return False
-
-        valuesEqual = super().checkListForEquality(self.values, other.values)
-        return valuesEqual and self.name == other.name and self.variants == other.variants and self.unit == other.unit and self.description == other.description and self.valueDetails == other.valueDetails
+		else:
+			valuesEqual = super().checkListForEquality(self.values, other.values)
+			return valuesEqual and self.name == other.name and self.variants == other.variants and self.unit == other.unit and self.description == other.description and self.valueDetails == other.valueDetails
     
     def validate(self, raiseException=False):
         errMsg = None
-        if self.name is None or len(self.name.strip()) == 0:
-            errMsg = "Der Merkmalsname fehlt."
-            super().logError(errMsg, raiseException)
-        if (self.values is None or len(self.values) == 0) and (self.variants is None or len(self.variants) == 0):
+        super().valueNotNoneOrEmpty(self.name, "Der Merkmalsname fehlt.", raiseException)
+        hasValues = super().valueNotNoneOrEmpty(self.values, "Keine Attributswerte", False)
+        hasVariants = super().valueNotNoneOrEmpty(self.variants, "Keine Varianten", False)
+        if not hasValues and not hasVariants:
             errMsg = "Es wurden weder Attributswerte noch Varianten angegeben."
             super().logError(errMsg, raiseException)
-        elif len(self.values) > 0 and self.variants is not None and len(self.variants) > 0:
+        elif hasValues and hasVariants:
             errMsg = "Es wurden Values und Varianten angegeben. Die Zuordnung ist mehrdeutig."
             super().logError(errMsg, raiseException)
         else:
-            if self.variants is not None:
+            if hasVariants:
                 self.variants.validate(raiseException)
+                    
     
     def addValue(self, value):
-        if value is not None:
-            if type(value) is str and len(value.strip()) > 0 and value not in self.values:
+        """
+        Validiert, ob der übergebene Wert nicht leer ist und fügt ihn zur Liste der Values hinzu, falls das der Fall ist.  
+        """
+        valueNotEmpty = super().valueNotNoneOrEmpty(self.name, "Kein Wert übergeben.", False)
+        if valueNotEmpty and value not in self.values:
+            if type(value) is str: 
                 self.values.append(value)
-            elif type(value) is not str and value not in self.values: 
+            else: 
                 self.values.append(value)
-            else:
-                pass
 
     def addVariantOrder(self, order):
         if self.variants is None:
@@ -55,3 +60,19 @@ class Feature(ValidatingXmlObject):
         if self.variants is None:
             self.variants = VariantSet()
         self.variants.addVariant(variant)
+    
+
+    def toXml(self):
+        self.validate(True)
+        xmlFeature = Element("FEATURE")
+        super().addMandatorySubElement(xmlFeature, "FNAME", self.name)
+        super().addOptionalSubElement(xmlFeature, "FORDER", self.order)
+        super().addOptionalSubElement(xmlFeature, "FUNIT", self.unit)
+        super().addOptionalSubElement(xmlFeature, "FDESCR", self.description)
+        super().addOptionalSubElement(xmlFeature, "FVALUE_DETAILS", self.valueDetails)
+
+        if len(self.values) > 0:
+            for value in self.values:
+                super().addMandatorySubElement(xmlFeature, "FVALUE", value)
+        if self.variants is not None:
+            xmlFeature.append(self.variants.toXml())

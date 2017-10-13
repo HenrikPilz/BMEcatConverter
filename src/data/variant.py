@@ -4,7 +4,7 @@ Created on 17.05.2017
 @author: henrik.pilz
 '''
 from . import ValidatingXmlObject
-
+from lxml.etree import Element
 
 class Variant(ValidatingXmlObject):
     '''
@@ -20,9 +20,10 @@ class Variant(ValidatingXmlObject):
         self.productIdSuffix = None
 
     def __eq__(self, other):
-        if type(self) != type(other):
+        if not super().__eq__(other):
             return False
-        return self.value == other.value and self.productIdSuffix == other.productIdSuffix
+		else:
+			return self.value == other.value and self.productIdSuffix == other.productIdSuffix
                
     def validate(self, raiseException=False):
         errMsg = None
@@ -32,3 +33,10 @@ class Variant(ValidatingXmlObject):
         if self.productIdSuffix is None:
             errMsg= "Das Suffix fuer die Variante " + str(self.value) + " wurde nicht definiert."
             super().logError(errMsg, raiseException)
+
+    def toXml(self):
+        self.validate(True)
+        xmlVariant = Element("VARIANT")
+        super().addMandatorySubElement(xmlVariant, "FVALUE", self.value)
+        super().addMandatorySubElement(xmlVariant, "SUPPLIER_AID_SUPPLEMENT", self.productIdSuffix)
+        return xmlVariant
