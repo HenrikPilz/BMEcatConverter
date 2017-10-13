@@ -75,6 +75,7 @@ if __name__ == '__main__':
     # Check for openpyxl
     packageInstaller.installIfNeeded("openpyxl")
     packageInstaller.installIfNeeded("regex")
+    packageInstaller.installIfNeeded("lxml")
 
     # Loging einstgellen: zwei Outputdateien plus Konsole 
     setUpLogging()
@@ -85,7 +86,7 @@ if __name__ == '__main__':
     
     try:
         argv = sys.argv[1:]
-        inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName = ArgumentParser.parse(argv)
+        inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName = ArgumentParser().parse(argv)
         converter = Converter(inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName)        
         converter.convert()
     except HelpCalledException:

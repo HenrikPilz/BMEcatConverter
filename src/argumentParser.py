@@ -21,52 +21,60 @@ class ArgumentParser():
     '''
     classdocs
     '''
-
-    @classmethod
-    def parse(self, argv):
-        inputfile = None
-        outputfile = None
-        merchant = None
-        manufacturer = None
-        dateformat = None
-        separatorMode = None
+    def __init__(self):
+        self._inputfile = None
+        self._outputfile = None
+        self._merchant = None
+        self._manufacturer = None
+        self._dateformat = None
+        self._separatorMode = None
         
+    def parse(self, argv):
         opts, args = getopt.getopt(argv,"hi:o:", ["merchant=", "manufacturer=", "dateformat=", "separators="])
         print("Options: ", opts)
     
         for opt, arg in opts:
             logging.debug("Option: " + opt)
             logging.debug("Argument: " + arg)
-            if opt == '-h':
-                raise HelpCalledException()
-            elif opt == "-i":
-                inputfile = arg
-            elif opt == "-o":
-                outputfile = arg
-            elif opt == "--manufacturer":
-                manufacturer = arg
-            elif opt == "--merchant":
-                merchant = arg
-            elif opt == "--separators":
-                separatorMode = arg
-            elif opt == "--dateformat":
-                dateformat=arg            
-    
-        if inputfile is None:
+            self._checkAndDetermineArgument(opt, arg)            
+                
+        self._validateArguments()
+        self.logData()
+        
+        return self._inputfile, self._outputfile, self._dateformat, self._separatorMode, self._manufacturer, self._merchant
+
+    def _checkAndDetermineArgument(self, opt, arg):
+        if opt == '-h':
+            raise HelpCalledException()
+        elif opt == "-i":
+            self._inputfile = arg
+        elif opt == "-o":
+            self._outputfile = arg
+        elif opt == "--manufacturer":
+            self._manufacturer = arg
+        elif opt == "--merchant":
+            self._merchant = arg
+        elif opt == "--separators":
+            self._separatorMode = arg
+        elif opt == "--dateformat":
+            self._dateformat = arg
+
+    def _validateArguments(self):
+        if self._inputfile is None:
             raise MissingArgumentException("Inputfile is missing.")
-        if outputfile is None:
+        if self._outputfile is None:
             raise MissingArgumentException("Outputfile is missing.")
-        if dateformat is None:
+        if self._dateformat is None:
             raise MissingArgumentException("Dateformat  is missing.")
-        if separatorMode is None:
+        if self._separatorMode is None:
             raise MissingArgumentException("SeparateorMode  is missing.")
 
-
-        logging.info("Input file is {0}".format(inputfile))
-        logging.info("Output file is {0}".format(outputfile))
-        if merchant is not None:
-            logging.info("Merchant: {0}".format(merchant))
-        if manufacturer is not None:
-            logging.info("Manufacturer: {0}".format(manufacturer))
+    def logData(self):
+        logging.info("Input file is {0}".format(self._inputfile))
+        logging.info("Output file is {0}".format(self._outputfile))
+        if self._merchant is not None:
+            logging.info("Merchant: {0}".format(self._merchant))
+        if self._manufacturer is not None:
+            logging.info("Manufacturer: {0}".format(self._manufacturer))
     
-        return inputfile, outputfile, dateformat, separatorMode, manufacturer, merchant
+
