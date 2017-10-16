@@ -121,7 +121,7 @@ class FeatureTest(unittest.TestCase):
         self.assertTrue(feature1 == feature2, "Empty Feature should be equal to another another via '=='")
         self.assertFalse(feature1 != feature2, "Empty Feature should not be unequal to another another via '!='")
 
-    def testEqualityForDiferentTypesAndNone(self):
+    def testEqualityForDifferentTypesAndNone(self):
         feature1 = Feature()
         self.assertFalse(feature1 == None, "Empty Features should not be equal to None")
         self.assertTrue(feature1 != None, "Empty Features should be unequal to None")
@@ -129,7 +129,7 @@ class FeatureTest(unittest.TestCase):
         self.assertFalse(feature1 == "test", "Empty Features should not be equal to str('test')")
         self.assertTrue(feature1 != "test", "Empty Features should be unequal to str('test')")
 
-    def testEqualityForDiferentValues(self):
+    def testEqualityForDifferentValues(self):
         feature1 = Feature()
         feature1.name = "Test"
         feature1.addValue("1")

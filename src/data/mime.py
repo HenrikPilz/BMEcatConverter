@@ -25,7 +25,7 @@ class Mime(ValidatingXmlObject):
         if not super().__eq__(other):
             return False
         else:
-            return self.source == other.source and self.mimeType == other.mimeType and self.description == other.description and self.altenativeContent == other.altenativeContent and self.purpose == other.purpose and self.order == other.order
+            return self.source == other.source
         
     def validate(self, raiseException=False):
         if self.source is None:

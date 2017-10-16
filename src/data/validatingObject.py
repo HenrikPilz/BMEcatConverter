@@ -20,13 +20,14 @@ class ValidatingObject(object):
         super().__init__()
     
     def valueNotNoneOrEmpty(self, attribute, message, raiseException=False):
+        if not self.valueNotNone(attribute, message, raiseException):
+            return False
         isEmpty = False
         if type(attribute) == 'str':
             isEmpty = len(attribute.strip())== 0
         else:
             isEmpty = len(attribute) == 0
-        
-        if attribute is None or isEmpty:
+        if isEmpty:
             self.logError(message, raiseException)
             return False
         return True

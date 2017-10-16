@@ -44,7 +44,7 @@ class Feature(ValidatingXmlObject):
         """
         Validiert, ob der übergebene Wert nicht leer ist und fügt ihn zur Liste der Values hinzu, falls das der Fall ist.  
         """
-        valueNotEmpty = super().valueNotNoneOrEmpty(self.name, "Kein Wert übergeben.", False)
+        valueNotEmpty = super().valueNotNoneOrEmpty(value, "Kein Wert übergeben.", False)
         if valueNotEmpty and value not in self.values:
             if type(value) is str: 
                 self.values.append(value)

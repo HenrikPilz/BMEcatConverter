@@ -19,8 +19,7 @@ class FeatureSet(ValidatingXmlObject):
         if not super().__eq__(other):
             return False
         else:
-            featuresEqual = super().checkListForEquality(self.features, other.features)
-            return featuresEqual and self.referenceGroupId == other.referenceGroupId and self.referenceSytem == other.referenceSytem
+            return super().checkListForEquality(self.features, other.features)
 
     def addFeature(self,feature):
         try:

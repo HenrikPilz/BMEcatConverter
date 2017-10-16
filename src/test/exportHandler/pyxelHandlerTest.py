@@ -68,5 +68,29 @@ class PyxelHandlerTest(unittest.TestCase):
         excelImporter.readWorkbook('test_excel_output.xlsx')
         
         article2 = excelImporter.articles[0]
-        
-        self.assertEqual(article, article2, "Test")
+
+        self.assertEqual(article.productId, article2.productId, "Artikelnummer")
+        self.assertEqual(article.details.deliveryTime, article2.details.deliveryTime, "deliveryTime")
+        self.assertEqual(article.details.ean, article2.details.ean, "ean")
+        self.assertEqual(article.details.title, article2.details.title, "title")
+        self.assertEqual(article.details.description, article2.details.description, "description")
+        if article.details.manufacturerArticleId is None:
+            self.assertEqual(article.productId, article2.details.manufacturerArticleId, "manufacturerArticleId")
+        else:
+            self.assertEqual(article.details.manufacturerArticleId, article2.details.manufacturerArticleId, "manufacturerArticleId")
+        self.assertEqual(article.details.manufacturerName, article2.details.manufacturerName, "manufacturerName")
+        self.assertEqual(article.details.keywords, article2.details.keywords, "keywords")
+        self.assertEqual(article.details.specialTreatmentClasses, article2.details.specialTreatmentClasses, "specialTreatmentClasses")
+        self.assertEqual(article.details.erpGroupBuyer, article2.details.erpGroupBuyer, "erpGroupBuyer")
+        self.assertEqual(article.details.erpGroupSupplier, article2.details.erpGroupSupplier, "erpGroupSupplier")
+        self.assertEqual(article.details.remarks, article2.details.remarks, "remarks")
+        self.assertEqual(article.details.buyerId, article2.details.buyerId, "buyerId")
+        self.assertEqual(article.details.segment, article2.details.segment, "segment")
+        self.assertEqual(article.details.articleOrder, article2.details.articleOrder, "articleOrder")
+        self.assertEqual(article.details.articleStatus, article2.details.articleStatus, "articleStatus")
+        self.assertEqual(article.details.supplierAltId, article2.details.supplierAltId, "supplierAltId")
+        self.assertEqual(article.details.manufacturerTypeDescription, article2.details.manufacturerTypeDescription, "manufacturerTypeDescription")
+        self.assertEqual(article.orderDetails, article2.orderDetails, "orderDetails")
+        self.assertEqual(article.featureSets, article2.featureSets, "featureSets")
+        self.assertEqual(article.mimeInfo, article2.mimeInfo, "mimeInfo")
+        self.assertEqual(article.references, article2.references, "references")        
