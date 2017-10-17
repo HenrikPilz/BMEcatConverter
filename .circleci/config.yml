@@ -82,13 +82,7 @@ jobs:
           name: run coverage
           command: |
             . venv/bin/activate
-            coverage run src/test_main.py
-      
-      # create coverage report
-      - run:
-          name: create coverage report
-          command: |
-            . venv/bin/avtivate
+            coverage run src/test_main.py      
             coverage report
             coverage xml
             coverage html
