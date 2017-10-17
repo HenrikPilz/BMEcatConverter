@@ -8,7 +8,7 @@ import logging
 import os
 
 from lxml import etree
-from lxml.etree import Element
+from lxml.etree import Element, SubElement
 
 import getpass
 
@@ -40,6 +40,7 @@ class BMEcatHandler(object):
             newCatalog.append(self.__createCatalogGroupSystemElement())
             bmecat.append(newCatalog)    
             newCatalog.extend(self.__createArticleElements())
+            newCatalog.extend(self.__createArticleCatalogMapping())
             file.write(self.__prettyFormattedOutput(bmecat))
             file.close()
         
@@ -119,3 +120,13 @@ class BMEcatHandler(object):
         """
         return etree.tostring(elem, encoding="UTF-8", pretty_print=True, xml_declaration=True)
     
+    def __createArticleCatalogMapping(self):
+        mapping = []
+        for articleType, articles in self._articles.items():
+            for article in articles:
+                parent = Element("ARTICLE_TO_CATALOGGROUP_MAP")
+                SubElement(parent,"ART_ID").text = article.productId
+                SubElement(parent,"CATALOG_GROUP_ID").text = "2"
+                SubElement(parent,"ARTICLE_TO_CATALOGGROUP_MAP_ORDER").text = "2"
+                mapping.append(parent)
+        return mapping
