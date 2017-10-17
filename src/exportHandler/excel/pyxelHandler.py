@@ -273,14 +273,13 @@ class PyxelHandler(object):
     def writeReferencesForOneArticle(self, article, rowIndex, sheet):
         count = 0
         for reference in article.references:
-            for referencedArticleId in reference.supplierArticleIds:
-                columnIndex = 1
-                sheet.cell(row=rowIndex+count, column=columnIndex, value=article.productId)
-                columnIndex += 1
-                sheet.cell(row=rowIndex+count, column=columnIndex, value=reference.referenceType)
-                columnIndex += 1
-                sheet.cell(row=rowIndex+count, column=columnIndex, value=referencedArticleId)
-                count += 1
+            columnIndex = 1
+            sheet.cell(row=rowIndex+count, column=columnIndex, value=article.productId)
+            columnIndex += 1
+            sheet.cell(row=rowIndex+count, column=columnIndex, value=reference.referenceType)
+            columnIndex += 1
+            sheet.cell(row=rowIndex+count, column=columnIndex, value=reference.supplierArticleId)
+            count += 1
         return count
 
     def createKeywordsSheet(self, wb):

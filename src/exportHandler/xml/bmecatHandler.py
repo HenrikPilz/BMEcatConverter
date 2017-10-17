@@ -10,6 +10,7 @@ import os
 from lxml import etree
 from lxml.etree import Element
 
+import getpass
 
 class BMEcatHandler(object):
     
@@ -64,23 +65,29 @@ class BMEcatHandler(object):
                             "</CATALOG_STRUCTURE>" +
                             "</CATALOG_GROUP_SYSTEM>")
 
+
+    def __determineInitaials(self):
+        userName = getpass.getuser()
+        initials = None
+        logging.debug("Username: {0}".format(userName))
+        if userName is not None:
+            usplit = None
+            if len(userName.split(" ")) > 1:
+                usplit = userName.split(" ")
+            if len(userName.split(".")) > 1:
+                usplit = userName.split(".")
+                if len(usplit[0].split("-")) > 1:
+                    usplit = usplit[0].split("-").append(usplit[1])
+            initials = "".join([elem[0].upper() for elem in usplit])
+        else:
+            initials = "BC_TEMP"
+        return initials
+
     def __createHeaderElement(self):
         ''' Create Header of BMEcat
         '''
-        userName = os.environ["USERNAME"]
-        logging.debug("Username: {0}".format(userName))
-        
-        usplit = None
-        if len(userName.split(" ")) > 1:
-            usplit = userName.split(" ")
-        if len(userName.split(".")) > 1:
-            usplit = userName.split(".")
-            if len(usplit[0].split("-")) > 1:
-                usplit = usplit[0].split("-").append(usplit[1])
-                
-        
-        initals = "".join([elem[0].upper() for elem in usplit])
-        logging.debug("Initialen: {0}".format(initals))
+        initials = self.__determineInitaials()
+        logging.debug("Initialen: {0}".format(initials))
         now = datetime.now()
 
         generationDate = now.strftime("%Y-%m-%d")
@@ -90,9 +97,9 @@ class BMEcatHandler(object):
                             "<GENERATOR_INFO>BMEcatConverter Contorion</GENERATOR_INFO>" +
                             "<CATALOG>" +
                             "<LANGUAGE>deu</LANGUAGE>" +
-                            "<CATALOG_ID>" + dateKz + "_" + initals +"</CATALOG_ID>" +
+                            "<CATALOG_ID>" + dateKz + "_" + initials +"</CATALOG_ID>" +
                             "<CATALOG_VERSION>1.0</CATALOG_VERSION>" +
-                            "<CATALOG_NAME>" + dateKz + "-Fiege-Update_" + initals +"</CATALOG_NAME>" +
+                            "<CATALOG_NAME>" + dateKz + "-Fiege-Update_" + initials +"</CATALOG_NAME>" +
                             '<DATETIME type="generation_date">' +
                             "<DATE>" + generationDate + "</DATE>" +
                             "<TIME>"+ generationTIme + "</TIME>" +

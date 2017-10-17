@@ -31,10 +31,10 @@ class Reference(ValidatingXmlObject):
         if not super().__eq__(other):
             return False
         else:
-            supplierArticleIdsEqual = super().checkListForEquality(self.supplierArticleIds, other.supplierArticleIds)
+            supplierArticleIdEqual = self.supplierArticleId == other.supplierArticleId
             mimeInfoEqual = super().checkListForEquality(self.mimeInfo, other.mimeInfo)
         
-            return supplierArticleIdsEqual and mimeInfoEqual and self.referenceType == other.referenceType and self.quantity == other.quantity
+            return supplierArticleIdEqual and mimeInfoEqual and self.referenceType == other.referenceType and self.quantity == other.quantity
             return self.supplierArticleId == other.supplierArticleId and self.referenceType == other.referenceType
 
 
