@@ -67,27 +67,30 @@ class BMEcatHandler(object):
                             "</CATALOG_GROUP_SYSTEM>")
 
 
-    def __determineInitaials(self):
+    def __determineInitials(self):
         userName = getpass.getuser()
-        initials = None
+        initials = "BC_TEMP"
         logging.debug("Username: {0}".format(userName))
         if userName is not None:
-            usplit = None
+            usplit = []
             if len(userName.split(" ")) > 1:
                 usplit = userName.split(" ")
             if len(userName.split(".")) > 1:
                 usplit = userName.split(".")
-                if len(usplit[0].split("-")) > 1:
-                    usplit = usplit[0].split("-").append(usplit[1])
-            initials = "".join([elem[0].upper() for elem in usplit])
-        else:
-            initials = "BC_TEMP"
+
+            if len(usplit) > 1 and len(usplit[0].split("-")) > 1:
+                usplit = usplit[0].split("-").append(usplit[1])
+            initials = ""
+            for elem in usplit:
+                if len(elem) > 0:
+                    initials += elem[0].upper()
+            
         return initials
 
     def __createHeaderElement(self):
         ''' Create Header of BMEcat
         '''
-        initials = self.__determineInitaials()
+        initials = self.__determineInitials()
         logging.debug("Initialen: {0}".format(initials))
         now = datetime.now()
 
