@@ -46,5 +46,5 @@ class FeatureSet(ValidatingXmlObject):
         super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_SYSTEM_NAME", self.referenceSytem)
         super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_GROUP_ID", self.referenceGroupId)
         super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_GROUP_NAME", self.referenceGroupName)
-        for feature in self.features:
-            xmlFeatureSet.append(feature.toXml())
+        super().addListOfSubElements(xmlFeatureSet, self.features)
+        return xmlFeatureSet

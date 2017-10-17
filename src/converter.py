@@ -9,7 +9,7 @@ import os
 from xml.sax import make_parser
 from importHandler.xml.bmecatHandler import BMEcatHandler as BMEcatImportHandler
 from importHandler.excel.excelImporter import ExcelImporter
-'''from exportHandler.xml.bmecatHandler import BMEcatExportHandler'''
+from exportHandler.xml.bmecatHandler import BMEcatHandler as BMEcatExportHandler
 from exportHandler.excel.pyxelHandler import PyxelHandler
 from resolver.dtdResolver import DTDResolver
 
@@ -77,10 +77,11 @@ class Converter(object):
             logging.info("Daten eingelesen")
             print("Daten eingelesen")
         
-            exporter = BMEcatExportHandler(dateFormat, ".", ",", articles, self.outputfile)
+            exporter = BMEcatExportHandler(self.outputfile,articles)
         
             logging.info("Erstelle XML-Datei")
             print("Erstelle XML-Datei")
+            exporter.writeBMEcatAsXML(self.outputfile, articles)
         
         logging.info("Fertig.")
         print("Fertig.")

@@ -175,7 +175,7 @@ class ProductTest(unittest.TestCase):
         product = Product()
         # setzen der Product ID       
         product.productId = "12345"
-        with self.assertRaisesRegex(Exception, "Der Artikel hat keine Artikeldetails."):
+        with self.assertRaisesRegex(Exception, "Der Artikel '[0-9]{5}' hat keine Artikeldetails."):
             product.validate(True)
         # Productdetails
         product.details = ProductDetails()
@@ -191,7 +191,7 @@ class ProductTest(unittest.TestCase):
         product.details = ProductDetails()
         product.addTitle("TestTitel")
 
-        with self.assertRaisesRegex(Exception, "Der Artikel hat keine Bestellinformation."):
+        with self.assertRaisesRegex(Exception, "Der Artikel '[0-9]{5}' hat keine Bestellinformation."):
             product.validate(True)
     
     def testValidateExceptionNoPriceInformation(self):
@@ -209,11 +209,11 @@ class ProductTest(unittest.TestCase):
 
         product.orderDetails = orderDetails
         
-        with self.assertRaisesRegex(Exception, "Der Artikel hat keine Preisinformationen."):
+        with self.assertRaisesRegex(Exception, "Der Artikel '[0-9]{5}' hat keine Preisinformationen."):
             product.validate(True)
 
         product.priceDetails = None
-        with self.assertRaisesRegex(Exception, "Der Artikel hat keine Preisinformationen."):
+        with self.assertRaisesRegex(Exception, "Der Artikel '[0-9]{5}' hat keine Preisinformationen."):
             product.validate(True)
 
 

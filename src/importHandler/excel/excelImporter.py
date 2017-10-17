@@ -132,7 +132,7 @@ class ExcelImporter(object):
             # wenn der Feldnam nicht leer ist
             if currentFieldname is not None and currentFieldname.strip() is not None and len(currentFieldname.strip()) > 0:
                 # gib ihn aus
-                print (currentFieldname)
+                logging.debug(currentFieldname)
                 # ist er in den basefieldKeys (Grunddatenfelder des Artikels)
                 if currentFieldname in self.__basefieldMapping.keys():
                     self.__indexForProduct[self.__basefieldMapping[currentFieldname]] = colIndex
@@ -150,7 +150,7 @@ class ExcelImporter(object):
                     fieldName = regex.match("[a-zA-Z]*", currentFieldname).group(0)
                     fieldCount = currentFieldname.replace(fieldName, "")
                     
-                    print("'{0}' : '{1}'".format(fieldName, fieldCount)) #logging.debug
+                    logging.debug("'{0}' : '{1}'".format(fieldName, fieldCount))
                     
                     columnNameToClassFieldName = None
                     indexForClassFieldName = None

@@ -16,8 +16,8 @@ class PriceTest(unittest.TestCase):
         self.assertEqual(price.currency, "EUR")
         self.assertEqual(price.tax, 0.19)
         self.assertEqual(price.lowerBound, 1)
-        self.assertEqual(price.factor, 1.0)
-        self.assertEqual(price.territory, "DEU")
+        self.assertIsNone(price.factor)
+        self.assertIsNone(price.territory)
 
     def testValidateExceptionNoAmount(self):
         price = Price()

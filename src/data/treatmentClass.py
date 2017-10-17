@@ -5,6 +5,7 @@ Created on 05.05.2017
 '''
 import logging
 from . import ValidatingXmlObject
+from lxml.etree import Element
 
 
 class TreatmentClass(ValidatingXmlObject):
@@ -31,3 +32,10 @@ class TreatmentClass(ValidatingXmlObject):
             super().logError("Es muss eine Klassifizierung angegeben werden.", raiseException)
         if self.value is None:
             logging.info("Es wurde kein Wert zur Klassifizierung angegeben.")
+    
+    
+    def toXml(self):
+        self.validate(True)
+        xmlElement = Element("SPECIAL_TREATMENT_CLASS", { "type" : self.classType })
+        xmlElement.text = self.value
+        return xmlElement

@@ -5,6 +5,7 @@ Created on 05.05.2017
 '''
 import logging
 from . import ValidatingXmlObject
+from lxml.etree import Element
 
 class Price(ValidatingXmlObject):
     
@@ -14,14 +15,18 @@ class Price(ValidatingXmlObject):
         self.currency = "EUR"
         self.tax = 0.19
         self.lowerBound = 1
-        self.factor = 1.0
-        self.territory = "DEU"
+        self.factor = None
+        self.territory = None
 
     def __eq__(self, other):
         if not super().__eq__(other):
             return False
         else:
-            return self.priceType == other.priceType and self.amount == other.amount and self.currency == other.currency and self.tax == other.tax and self.lowerBound == other.lowerBound and self.factor == other.factor and self.territory == other.territory
+            amountEqual = float(self.amount) == float(other.amount)
+            taxEqual = float(self.tax) == float(other.tax)
+            lowerBoundEqual = int(self.lowerBound) == int(other.lowerBound)
+            factorEqual = float(self.factor) == float(other.factor)
+            return self.priceType == other.priceType and amountEqual and self.currency == other.currency and taxEqual and lowerBoundEqual and factorEqual and self.territory == other.territory
 
     def validate(self, raiseException=False):
         if self.amount is None:
@@ -38,3 +43,16 @@ class Price(ValidatingXmlObject):
             logging.warning("Waehrung nicht in EURO: " + str(self.currency))
         if float(self.lowerBound) < 1:
             logging.warning("Staffelmenge falsch!")
+            
+    def toXml(self):
+        self.validate(True)
+        priceXmlElement = Element("ARTICLE_PRICE", { "price_type" : self.priceType })
+        super().addMandatorySubElement(priceXmlElement, "PRICE_AMOUNT", self.amount)
+        super().addMandatorySubElement(priceXmlElement, "PRICE_CURRENCY", self.currency)
+        super().addMandatorySubElement(priceXmlElement, "TAX", self.tax)
+        super().addMandatorySubElement(priceXmlElement, "LOWER_BOUND", self.lowerBound)
+        
+        super().addOptionalSubElement(priceXmlElement, "PRICE_FACTOR", self.factor)
+        super().addOptionalSubElement(priceXmlElement, "TERRITORY", self.territory)
+        
+        return priceXmlElement

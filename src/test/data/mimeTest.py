@@ -16,19 +16,57 @@ class MimeTest(unittest.TestCase):
         self.assertIsNone( mime.description )
         self.assertIsNone( mime.altenativeContent )
         self.assertIsNone( mime.purpose )
-        self.assertEqual( mime.order, 1 )
+        self.assertEqual( mime.order, 0 )
 
-    def testValidateException(self):       
+    def testValidateExceptionNoSource(self):       
+        mime = Mime()
         with self.assertRaisesRegex(Exception, "Kein Bildpfad angegeben."):
-            mime = Mime()
             mime.validate(True)
         
-    def testValidate(self):
+    def testValidateExceptionNoOrder(self):
         mime = Mime()
         mime.source = "Test"
-        mime.validate(True)
-        mime.mimeType = "image/jpeg"
-        mime.validate(True)
+        with self.assertRaisesRegex(Exception, "Bildreihenfolge fehlerhaft: "):
+            mime.validate(True)
+
+    def testValidateExceptionNoMimeType(self):
+        mime = Mime()
+        mime.source = "Test"
+        mime.order = 1
+        with self.assertRaisesRegex(Exception, "Bildtyp nicht gesetzt."):
+            mime.validate(True)
+        
+    def testValidateExceptionWrongMimeType(self):
+        mime = Mime()
+        mime.source = "Test"
+        mime.order = 1
+        mime.mimeType = "Test"
+        with self.assertRaisesRegex(Exception, "Bildtyp fehlerhaft: Test"):
+            mime.validate(True)
+        
+    def testValidateExceptionNoPurpose(self):
+        mime = Mime()
+        mime.source = "Test"
+        mime.order = 1
+        mime.mimeType = "image/jpg"
+        with self.assertRaisesRegex(Exception, "Bildverwendung nicht gesetzt."):
+            mime.validate(True)
+
+    def testValidateExceptionWrongPurpose(self):
+        mime = Mime()
+        mime.source = "Test"
+        mime.order = 1
+        mime.mimeType = "image/jpg"
+        mime.purpose = "TEST"
+        with self.assertRaisesRegex(Exception, "Bildverwendung fehlerhaft: TEST"):
+            mime.validate(True)
+
+
+    def testValidate(self):
+        mime = Mime()
+        mime.order = 1
+        mime.source = "Test"
         mime.purpose = "detail"
+        mime.mimeType = "image/jpeg"
         mime.validate(True)
 

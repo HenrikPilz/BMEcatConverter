@@ -4,34 +4,41 @@ Created on 12.05.2017
 @author: henrik.pilz
 '''
 from datetime import datetime
+import logging
 import os
 
 from lxml import etree
 from lxml.etree import Element
 
+
 class BMEcatHandler(object):
     
-    def __createArticleElements(self, articles):
+    def __init__(self, articles, filename):
+        self._articles = articles
+        self._filename = filename
+    
+    def __createArticleElements(self):
         articleElements = []
-        for articleType in articles.keys():
-            articleElements.extend(self.__createArticleElementsForSet(articles[articleType]))
+        for articleType, articles in self._articles.items():
+            articleElements.extend(self.__createArticleElementsForSet(articles, articleType))
         return articleElements
 
-    def __createArticleElementsForSet(self, articles):
+    def __createArticleElementsForSet(self, articles, articleType='new'):
         articleElements = []
         for article in articles:
-            articleElements.append(article.toXmlElemnt())
+            articleElement = article.toXml(articleType)
+            articleElements.append(articleElement)
         return articleElements
     
-    def writeBMEcatAsXML(self, filename, articles):
-        with open(filename, "wb") as file:
+    def writeBMEcatAsXML(self):
+        with open(self._filename, "wb") as file:
             bmecat = self.__createBMEcatRootElement()
             bmecat.append(self.__createHeaderElement())
             
             newCatalog = Element("T_NEW_CATALOG")
             newCatalog.append(self.__createCatalogGroupSystemElement())
             bmecat.append(newCatalog)    
-            newCatalog.extend(self.__createArticleElements(articles))
+            newCatalog.extend(self.__createArticleElements())
             file.write(self.__prettyFormattedOutput(bmecat))
             file.close()
         
@@ -61,9 +68,19 @@ class BMEcatHandler(object):
         ''' Create Header of BMEcat
         '''
         userName = os.environ["USERNAME"]
-        usplit = userName.split(" ")
-        initals = usplit[0][0] + usplit[1][0]
+        logging.debug("Username: {0}".format(userName))
         
+        usplit = None
+        if len(userName.split(" ")) > 1:
+            usplit = userName.split(" ")
+        if len(userName.split(".")) > 1:
+            usplit = userName.split(".")
+            if len(usplit[0].split("-")) > 1:
+                usplit = usplit[0].split("-").append(usplit[1])
+                
+        
+        initals = "".join([elem[0].upper() for elem in usplit])
+        logging.debug("Initialen: {0}".format(initals))
         now = datetime.now()
 
         generationDate = now.strftime("%Y-%m-%d")

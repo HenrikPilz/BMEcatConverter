@@ -61,7 +61,6 @@ class Feature(ValidatingXmlObject):
             self.variants = VariantSet()
         self.variants.addVariant(variant)
     
-
     def toXml(self):
         self.validate(True)
         xmlFeature = Element("FEATURE")
@@ -76,3 +75,4 @@ class Feature(ValidatingXmlObject):
                 super().addMandatorySubElement(xmlFeature, "FVALUE", value)
         if self.variants is not None:
             xmlFeature.append(self.variants.toXml())
+        return xmlFeature

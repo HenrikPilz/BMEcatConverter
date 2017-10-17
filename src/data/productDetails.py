@@ -5,7 +5,7 @@ Created on 05.05.2017
 '''
 import logging
 from . import ValidatingXmlObject
-
+from lxml.etree import Element, SubElement
 
 class ProductDetails(ValidatingXmlObject):
     
@@ -45,8 +45,10 @@ class ProductDetails(ValidatingXmlObject):
             # self.buyerId == other.buyerId
             # self.articleOrder == other.articleOrder
             # self.articleStatus == other.articleStatus
-        
-            return self.title == other.title and self.description == other.description and self.ean == other.ean and self.manufacturerArticleId == other.manufacturerArticleId and self.manufacturerName == self.manufacturerName and self.deliveryTime == other.deliveryTime
+            eanEqual = int(self.ean) == int(other.ean)
+            manufacturerArticleIdEqual = str(self.manufacturerArticleId) == str(other.manufacturerArticleId)
+            deliveryTimeEqual = float(self.deliveryTime) == float(other.deliveryTime)
+            return self.title == other.title and self.description == other.description and eanEqual and manufacturerArticleIdEqual and self.manufacturerName == self.manufacturerName and deliveryTimeEqual
 
     def validate(self, raiseException=False):
         if self.title is None or self.title.strip() == "":
@@ -61,3 +63,21 @@ class ProductDetails(ValidatingXmlObject):
     
     def addKeyword(self, keyword):
         self.keywords.append(keyword)
+    
+    def toXml(self):
+        self.validate(True)
+        detailsXmlElement = Element("ARTICLE_DETAILS")
+        super().addMandatorySubElement(detailsXmlElement, "DESCRIPTION_SHORT", self.title)
+        
+        super().addOptionalSubElement(detailsXmlElement, "DESCRIPTION_LONG", self.description)
+        super().addOptionalSubElement(detailsXmlElement, "EAN", self.ean)
+        super().addOptionalSubElement(detailsXmlElement, "MANUFACTURER_AID", self.manufacturerArticleId)
+        super().addOptionalSubElement(detailsXmlElement, "MANUFACTURER_NAME", self.manufacturerName)
+
+        super().addMandatorySubElement(detailsXmlElement, "DELIVERY_TIME", self.deliveryTime)
+        
+        for keyword in self.keywords:
+            SubElement(detailsXmlElement,"KEYWORD").text = keyword
+        
+        super().addListOfSubElements(detailsXmlElement, self.specialTreatmentClasses)
+        return detailsXmlElement

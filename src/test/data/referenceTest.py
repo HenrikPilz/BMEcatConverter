@@ -15,10 +15,9 @@ class ReferenceTest(unittest.TestCase):
         
         self.assertIsNone(reference.referenceType)
         self.assertIsNone( reference.description)
-        self.assertEqual( reference.quantity, 1)
+        self.assertIsNone( reference.quantity)
         
-        self.assertIsNotNone(reference.supplierArticleIds)
-        self.assertEqual( len(reference.supplierArticleIds), 0)
+        self.assertIsNone(reference.supplierArticleId)
         
         self.assertIsNotNone(reference.mimeInfo)
         self.assertEqual( len(reference.mimeInfo), 0)
@@ -31,9 +30,9 @@ class ReferenceTest(unittest.TestCase):
             
     def testAddSupplierArticleId(self):
         reference = Reference()
-        self.assertEqual( len(reference.supplierArticleIds), 0)
+        self.assertIsNone( reference.supplierArticleId)
         reference.addSupplierArticleId("test")
-        self.assertEqual( len(reference.supplierArticleIds), 1)
+        self.assertEqual( reference.supplierArticleId, "test")
         
         
         

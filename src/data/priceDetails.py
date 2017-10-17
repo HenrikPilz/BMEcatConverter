@@ -5,7 +5,7 @@ Created on 05.05.2017
 '''
 import logging
 from . import ValidatingXmlObject
-
+from lxml.etree import Element
 
 class PriceDetails(ValidatingXmlObject):
     
@@ -15,7 +15,7 @@ class PriceDetails(ValidatingXmlObject):
     def __init__(self):
         self.validFrom = None
         self.validTo = None
-        self.dailyPrice = False
+        self.dailyPrice = None
         self.prices = []
 
     def __eq__(self, other):
@@ -44,3 +44,13 @@ class PriceDetails(ValidatingXmlObject):
     def addPrice(self, price):
         if price is not None:
             self.prices.append(price)
+
+    def toXml(self):
+        self.validate(True)
+        priceDetailsXmlElement = Element("ARTICLE_PRICE_DETAILS")
+        if self.validFrom is not None and self.validTo is not None:
+            super().addDateTimeSubElement(priceDetailsXmlElement, "valid_start_date", self.validFrom)
+            super().addDateTimeSubElement(priceDetailsXmlElement, "valid_end_date", self.validTo)
+        super().addOptionalSubElement(priceDetailsXmlElement, "DAILY_PRICE", self.dailyPrice)
+        super().addListOfSubElements(priceDetailsXmlElement, self.prices)
+        return priceDetailsXmlElement

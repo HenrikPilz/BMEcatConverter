@@ -5,6 +5,7 @@ Created on 05.05.2017
 '''
 import logging
 from . import ValidatingXmlObject
+from lxml.etree import Element
 
 
 class Mime(ValidatingXmlObject):
@@ -19,7 +20,7 @@ class Mime(ValidatingXmlObject):
         self.description = None
         self.altenativeContent = None
         self.purpose = None
-        self.order = 1
+        self.order = 0
         
     def __eq__(self, other):
         if not super().__eq__(other):
@@ -31,8 +32,23 @@ class Mime(ValidatingXmlObject):
         if self.source is None:
             super().logError("Kein Bildpfad angegeben.", raiseException)
         if int(self.order) < 1:
-            logging.info("Bildreihenfolge fehlerhaft: " + str(self.order))
-        if not self.mimeType is None and self.mimeType not in Mime.__allowedTypes:
-            logging.info("Bildtyp fehlerhaft: " + str(self.mimeType))
-        if not self.purpose is None and self.purpose not in Mime.__allowedPurposes:
-            logging.info("Bildverwendung fehlerhaft: " + str(self.purpose))
+            super().logError("Bildreihenfolge fehlerhaft: " + str(self.order), raiseException)
+        if self.mimeType is None:
+            super().logError("Bildtyp nicht gesetzt.", raiseException)
+        elif self.mimeType not in Mime.__allowedTypes:
+            super().logError("Bildtyp fehlerhaft: " + str(self.mimeType), raiseException)
+        if self.purpose is None:
+            super().logError("Bildverwendung nicht gesetzt.", raiseException)
+        elif self.purpose not in Mime.__allowedPurposes:
+            super().logError("Bildverwendung fehlerhaft: " + str(self.purpose), raiseException)
+
+    def toXml(self):
+        self.validate(True)
+        mimeElement = Element("MIME")
+        super().addMandatorySubElement(mimeElement, "MIME_SOURCE", self.source)
+        super().addMandatorySubElement(mimeElement, "MIME_TYPE", self.mimeType)
+        super().addMandatorySubElement(mimeElement, "MIME_PURPOSE", self.purpose)
+        super().addMandatorySubElement(mimeElement, "MIME_ORDER", self.order)
+        super().addOptionalSubElement(mimeElement, "MIME_DESCR", self.description)
+        super().addOptionalSubElement(mimeElement, "MIME_ALT", self.altenativeContent)
+        return mimeElement

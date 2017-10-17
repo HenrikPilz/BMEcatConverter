@@ -37,6 +37,5 @@ class VariantSet(ValidatingXmlObject):
         self.validate(True)
         xmlVariants = Element("VARIANTS")
         super().addMandatorySubElement(xmlVariants, "VORDER", self.order)
-        for variant in self.variants:
-            xmlVariants.append(variant.toXml())
-        return xmlVariants        
+        super().addListOfSubElements(xmlVariants, self.variants)
+        return xmlVariants

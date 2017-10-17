@@ -5,6 +5,7 @@ Created on 05.05.2017
 '''
 import logging
 from . import ValidatingXmlObject
+from lxml.etree import Element
 
 
 class Reference(ValidatingXmlObject):
@@ -18,8 +19,11 @@ class Reference(ValidatingXmlObject):
         Constructor
         '''
         self.referenceType = None
-        self.supplierArticleIds = []
-        self.quantity = 1
+        self.supplierArticleId = None
+        self.supplierId = None
+        self.quantity = None
+        self.catalogId = None
+        self.catalogVersion = None
         self.description = None
         self.mimeInfo = []
 
@@ -31,22 +35,40 @@ class Reference(ValidatingXmlObject):
             mimeInfoEqual = super().checkListForEquality(self.mimeInfo, other.mimeInfo)
         
             return supplierArticleIdsEqual and mimeInfoEqual and self.referenceType == other.referenceType and self.quantity == other.quantity
+            return self.supplierArticleId == other.supplierArticleId and self.referenceType == other.referenceType
+
 
     def validate(self,  raiseException=False):
         if self.referenceType is None:
             super().logError("Der Referenz wurde kein Typ zugewiesen.",  raiseException)
-        if self.supplierArticleIds is None or len(self.supplierArticleIds) == 0:
+        if self.supplierArticleId is None:
             super().logError("Es wird keine Artikelnummer referenziert.",  raiseException)
-        if int(self.quantity) != len(self.supplierArticleIds):
-            logging.warning("Anzahl referenzierter Artikel stimmt nicht mit der Anzahl der vorhandenen Artikelnummern ueberein..")
+        if self.quantity is not None and self.referenceType != "constists_of":
+            logging.warning("Anzahl ist kein Attribute, welches gesetzt werden darf.")
+            self.quantity = None
         if self.mimeInfo is None or len(self.mimeInfo) == 0:
             logging.info("Es wurden keine Bilder gefunden.")
         else:
             for mime in self.mimeInfo:
                 mime.validate(raiseException)
 
+
     def addMime(self, mime):
         self.mimeInfo.append(mime)
         
     def addSupplierArticleId(self, supplierArticleId):
-        self.supplierArticleIds.append(supplierArticleId)
+        if self.supplierArticleId is not None:
+            raise Exception("Es wird schon eine Artikelnummer referenziert: {0}".format(self.supplierArticleId))
+        self.supplierArticleId = supplierArticleId 
+    
+    def toXml(self):
+        self.validate(True)
+        attributes = { "type" : self.referenceType }
+        if self.quantity is not None:
+            attributes["quantity"] = self.quantity
+        referenceElement = Element("ARTICLE_REFERENCE", attributes)
+        super().addMandatorySubElement(referenceElement, "ART_ID_TO", self.supplierArticleId)
+        super().addOptionalSubElement(referenceElement, "CATALOG_ID", self.catalogId)
+        super().addOptionalSubElement(referenceElement, "CATALOG_VERSION", self.catalogVersion)
+        return referenceElement
+        

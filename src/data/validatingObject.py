@@ -83,11 +83,31 @@ class ValidatingXmlObject(ValidatingObject):
         raise NotImplementedError("Please implement 'toXml' in your class '{0}".format(__file__))
 
     def addMandatorySubElement(self, parent, tag, value):
+        '''
+        Erstellt eiin Child-Element und wirft eine Exception, falls value nicht None
+        '''
         if value is None:
             raise NoValueGivenException("Kein Wert übergeben.")
-        SubElement(parent, tag).text = value
+        subElement = SubElement(parent, tag)
+        subElement.text = str(value).encode(encoding='utf_8', errors='strict')
+        return subElement
+        
     
     def addOptionalSubElement(self, parent, tag, value):
+        '''
+        Erstellt eiin Child-Element, falls value nicht None
+        '''
         if value is not None:
-            SubElement(parent, tag).text = value
+            return self.addMandatorySubElement(parent, tag, value)
+        return None
 
+    def addListOfSubElements(self, parent, listOfSubElements):
+        for element in listOfSubElements:
+            parent.append(element.toXml())
+
+    def addDateTimeSubElement(self, parent, dateType, date):
+        dateTimeSubElement = SubElement(parent, "DATETIME", { "type"  : dateType})
+        dateSubElement = SubElement(dateTimeSubElement, "DATE")
+        dateSubElement.text = date.strftime("%Y-%m-%d")
+        timeSubElement = SubElement(dateTimeSubElement, "TIME")
+        timeSubElement.text = date.strftime("%H:%M:%S")

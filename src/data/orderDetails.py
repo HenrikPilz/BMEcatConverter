@@ -6,6 +6,7 @@ Created on 05.05.2017
 
 import logging
 from . import ValidatingXmlObject
+from lxml.etree import Element
 
 
 class OrderDetails(ValidatingXmlObject):
@@ -25,7 +26,11 @@ class OrderDetails(ValidatingXmlObject):
         if not super().__eq__(other):
             return False
         else:
-            return self.orderUnit == other.orderUnit and self.contentUnit == other.contentUnit and self.packingQuantity == other.packingQuantity and self.priceQuantity == other.priceQuantity and self.quantityMin == other.quantityMin and self.quantityInterval == other.quantityInterval
+            priceQuantityEqual = int(self.priceQuantity) == int(other.priceQuantity)
+            quantityMinEqual = int(self.quantityMin) == int(other.quantityMin)
+            quantityIntervalEqual = int(self.quantityInterval) == int(other.quantityInterval)
+            packingQuantityEqual = int(self.packingQuantity) == int(other.packingQuantity)
+            return self.orderUnit == other.orderUnit and self.contentUnit == other.contentUnit and packingQuantityEqual and priceQuantityEqual and quantityMinEqual and quantityIntervalEqual
 
     def validate(self, raiseException=False):
         if self.orderUnit is None or self.orderUnit.strip() == "":
@@ -42,3 +47,14 @@ class OrderDetails(ValidatingXmlObject):
             logging.warning("Mindestbestellmenge und PackingQuantity duerfen nicht beide ungleich eins sein.")
         if float(self.quantityMin) != float(self.priceQuantity):
             logging.info("PackagingQuantity und PriceQuantity untscheiden sich!")
+
+    def toXml(self):
+        self.validate(True)
+        orderDetailsXmlElement = Element("ARTICLE_ORDER_DETAILS")
+        super().addMandatorySubElement(orderDetailsXmlElement, "ORDER_UNIT", self.orderUnit)
+        super().addMandatorySubElement(orderDetailsXmlElement, "CONTENT_UNIT", self.contentUnit)
+        super().addMandatorySubElement(orderDetailsXmlElement, "NO_CU_PER_OU", self.packingQuantity)
+        super().addMandatorySubElement(orderDetailsXmlElement, "QUANTITY_MIN", self.quantityMin)
+        super().addMandatorySubElement(orderDetailsXmlElement, "QUANTITY_INTERVAL", self.quantityInterval)
+        super().addMandatorySubElement(orderDetailsXmlElement, "PRICE_QUANTITY", self.priceQuantity)
+        return orderDetailsXmlElement
