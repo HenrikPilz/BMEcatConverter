@@ -62,6 +62,8 @@ class ValidatingObject(object):
                 isNotEmpty = len(attribute.strip()) > 0
             else:
                 isNotEmpty = len(attribute) > 0
+            if not isNotEmpty:
+                self.logError(message, raiseException)
             return isNotEmpty
         return False
 
