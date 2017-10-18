@@ -3,11 +3,11 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
-from . import ValidatingXmlObject
+from . import ValidatingObject, XmlObject, ComparableEqual
 from .variantSet import VariantSet
 from lxml.etree import Element
 
-class Feature(ValidatingXmlObject):
+class Feature(ValidatingObject, XmlObject, ComparableEqual):
     def __init__(self):
         self.name = None
         self.order = None

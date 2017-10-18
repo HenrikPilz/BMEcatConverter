@@ -4,10 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingXmlObject
+from . import ValidatingObject, XmlObject, ComparableEqual
 from lxml.etree import Element
 
-class PriceDetails(ValidatingXmlObject):
+class PriceDetails(ValidatingObject, XmlObject, ComparableEqual):
     
     neededPriceTypes = [ 'net_customer' ]
     additionalPriceTypes = [ 'net_list' ]

@@ -4,11 +4,11 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingXmlObject
+from . import ValidatingObject, XmlObject, ComparableEqual
 from lxml.etree import Element, SubElement
 
 
-class Product(ValidatingXmlObject):
+class Product(ValidatingObject, XmlObject, ComparableEqual):
 
     def __init__(self):        
         self.productId = None

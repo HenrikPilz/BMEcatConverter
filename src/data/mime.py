@@ -3,11 +3,11 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
-from . import ValidatingXmlObject
+from . import ValidatingObject, XmlObject, ComparableEqual
 from lxml.etree import Element
 
 
-class Mime(ValidatingXmlObject):
+class Mime(ValidatingObject, XmlObject, ComparableEqual):
     
     __allowedTypes = [ "url", "application/pdf", "image/jpeg", "image/jpg", "image/tif", "text/html", "text/plain" ]
     __allowedPurposes = [ "thumbnail", "normal", "detail", "data_sheet", "logo", "others" ]

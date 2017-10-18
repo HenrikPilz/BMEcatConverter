@@ -3,10 +3,10 @@ Created on 17.05.2017
 
 @author: henrik.pilz
 '''
-from . import ValidatingXmlObject
+from . import ValidatingObject, XmlObject, ComparableEqual
 from lxml.etree import Element
 
-class Variant(ValidatingXmlObject):
+class Variant(ValidatingObject, XmlObject, ComparableEqual):
     '''
     classdocs
     '''

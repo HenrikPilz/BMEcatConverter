@@ -4,11 +4,11 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingXmlObject
+from . import ValidatingObject, XmlObject, ComparableEqual
 from lxml.etree import Element
 
 
-class TreatmentClass(ValidatingXmlObject):
+class TreatmentClass(ValidatingObject, XmlObject, ComparableEqual):
     '''
     classdocs
     '''
