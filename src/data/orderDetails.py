@@ -5,13 +5,15 @@ Created on 05.05.2017
 '''
 
 import logging
-from . import ValidatingObject, XmlObject, ComparableEqual
+
 from lxml.etree import Element
+
+from . import ValidatingObject, XmlObject, ComparableEqual
 
 
 class OrderDetails(ValidatingObject, XmlObject, ComparableEqual):
-    allowedOrderUnits = [ "C62", "MTR", "SET", "BX", "CT", "PF", "BG", "PK", "TN", "DR", "CA", "CS", "RO" ]
-    allowedContentUnits = [ "C62", "MTR", "SET", "RO", "DR", "CS", "PR", "RO" ]
+    __allowedOrderUnits = [ "C62", "MTR", "SET", "BX", "CT", "PF", "BG", "PK", "TN", "DR", "CA", "CS", "RO" ]
+    __allowedContentUnits = [ "C62", "MTR", "SET", "RO", "DR", "CS", "PR", "RO" ]
     __allowedCombinations = {}
 
     def __init__(self):
@@ -30,16 +32,16 @@ class OrderDetails(ValidatingObject, XmlObject, ComparableEqual):
             quantityMinEqual = int(self.quantityMin) == int(other.quantityMin)
             quantityIntervalEqual = int(self.quantityInterval) == int(other.quantityInterval)
             packingQuantityEqual = int(self.packingQuantity) == int(other.packingQuantity)
-            return self.orderUnit == other.orderUnit and self.contentUnit == other.contentUnit and packingQuantityEqual and priceQuantityEqual and quantityMinEqual and quantityIntervalEqual
+            orderUnitEqual = self.orderUnit == other.orderUnit
+            contentUnitEqual = self.contentUnit == other.contentUnit
+            unitsEqual = orderUnitEqual and contentUnitEqual
+            orderUnitValuesEqual = quantityIntervalEqual and quantityMinEqual
+            return unitsEqual and orderUnitValuesEqual and priceQuantityEqual and packingQuantityEqual
 
     def validate(self, raiseException=False):
-        if self.orderUnit is None or self.orderUnit.strip() == "":
-            super().logError("Keine Bestelleinheit angeben.", raiseException)
-        if self.orderUnit not in OrderDetails.allowedOrderUnits:
+        if super().valueNotNoneOrEmpty(self.orderUnit, "Keine Bestelleinheit angeben.", raiseException) and self.orderUnit not in OrderDetails.__allowedOrderUnits:
             super().logError("Falsche Bestelleinheit angeben: " + str(self.orderUnit), raiseException)
-        if self.contentUnit is None or self.contentUnit.strip() == "":
-            super().logError("Keine Verpackungseinheit angeben.", raiseException)
-        if self.contentUnit not in OrderDetails.allowedContentUnits:
+        if super().valueNotNoneOrEmpty(self.contentUnit,"Keine Verpackungseinheit angeben.", raiseException) and self.contentUnit not in OrderDetails.__allowedContentUnits:
             super().logError("Falsche Verpackungseinheit angeben: " + str(self.contentUnit), raiseException)
         if float(self.quantityMin) != float(self.quantityInterval):
             logging.info("Mindestbestellmenge und Bestellintervall sollten gleich sein.")
