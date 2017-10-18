@@ -85,13 +85,7 @@ jobs:
             coverage run src/test_main.py      
             coverage report
             coverage xml
-            coverage html
-
-      # upload reports
-      - run:
-          name: upload coverage
-          command: |
-            codeclimate-test-reporter
+            coverage html            
 
       - store_artifacts:
           path: ~/repo/coverage/report/html
