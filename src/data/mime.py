@@ -3,7 +3,6 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
-import logging
 from . import ValidatingXmlObject
 from lxml.etree import Element
 
@@ -29,17 +28,12 @@ class Mime(ValidatingXmlObject):
             return self.source == other.source
         
     def validate(self, raiseException=False):
-        if self.source is None:
-            super().logError("Kein Bildpfad angegeben.", raiseException)
+        super().valueNotNone(self.source, "Kein Bildpfad angegeben.", raiseException)
         if int(self.order) < 1:
             super().logError("Bildreihenfolge fehlerhaft: " + str(self.order), raiseException)
-        if self.mimeType is None:
-            super().logError("Bildtyp nicht gesetzt.", raiseException)
-        elif self.mimeType not in Mime.__allowedTypes:
+        if super().valueNotNone(self.mimeType, "Bildtyp nicht gesetzt.", raiseException) and self.mimeType not in Mime.__allowedTypes:
             super().logError("Bildtyp fehlerhaft: " + str(self.mimeType), raiseException)
-        if self.purpose is None:
-            super().logError("Bildverwendung nicht gesetzt.", raiseException)
-        elif self.purpose not in Mime.__allowedPurposes:
+        if super().valueNotNone(self.purpose, "Bildverwendung nicht gesetzt.", raiseException) and self.purpose not in Mime.__allowedPurposes:
             super().logError("Bildverwendung fehlerhaft: " + str(self.purpose), raiseException)
 
     def toXml(self):
