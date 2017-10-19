@@ -1,5 +1,6 @@
 [run]
 branch = true
+source = src/
 
 [paths]
 source = src/
