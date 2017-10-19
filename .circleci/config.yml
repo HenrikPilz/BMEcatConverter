@@ -82,11 +82,7 @@ jobs:
           name: run coverage
           command: |
             . venv/bin/activate
-      # curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
-      # chmod +x ./cc-test-reporter
-      # ./cc-test-reporter before-build
             coverage run src/test_main.py
-      # ./cc-test-reporter after-build --exit-code $?
             coverage report
             coverage xml
             coverage html            
