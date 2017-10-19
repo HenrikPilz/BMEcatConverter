@@ -52,6 +52,7 @@ jobs:
   coverage:
     environment:
       CC_TEST_REPORTER_ID: 7cab17cbed7019019ea4955c73a8099e2d8c1199833546e7b5e9223bbb1e6dc6
+      CODECLIMATE_REPO_TOKEN: 7cab17cbed7019019ea4955c73a8099e2d8c1199833546e7b5e9223bbb1e6dc6
     docker:
       - image: circleci/python:3.6.1
     working_directory: ~/repo
