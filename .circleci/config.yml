@@ -82,6 +82,11 @@ jobs:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
 
+      - run:
+          name: before build
+          command: |
+            ./cc-test-reporter before-build
+
       # run coverage!
       - run:
           name: run coverage
@@ -91,6 +96,11 @@ jobs:
             coverage report
             coverage xml
             coverage html            
+            ./cc-test-reporter format-coverage -t coverage.py -o ./.coverage
+            ./cc-test-reporter upload-coverage
+      - run:
+          command: |
+            ./cc-test-reporter after-build --exit-code $?
 
       - store_artifacts:
           path: ~/repo/coverage/report/html
