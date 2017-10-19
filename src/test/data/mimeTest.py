@@ -16,7 +16,7 @@ class MimeTest(unittest.TestCase):
         self.assertIsNone( mime.description )
         self.assertIsNone( mime.altenativeContent )
         self.assertIsNone( mime.purpose )
-        self.assertEqual( mime.order, 0 )
+        self.assertIsNone( mime.order )
 
     def testValidateExceptionNoSource(self):       
         mime = Mime()

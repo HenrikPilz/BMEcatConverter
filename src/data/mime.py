@@ -19,7 +19,7 @@ class Mime(ValidatingObject, XmlObject, ComparableEqual):
         self.description = None
         self.altenativeContent = None
         self.purpose = None
-        self.order = 0
+        self.order = None
         
     def __eq__(self, other):
         if not super().__eq__(other):
@@ -29,8 +29,7 @@ class Mime(ValidatingObject, XmlObject, ComparableEqual):
         
     def validate(self, raiseException=False):
         super().valueNotNone(self.source, "Kein Bildpfad angegeben.", raiseException)
-        if int(self.order) < 1:
-            super().logError("Bildreihenfolge fehlerhaft: " + str(self.order), raiseException)
+        super().valueNotNone(self.order, "Bildreihenfolge fehlerhaft: " + str(self.order), raiseException)
         if super().valueNotNone(self.mimeType, "Bildtyp nicht gesetzt.", raiseException) and self.mimeType not in Mime.__allowedTypes:
             super().logError("Bildtyp fehlerhaft: " + str(self.mimeType), raiseException)
         if super().valueNotNone(self.purpose, "Bildverwendung nicht gesetzt.", raiseException) and self.purpose not in Mime.__allowedPurposes:

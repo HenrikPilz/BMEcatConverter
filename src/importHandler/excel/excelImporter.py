@@ -189,7 +189,7 @@ class ExcelImporter(object):
         self.__transferInformationForMapping(self.__indexForOrderDetails, currentProduct.orderDetails, rowIndex, sheet)
         self.__addMultipleOrderedObjects(self.__indexTuplesForMimes, currentProduct, Mime, rowIndex, sheet)
         priceDetails = PriceDetails()
-        self.__addMultipleOrderedObjects(self.__indexPairsForFeatures, priceDetails, Price, rowIndex, sheet)
+        self.__addMultipleOrderedObjects(self.__indexTuplesForPrices, priceDetails, Price, rowIndex, sheet)
         currentProduct.addPriceDetails(priceDetails)
         featureSet = FeatureSet()
         self.__addMultipleOrderedObjects(self.__indexPairsForFeatures, featureSet, Feature, rowIndex, sheet)
@@ -204,10 +204,15 @@ class ExcelImporter(object):
         for fieldname in mapping.keys():
             for order, colIndex in mapping[fieldname].items():
                 if order not in itemsToAddByOrder.keys(): 
-                    itemsToAddByOrder[order]= typeOfMultiples()                
+                    itemsToAddByOrder[order] = typeOfMultiples()                
                 setattr(itemsToAddByOrder[order], fieldname, sheet.cell(column=colIndex, row=rowIndex).value)
         
         for key in sorted(itemsToAddByOrder.keys()):
+            try:
+                if getattr(itemsToAddByOrder[key], "order") is None:
+                    setattr(itemsToAddByOrder[key], "order", int(key))
+            except AttributeError:
+                pass
             self.__exectueAddMethod(objectContainer, "add" + str(typeOfMultiples.__name__), itemsToAddByOrder[key]) 
 
     def __transferInformationForMapping(self, mapping, objectForValue, rowIndex, sheet):

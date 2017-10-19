@@ -24,6 +24,8 @@ class FeatureSet(ValidatingObject, XmlObject, ComparableEqual):
     def addFeature(self,feature):
         try:
             feature.validate(True)
+            if feature.order is None or feature.order <= 0:
+                feature.order = max(self.features, key=lambda feature: feature.order, default=0) + 1
             self.features.append(feature)
         except Exception as ve:
             logging.info("Das Attribut enthaelt keine validen Werte. Es wird nicht hinzugefuegt. {0}".format(str(ve)))
@@ -46,5 +48,5 @@ class FeatureSet(ValidatingObject, XmlObject, ComparableEqual):
         super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_SYSTEM_NAME", self.referenceSytem)
         super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_GROUP_ID", self.referenceGroupId)
         super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_GROUP_NAME", self.referenceGroupName)
-        super().addListOfSubElements(xmlFeatureSet, self.features)
+        super().addListOfSubElements(xmlFeatureSet, sorted(self.features, key=lambda feature: feature.order))
         return xmlFeatureSet

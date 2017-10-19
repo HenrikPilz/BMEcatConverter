@@ -41,35 +41,19 @@ class Product(ValidatingObject, XmlObject, ComparableEqual):
         return not self.__eq__(other)
    
     def validate(self, raiseException=False):
-        if self.productId is None:
-            super().logError("Der Artikel hat keine Artikelnummer.", raiseException)
-        if self.details is None:
-            super().logError("Der Artikel '{0}' hat keine Artikeldetails.".format(self.productId), raiseException)
-        else:
-            self.details.validate(raiseException)
-        if self.orderDetails is None:
-            super().logError("Der Artikel '{0}' hat keine Bestellinformation.".format(self.productId), raiseException)
-        else:
-            self.orderDetails.validate(raiseException)
-        if self.priceDetails is None or len(self.priceDetails) == 0:
-            super().logError("Der Artikel '{0}' hat keine Preisinformationen.".format(self.productId), raiseException)
-        else:
-            for priceDetail in self.priceDetails:
-                priceDetail.validate(raiseException)
+        super().valueNotNone(self.productId, "Der Artikel hat keine Artikelnummer.", raiseException)
+        super().valueNotNone(self.details, "Der Artikel '{0}' hat keine Artikeldetails.".format(self.productId), raiseException)
+        self.details.validate(raiseException)
+        super().valueNotNone(self.orderDetails, "Der Artikel '{0}' hat keine Bestellinformation.".format(self.productId), raiseException)
+        self.orderDetails.validate(raiseException)
+        super().valueNotNoneOrEmpty(self.priceDetails, "Der Artikel '{0}' hat keine Preisinformationen.".format(self.productId), raiseException)
+        super().validateList(self.priceDetails, raiseException)
             
-        if self.mimeInfo is None or len(self.mimeInfo) == 0:
-            logging.info("Für Artikel '{0}' wurden keine Bilder gefunden.".format(self.productId))
-        else:
-            for mime in self.mimeInfo:
-                mime.validate(raiseException)
-        if self.featureSets is None or len(self.featureSets) == 0:
-            logging.info("Für Artikel '{0}' wurden keine Attribute gefunden.".format(self.productId))
-        else:
-            for featureSet in self.featureSets:
-                featureSet.validate(raiseException)
-                for feature in featureSet.features:
-                    if feature.variants is not None and len(feature.variants) > 0:
-                        self.hasVariants = True
+        if super().valueNotNoneOrEmpty(self.mimeInfo, "Für Artikel '{0}' wurden keine Bilder gefunden.".format(self.productId), False):
+            super().validateList(self.mimeInfo, raiseException)
+
+        if super().valueNotNoneOrEmpty(self.featureSets, "Für Artikel '{0}' wurden keine Attribute gefunden.".format(self.productId), False):
+            super().validateList(self.featureSets, raiseException)
 
     def addPriceDetails(self, priceDetails):
         self.priceDetails.append(priceDetails)
@@ -93,6 +77,8 @@ class Product(ValidatingObject, XmlObject, ComparableEqual):
         self.details.deliveryTime = deliveryTime
         
     def addMime(self, mime):
+        if mime.order is None or int(mime.order) <= 0:
+            mime.order = max(self.mimeInfo, key=lambda mime: int(mime.order), default=0) + 1
         self.mimeInfo.append(mime)
 
     def addReference(self, reference):
@@ -126,8 +112,9 @@ class Product(ValidatingObject, XmlObject, ComparableEqual):
     
     def __addVariant(self, feature):
         self.variants.append((feature.variants.order, feature.name, feature.variants))
+        # Anzahl bestehender Varianter multipliziert mit der Anzahl definierter Varianter in diesem Feature
         self.numberOfVariants *= len(feature.variants)
-        self.hasVariants = len(feature.variants) > 0
+        self.hasVariants = self.numberOfVariants > 1
     
     def toXml(self, articleType='new'):
         self.validate(True)
@@ -136,11 +123,8 @@ class Product(ValidatingObject, XmlObject, ComparableEqual):
         articleElement.append(self.details.toXml())
         articleElement.append(self.orderDetails.toXml())
         super().addListOfSubElements(articleElement, self.priceDetails)
-        mimeInfoElement = SubElement(articleElement, "MIME_INFO")
-        super().addListOfSubElements(mimeInfoElement, self.mimeInfo)
+        mimeInfoElement = SubElement(articleElement, "MIME_INFO")        
+        super().addListOfSubElements(mimeInfoElement, sorted(self.mimeInfo, key=lambda mime: mime.order))
         super().addListOfSubElements(articleElement, self.featureSets)
         super().addListOfSubElements(articleElement, self.references)        
         return articleElement
-
-    def __checkUpdateAndSortMimes(self):
-        raise Exception("FEHLT")

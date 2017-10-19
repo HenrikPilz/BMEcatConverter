@@ -45,17 +45,21 @@ class ValidatingObject(object):
                 return False
         return True
     
+    def validateList(self, listToValidate, raiseException):
+        for listItem in listToValidate:
+            listItem.validate(raiseException)
+    
     @abstractmethod
     def validate(self, raiseException=False):
         raise NotImplementedError("Please implement 'validate' in your class '{0}".format(__file__))
     
-    def valueNotNone(self, attribute, message, raiseException=False):
+    def valueNotNone(self, attribute, message=None, raiseException=False):
         if attribute is None:
             self.logError(message, raiseException)
             return False
         return True
 
-    def valueNotNoneOrEmpty(self, attribute, message, raiseException=False):
+    def valueNotNoneOrEmpty(self, attribute, message=None, raiseException=False):
         if self.valueNotNone(attribute, message, raiseException):
             isNotEmpty = True
             if isinstance(attribute, str):
@@ -68,11 +72,12 @@ class ValidatingObject(object):
         return False
 
     
-    def logError(self, errMsg, raiseException=False):
+    def logError(self, errMsg=None, raiseException=False):
         '''
          Taking an ErrorMessage, logging it and if wanted throwing an Exception
         '''
-        logging.error(errMsg)
+        if errMsg is not None:
+            logging.error(errMsg)
         if raiseException:
             raise Exception(errMsg)
 
