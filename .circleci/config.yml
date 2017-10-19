@@ -96,4 +96,6 @@ workflows:
   test_and_coverage:
     jobs:
       - test
-      - coverage
+      - coverage:
+          requires:
+            - test
