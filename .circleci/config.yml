@@ -92,12 +92,11 @@ jobs:
           name: run coverage
           command: |
             . venv/bin/activate
-            coverage run src/test_main.py
+            coverage run --source=src src/test_main.py 
             coverage report
             coverage xml
-            coverage html    
-            cd ~/repo/coverage/xml
-            ./cc-test-reporter format-coverage  -t coverage.py -o ./.coverage
+            coverage html
+            ./cc-test-reporter format-coverage  --add-prefix ./coverage/xml/ -t coverage.py -o ./.coverage
             ./cc-test-reporter upload-coverage
       - run:
           command: |
