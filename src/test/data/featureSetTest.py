@@ -45,7 +45,7 @@ class FeatureSetTest(unittest.TestCase):
         featureSet.addFeature(feature)                
         self.assertEqual(len(featureSet), 0)       
 
-    def testEqualityOfEmptyFeatureSets(self):
+    def testEqualityOfEmptyAndEqualFeatureSets(self):
         featureSet1 = FeatureSet()
         featureSet2 = FeatureSet()
         
@@ -80,3 +80,25 @@ class FeatureSetTest(unittest.TestCase):
         self.assertFalse(featureSet1 == featureSet2, "Empty FeatureSets should be equal to another another via '=='")
         self.assertTrue(featureSet1 != featureSet2, "Empty FeatureSets should not be unequal to another another via '!='")
 
+    def testEqualityOfDifferentFeatureSets(self):
+        featureSet1 = FeatureSet()
+        featureSet2 = FeatureSet()
+        
+        self.assertEqual(featureSet1, featureSet2, "Two Empty FeatureSets should be equal.")
+        self.assertTrue(featureSet1 == featureSet2, "Empty FeatureSets should be equal to another another via '=='")
+        self.assertFalse(featureSet1 != featureSet2, "Empty FeatureSets should not be unequal to another another via '!='")
+
+        featureSet1 = FeatureSet()
+        feature = Feature()
+        feature.name = "Name1"
+        feature.addValue("Value1")
+        featureSet1.addFeature(feature)
+        featureSet2 = FeatureSet()
+        feature = Feature()
+        feature.name = "Name2"
+        feature.addValue("Value2")
+        featureSet2.addFeature(feature)
+        
+        self.assertNotEqual(featureSet1, featureSet2, "Two NonEmpty FeatureSets should not be equal, due to different Features")
+        self.assertFalse(featureSet1 == featureSet2, "NonEmpty FeatureSets should not be equal to another another via '==', due to different Features")
+        self.assertTrue(featureSet1 != featureSet2, "NonEmpty FeatureSets should be unequal to another another via '!=', due to different Features")

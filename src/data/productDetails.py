@@ -78,10 +78,8 @@ class ProductDetails(ValidatingObject, XmlObject, ComparableEqual):
         super().addOptionalSubElement(detailsXmlElement, "BUYER_AID ", self.buyerId)
         super().addOptionalSubElement(detailsXmlElement, "ERP_GROUP_BUYER", self.erpGroupBuyer)
         super().addOptionalSubElement(detailsXmlElement, "ERP_GROUP_SUPPLIER", self.erpGroupSupplier)
-        super().addOptionalSubElement(detailsXmlElement, "MANUFACTURER_NAME", self.manufacturerName)
-        super().addOptionalSubElement(detailsXmlElement, "MANUFACTURER_NAME", self.manufacturerName)
-
-        
+        super().addOptionalSubElement(detailsXmlElement, "ARTICLE_STATUS", self.articleStatus)
+        super().addOptionalSubElement(detailsXmlElement, "ARTICLE_ORDER", self.articleOrder)
 
         super().addMandatorySubElement(detailsXmlElement, "DELIVERY_TIME", self.deliveryTime)
         

@@ -21,14 +21,23 @@ class Feature(ValidatingObject, XmlObject, ComparableEqual):
         if not super().__eq__(other):
             return False
         else:
-            valuesEqual = super().checkListForEquality(self.values, other.values)
-            return valuesEqual and self.name == other.name and self.variants == other.variants and self.unit == other.unit and self.description == other.description and self.valueDetails == other.valueDetails
+            namesEqual = self.name == other.name
+            valuesEqual = super().checkListForEquality([str(value) for value in self.values], [str(value) for value in other.values])
+            unitsEqual = self.unit == other.unit
+            bothHaveVariants = super().valueNotNoneOrEmpty(self.variants) and super().valueNotNoneOrEmpty(other.variants)
+            noVariantsAtAll = self.variants is None and other.variants is None
+            variantsAreEqual = True
+            if bothHaveVariants:
+                variantsAreEqual = self.variants == other.variants
+            else:
+                variantsAreEqual = noVariantsAtAll
+            return namesEqual and unitsEqual and valuesEqual and variantsAreEqual
     
     def validate(self, raiseException=False):
         errMsg = None
         super().valueNotNoneOrEmpty(self.name, "Der Merkmalsname fehlt.", raiseException)
-        hasValues = super().valueNotNoneOrEmpty(self.values, "Keine Attributswerte", False)
-        hasVariants = super().valueNotNoneOrEmpty(self.variants, "Keine Varianten", False)
+        hasValues = super().valueNotNoneOrEmpty(self.values)
+        hasVariants = super().valueNotNoneOrEmpty(self.variants)
         if not hasValues and not hasVariants:
             errMsg = "Es wurden weder Attributswerte noch Varianten angegeben."
             super().logError(errMsg, raiseException)
@@ -38,8 +47,7 @@ class Feature(ValidatingObject, XmlObject, ComparableEqual):
         else:
             if hasVariants:
                 self.variants.validate(raiseException)
-                    
-    
+
     def addValue(self, value):
         """
         Validiert, ob der übergebene Wert nicht leer ist und fügt ihn zur Liste der Values hinzu, falls das der Fall ist.  

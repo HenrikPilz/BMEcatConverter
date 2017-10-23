@@ -4,8 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject, XmlObject, ComparableEqual
+
 from lxml.etree import Element
+
+from . import ValidatingObject, XmlObject, ComparableEqual, Feature
 
 
 class FeatureSet(ValidatingObject, XmlObject, ComparableEqual):
@@ -21,14 +23,8 @@ class FeatureSet(ValidatingObject, XmlObject, ComparableEqual):
         else:
             return super().checkListForEquality(self.features, other.features)
 
-    def addFeature(self,feature):
-        try:
-            feature.validate(True)
-            if feature.order is None or feature.order <= 0:
-                feature.order = max(self.features, key=lambda feature: feature.order, default=0) + 1
-            self.features.append(feature)
-        except Exception as ve:
-            logging.info("Das Attribut enthaelt keine validen Werte. Es wird nicht hinzugefuegt. {0}".format(str(ve)))
+    def addFeature(self, feature):
+        self.addToListIfValid(feature, self.features, "Das Attribut enthaelt keine validen Werte. Es wird nicht hinzugefuegt. ")
         
     def validate(self, raiseException=False):
         if self.referenceGroupName is not None and self.referenceGroupId is not None:

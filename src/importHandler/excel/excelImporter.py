@@ -4,10 +4,7 @@ Created on 11.05.2017
 @author: henrik.pilz
 '''
 
-import copy
-from inspect import currentframe
 import logging
-from multiprocessing.connection import arbitrary_address
 
 from openpyxl import load_workbook
 import regex
@@ -55,8 +52,8 @@ class ExcelImporter(object):
     __featureMapping = { 
         "attribute_name" : "name", 
         "attributeName" : "name", 
-        "attribute_value" : "value", 
-        "attributeValue" : "value", 
+        "attribute_value" : "values", 
+        "attributeValue" : "values", 
         "attribute_unit" : "unit",
         "attributeUnit" : "unit"
     }
@@ -204,8 +201,8 @@ class ExcelImporter(object):
         for fieldname in mapping.keys():
             for order, colIndex in mapping[fieldname].items():
                 if order not in itemsToAddByOrder.keys(): 
-                    itemsToAddByOrder[order] = typeOfMultiples()                
-                setattr(itemsToAddByOrder[order], fieldname, sheet.cell(column=colIndex, row=rowIndex).value)
+                    itemsToAddByOrder[order] = typeOfMultiples()
+                itemsToAddByOrder[order].add(fieldname, sheet.cell(column=colIndex, row=rowIndex).value)                
         
         for key in sorted(itemsToAddByOrder.keys()):
             try:

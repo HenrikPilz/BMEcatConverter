@@ -6,6 +6,7 @@ Created on 07.10.2017
 from abc import abstractmethod
 from lxml.etree import SubElement
 import logging
+from array import array
 
 class NoValueGivenException(Exception):
     def __init__(self, message):
@@ -33,6 +34,15 @@ class ValidatingObject(object):
     
     def __init__(self):
         super().__init__()
+        
+    def add(self, attributeName, attributeValue):
+        try:
+            if not isinstance(getattr(self, attributeName), (list, array)):
+                setattr(self, attributeName, attributeValue)
+            else:
+                getattr(self, attributeName).append(attributeValue)
+        except AttributeError as ae:
+            logging.error("Klassenattribut nicht gefunden: ", str(ae))
     
     @classmethod
     def checkListForEquality(self, lhs, rhs):
@@ -63,9 +73,11 @@ class ValidatingObject(object):
         if self.valueNotNone(attribute, message, raiseException):
             isNotEmpty = True
             if isinstance(attribute, str):
-                isNotEmpty = len(attribute.strip()) > 0
-            else:
+                isNotEmpty = len(attribute.strip()) > 0                
+            elif isinstance(attribute, (list, array)):
                 isNotEmpty = len(attribute) > 0
+            else:
+                isNotEmpty = len(str(attribute).strip()) > 0
             if not isNotEmpty:
                 self.logError(message, raiseException)
             return isNotEmpty
@@ -80,6 +92,26 @@ class ValidatingObject(object):
             logging.error(errMsg)
         if raiseException:
             raise Exception(errMsg)
+
+    def addToListIfValid(self, item, listToAddTo, errorMessage):
+        try:
+            self.determineOrderIfNeeded(item, listToAddTo)
+            item.validate(True)
+            listToAddTo.append(item)
+        except Exception as ve:
+            logging.warn(errorMessage + "{0}".format(str(ve)))
+
+
+    def determineOrderIfNeeded(self, item, listToAddTo):
+        try:
+            if getattr(item, "order") is None or int(item.order) <= 0:
+                maxItem = max(listToAddTo, key=lambda item: int(item.order), default=None)
+                if maxItem is None:                
+                    item.order = 1
+                else:
+                    item.order = int(maxItem.order) + 1
+        except AttributeError:
+            pass
 
 
 
@@ -102,7 +134,7 @@ class XmlObject(object):
         if value is None:
             raise NoValueGivenException("Kein Wert übergeben.")
         subElement = SubElement(parent, tag)
-        subElement.text = str(value).encode(encoding='utf_8', errors='strict')
+        subElement.text = str(value)
         return subElement
         
     

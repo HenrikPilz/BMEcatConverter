@@ -31,11 +31,10 @@ class Reference(ValidatingObject, XmlObject, ComparableEqual):
         if not super().__eq__(other):
             return False
         else:
-            supplierArticleIdEqual = self.supplierArticleId == other.supplierArticleId
+            supplierArticleIdEqual = str(self.supplierArticleId) == str(other.supplierArticleId)
             mimeInfoEqual = super().checkListForEquality(self.mimeInfo, other.mimeInfo)
         
-            return supplierArticleIdEqual and mimeInfoEqual and self.referenceType == other.referenceType and self.quantity == other.quantity
-            return self.supplierArticleId == other.supplierArticleId and self.referenceType == other.referenceType
+            return supplierArticleIdEqual and mimeInfoEqual and self.referenceType == other.referenceType and str(self.quantity) == str(other.quantity)
 
 
     def validate(self,  raiseException=False):

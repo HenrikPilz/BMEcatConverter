@@ -113,6 +113,21 @@ class FeatureTest(unittest.TestCase):
         feature.addVariantOrder(1)
         feature.validate(True)
 
+    def testValidateDescriptionValueDetails(self):
+        feature1 = Feature()
+        feature1.name = "TestFeature"
+        feature1.addValue("10")
+
+        feature2 = Feature()
+        feature2.name = "TestFeature"
+        feature2.addValue("10")
+        feature2.description = "Testdescription"
+
+        self.assertEqual(feature1, feature2, "Two Features should be equal, with different descriptions.")
+        self.assertTrue(feature1 == feature2, "Two Features should be equal via '==', because of different descriptions")
+        self.assertFalse(feature1 != feature2, "Two Features should be equal via '!=', because of different descriptions")
+
+
     def testEqualityOfEmptyFeatures(self):
         feature1 = Feature()
         feature2 = Feature()
@@ -165,17 +180,23 @@ class FeatureTest(unittest.TestCase):
         self.assertTrue(feature1 != feature2, "Empty Feature should be unequal to another another via '!=', because of different units")
 
         feature2.unit = "TU"
-        feature2.description = "Testdescription"
-
-        self.assertNotEqual(feature1, feature2, "Two Features should not be equal, because of different descriptions.")
-        self.assertFalse(feature1 == feature2, "Empty Feature should not be equal to another another via '==', because of different descriptions")
-        self.assertTrue(feature1 != feature2, "Empty Feature should be unequal to another another via '!=', because of different descriptions")
-
-
-        feature2.addValue("2")
+        feature2.addValue("3")
 
         self.assertNotEqual(feature1, feature2, "Two Features should not be equal, because of different values.")
         self.assertFalse(feature1 == feature2, "Empty Feature should not be equal to another another via '==', because of different values")
         self.assertTrue(feature1 != feature2, "Empty Feature should be unequal to another another via '!=', because of different values")
 
+    def testEqualityForSameValueDifferentType(self):
+        feature1 = Feature()
+        feature1.name = "Test"
+        feature1.addValue("1")
+        feature1.unit = "TU"
         
+        feature2 = Feature()
+        feature2.name = "Test"
+        feature2.addValue(1)
+        feature2.unit = "TU"
+        
+        self.assertEqual(feature1, feature2, "Two Empty Features should be equal.")
+        self.assertTrue(feature1 == feature2, "Empty Feature should be equal to another another via '=='")
+        self.assertFalse(feature1 != feature2, "Empty Feature should not be unequal to another another via '!='")

@@ -26,7 +26,7 @@ class Mime(ValidatingObject, XmlObject, ComparableEqual):
             return False
         else:
             return self.source == other.source
-        
+
     def validate(self, raiseException=False):
         super().valueNotNone(self.source, "Kein Bildpfad angegeben.", raiseException)
         super().valueNotNone(self.order, "Bildreihenfolge fehlerhaft: " + str(self.order), raiseException)

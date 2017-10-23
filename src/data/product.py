@@ -4,8 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject, XmlObject, ComparableEqual
+
 from lxml.etree import Element, SubElement
+
+from . import ValidatingObject, XmlObject, ComparableEqual
 
 
 class Product(ValidatingObject, XmlObject, ComparableEqual):
@@ -77,9 +79,7 @@ class Product(ValidatingObject, XmlObject, ComparableEqual):
         self.details.deliveryTime = deliveryTime
         
     def addMime(self, mime):
-        if mime.order is None or int(mime.order) <= 0:
-            mime.order = max(self.mimeInfo, key=lambda mime: int(mime.order), default=0) + 1
-        self.mimeInfo.append(mime)
+        self.addToListIfValid(mime, self.mimeInfo, "Das Bild enthaelt keine validen Einträge. Es wird nicht hinzugefuegt.")
 
     def addReference(self, reference):
         self.references.append(reference)

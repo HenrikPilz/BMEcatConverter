@@ -5,13 +5,15 @@ Created on 01.09.2017
 '''
 import logging
 import os
-
+import time
 from xml.sax import make_parser
-from importHandler.xml.bmecatHandler import BMEcatHandler as BMEcatImportHandler
-from importHandler.excel.excelImporter import ExcelImporter
-from exportHandler.xml.bmecatHandler import BMEcatHandler as BMEcatExportHandler
+
 from exportHandler.excel.pyxelHandler import PyxelHandler
+from exportHandler.xml.bmecatHandler import BMEcatHandler as BMEcatExportHandler
+from importHandler.excel.excelImporter import ExcelImporter
+from importHandler.xml.bmecatHandler import BMEcatHandler as BMEcatImportHandler
 from resolver.dtdResolver import DTDResolver
+
 
 class ConversionModeException(Exception):
     '''
@@ -71,18 +73,28 @@ class Converter(object):
         importer = ExcelImporter()
         
         if os.path.isfile(self.inputfile):
-            importer.readWorkbook(self.inputfile, )
-            articles = importer.articles
+            t1 = time.clock()
+            importer.readWorkbook(self.inputfile)
+            t2 = time.clock()
+            print ("Einlesen:")
+            self.computeDuration(t1, t2)
+            
+            articles = { 'new' : importer.articles }
         
             logging.info("Daten eingelesen")
             print("Daten eingelesen")
         
-            exporter = BMEcatExportHandler(self.outputfile,articles)
+            exporter = BMEcatExportHandler(articles, self.outputfile)
         
             logging.info("Erstelle XML-Datei")
             print("Erstelle XML-Datei")
-            exporter.writeBMEcatAsXML(self.outputfile, articles)
-        
+            t3 = time.clock()
+            exporter.writeBMEcatAsXML()
+            t4 = time.clock()
+            print ("Wegschreiben:")
+            self.computeDuration(t3, t4)
+        else:
+            raise FileNotFoundError("Datei '{0}' wurde nicht gefunden".format(self.inputfile))
         logging.info("Fertig.")
         print("Fertig.")
         
@@ -93,3 +105,10 @@ class Converter(object):
             self.excelToXml()
         else:
             raise ConversionModeException("Mode not supported")
+        
+    def computeDuration(self, t1, t2):
+        duration = t2-t1
+        if duration < 60:
+            print('Duration in seconds: ', (t2-t1))
+        else:
+            print('Duration in minutes: ', (t2-t1)/60)

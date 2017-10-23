@@ -555,9 +555,9 @@ class BMEcatHandler(handler.ContentHandler):
             
     def getUnit(self, value):
         currentUnit = None
-        if BMEcatHandler.__bmecatUnitMapper.hasKey(value):
+        if self.__bmecatUnitMapper.hasKey(value):
             currentUnit = BMEcatHandler.__bmecatUnitMapper.getSIUnit(value)
-        elif BMEcatHandler.__etimUnitMapper.hasKey(value):
+        elif self.__etimUnitMapper.hasKey(value):
             currentUnit = BMEcatHandler.__etimUnitMapper.getSIUnit(value)
         else:
             currentUnit = value

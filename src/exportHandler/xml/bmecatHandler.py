@@ -4,18 +4,17 @@ Created on 12.05.2017
 @author: henrik.pilz
 '''
 from datetime import datetime
+import getpass
 import logging
-import os
 
 from lxml import etree
 from lxml.etree import Element, SubElement
 
-import getpass
 
 class BMEcatHandler(object):
     
     def __init__(self, articles, filename):
-        self._articles = articles
+        self._articles = articles # dict!
         self._filename = filename
     
     def __createArticleElements(self):

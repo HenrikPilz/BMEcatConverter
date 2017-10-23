@@ -78,11 +78,44 @@ class ProductTest(unittest.TestCase):
         self.assertEqual(len(product.details.specialTreatmentClasses),1)
         self.assertIn("TestClass", product.details.specialTreatmentClasses)
 
-    def testAddMime(self):
+    def testAddMimeFailed(self):
         product = Product()
+        mime = Mime()
+        self.assertEqual(len(product.mimeInfo),0)        
+        product.addMime(mime)
+        self.assertEqual(len(product.mimeInfo),0)        
+        mime.source = "asdfhjk.jpg"
+        product.addMime(mime)
+        self.assertEqual(len(product.mimeInfo),0)        
+        mime.mimeType = "image/jpg"
+        product.addMime(mime)
+        self.assertEqual(len(product.mimeInfo),0)        
+        mime.order = 1
+        product.addMime(mime)
+        self.assertEqual(len(product.mimeInfo),0)        
+            
+    def testAddMimeDetermineOrder(self):
+        product = Product()
+        mime = Mime()
+        mime.source = "test.jpg"
+        mime.mimeType = "image/jpg"
+        mime.purpose = "detail"
         self.assertEqual(len(product.mimeInfo),0)
-        product.addMime(Mime())
+        product.addMime(mime)
+        self.assertEqual(len(product.mimeInfo),1)   
+        self.assertEqual(product.mimeInfo[0].order, 1)
+
+    def testAddMimePresetOrder(self):
+        product = Product()
+        mime = Mime()
+        mime.source = "test.jpg"
+        mime.mimeType = "image/jpg"
+        mime.purpose = "detail"
+        mime.order = 3
+        self.assertEqual(len(product.mimeInfo),0)
+        product.addMime(mime)
         self.assertEqual(len(product.mimeInfo),1)        
+        self.assertEqual(product.mimeInfo[0].order, 3)
             
     def testAddReference(self):
         product = Product()
