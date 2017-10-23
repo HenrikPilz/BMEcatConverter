@@ -96,8 +96,8 @@ jobs:
             coverage report
             coverage xml
             coverage html
-            ./cc-test-reporter format-coverage  --add-prefix ./coverage/xml/ -t coverage.py -o ./.coverage
-            ./cc-test-reporter upload-coverage
+          # ./cc-test-reporter format-coverage  --add-prefix ./coverage/xml/ -t coverage.py
+          # ./cc-test-reporter upload-coverage
       - run:
           command: |
             ./cc-test-reporter after-build --exit-code $?
