@@ -98,9 +98,9 @@ jobs:
             coverage html
           # ./cc-test-reporter format-coverage  --add-prefix ./coverage/xml/ -t coverage.py
           # ./cc-test-reporter upload-coverage
-      - run:
-          command: |
-            ./cc-test-reporter after-build -t coverage.py -p ./coverage/xml/ --exit-code $?
+      #- run:
+      #    command: |
+      #      ./cc-test-reporter after-build -t coverage.py -p ./coverage/xml/ --exit-code $?
 
       - store_artifacts:
           path: ~/repo/coverage/report/html
