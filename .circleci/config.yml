@@ -100,7 +100,7 @@ jobs:
           # ./cc-test-reporter upload-coverage
       - run:
           command: |
-            ./cc-test-reporter after-build -t coverage.py --exit-code $?
+            ./cc-test-reporter after-build -t coverage.py -p ./coverage/xml/ --exit-code $?
 
       - store_artifacts:
           path: ~/repo/coverage/report/html
