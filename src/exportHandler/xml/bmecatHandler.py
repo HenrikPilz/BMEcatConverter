@@ -13,9 +13,10 @@ from lxml.etree import Element, SubElement
 
 class BMEcatHandler(object):
     
-    def __init__(self, articles, filename):
+    def __init__(self, articles, filename, merchant='fiege'):
         self._articles = articles # dict!
         self._filename = filename
+        self._merchant = merchant
     
     def __createArticleElements(self):
         articleElements = []
@@ -66,56 +67,71 @@ class BMEcatHandler(object):
                             "</CATALOG_GROUP_SYSTEM>")
 
 
+
+    def __extractInitials(self, usplit):
+        initials = ""
+        for elem in usplit:
+            if len(elem) > 0:
+                initials += elem[0].upper()
+        
+        return initials
+
     def __determineInitials(self):
         userName = getpass.getuser()
-        initials = "BC_TEMP"
+        if userName is None:
+            return "BC_TEMP"
+        
         logging.debug("Username: {0}".format(userName))
-        if userName is not None:
-            usplit = []
-            if len(userName.split(" ")) > 1:
-                usplit = userName.split(" ")
-            if len(userName.split(".")) > 1:
-                usplit = userName.split(".")
+        usplit = []
+        if len(userName.split(" ")) > 1:
+            usplit = userName.split(" ")
+        if len(userName.split(".")) > 1:
+            usplit = userName.split(".")
 
-            if len(usplit) > 1 and len(usplit[0].split("-")) > 1:
-                usplit = usplit[0].split("-").append(usplit[1])
-            initials = ""
-            for elem in usplit:
-                if len(elem) > 0:
-                    initials += elem[0].upper()
+        if len(usplit) > 1 and len(usplit[0].split("-")) > 1:
+            usplit = usplit[0].split("-").append(usplit[1])
+        initials = self.__extractInitials(usplit)
             
         return initials
 
+    def __createGenerationDate(self): 
+        now = datetime.now()
+        generationDate = now.strftime("%Y-%m-%d")
+        generationTime = now.strftime("%H:%M:%S")
+        dateTime = Element("DATETIME", { "type" : "generation_date" })
+        SubElement(dateTime, "DATE").text = generationDate
+        SubElement(dateTime, "TIME").text = generationTime
+        return dateTime
+
+    def __createCatalogInfo(self):
+        initials = self.__determineInitials()
+        logging.debug("Initialen: {0}".format(initials))
+
+        dateKz = datetime.now().strftime("%Y%m%d")
+        catalog = Element("CATALOG")
+        SubElement(catalog, "LANGUAGE").text = "deu"
+        SubElement(catalog, "CATALOG_ID").text = dateKz + "_" + initials
+        SubElement(catalog, "CATALOG_VERSION").text = "1.0"
+        SubElement(catalog, "CATALOG_NAME").text = dateKz + "-" + self._merchant.title() + "-Update_" + initials
+        catalog.append(self.__createGenerationDate())
+        SubElement(catalog, "CURRENCY").text = "EUR"
+        return catalog
+
+    def __createSubElementWithNameContorion(self, tag):
+        element = Element(tag)
+        SubElement(element, tag + "_NAME").text = "Contorion GmbH"
+        return element
+    
     def __createHeaderElement(self):
         ''' Create Header of BMEcat
         '''
-        initials = self.__determineInitials()
-        logging.debug("Initialen: {0}".format(initials))
-        now = datetime.now()
-
-        generationDate = now.strftime("%Y-%m-%d")
-        dateKz = now.strftime("%Y%m%d")
-        generationTIme = now.strftime("%H:%M:%S")
-        return etree.XML("<HEADER>" +
-                            "<GENERATOR_INFO>BMEcatConverter Contorion</GENERATOR_INFO>" +
-                            "<CATALOG>" +
-                            "<LANGUAGE>deu</LANGUAGE>" +
-                            "<CATALOG_ID>" + dateKz + "_" + initials +"</CATALOG_ID>" +
-                            "<CATALOG_VERSION>1.0</CATALOG_VERSION>" +
-                            "<CATALOG_NAME>" + dateKz + "-Fiege-Update_" + initials +"</CATALOG_NAME>" +
-                            '<DATETIME type="generation_date">' +
-                            "<DATE>" + generationDate + "</DATE>" +
-                            "<TIME>"+ generationTIme + "</TIME>" +
-                            "</DATETIME>" +
-                            "<CURRENCY>EUR</CURRENCY>" +
-                            "</CATALOG>" +
-                            "<BUYER>" +
-                            "<BUYER_NAME>Contorion GmbH</BUYER_NAME>" +
-                            "</BUYER>" +
-                            "<SUPPLIER>" +
-                            "<SUPPLIER_NAME>Contorion GmbH</SUPPLIER_NAME>" +
-                            "</SUPPLIER>" +
-                            "</HEADER>")
+        header = Element("HEADER")
+        SubElement(header, "GENERATOR_INFO").text = "BMEcatConverter Contorion"
+        header.append(self.__createCatalogInfo())
+        header.append(self.__createSubElementWithNameContorion("BUYER"))
+        header.append(self.__createSubElementWithNameContorion("SUPPLIER"))
+        
+        return header
 
     def __prettyFormattedOutput(self, elem):
         """Return a pretty-printed XML string for the Element.
