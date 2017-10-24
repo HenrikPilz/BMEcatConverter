@@ -41,7 +41,7 @@ def createFileLoggingHandler(logfilename, logLevel=logging.DEBUG, logFormat='%(l
     if os.path.exists(logfilename):
         os.remove(logfilename)
     ''' log File'''
-    logFileHandler = logging.FileHandler(filename=logfilename)
+    logFileHandler = logging.FileHandler(filename=logfilename, mode='w')
     logFileFormatter = logging.Formatter(logFormat)
     logFileHandler.setFormatter(logFileFormatter)
     logFileHandler.setLevel(logLevel)

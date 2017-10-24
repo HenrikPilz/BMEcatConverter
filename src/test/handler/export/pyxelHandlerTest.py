@@ -142,7 +142,7 @@ class PyxelHandlerTest(BasicHandlerTest):
     def runTestMethod(self, article, filename):        
         articles = { 'new' : [ article ]}
 
-        # export as Excel        
+        # export as Excel
         pyxelHandler = PyxelHandler(articles, filename)
         pyxelHandler.createNewWorkbook()
 

@@ -9,7 +9,7 @@ from lxml.etree import Element
 
 class Mime(ValidatingObject, XmlObject, ComparableEqual):
     
-    __allowedTypes = [ "url", "application/pdf", "image/jpeg", "image/jpg", "image/tif", "text/html", "text/plain" ]
+    __allowedTypes = [ "url", "application/pdf", "image/jpeg", "image/jpg", "image/tif", "text/html", "text/plain", "image/tiff", "image/eps" ]
     __allowedPurposes = [ "thumbnail", "normal", "detail", "data_sheet", "logo", "others" ]
     __allowedCombinations = {}
     
