@@ -12,7 +12,7 @@ from data import Feature, FeatureSet, Mime, OrderDetails, Price, PriceDetails, P
 from mapping import Blacklist, UnitMapper
 
 
-class BMEcatHandler(handler.ContentHandler):
+class BMEcatImportHandler(handler.ContentHandler):
     '''
         Handler fuer Sax2Parser, welcher BMEcats in den Formaten 1.01,1.2,2005, 2005.1 sowie ETIM aller Arten liest.
     '''
@@ -288,7 +288,7 @@ class BMEcatHandler(handler.ContentHandler):
         if self.__currentElement is None:
             logging.warning("Bild konnte nicht gespeichert werden.")
         else:
-            self.__currentElement.addMime(self.__currentMime)
+            self.__currentElement.addMime(self.__currentMime, raiseException=False)
         self.__currentMime = None
 
     ''' ---------------------------------------------------------------------'''
@@ -342,7 +342,7 @@ class BMEcatHandler(handler.ContentHandler):
             raise Exception("Attributset soll gespeichert werden. Aber es ist kein Artikel vorhanden")
         if len(self.__currentFeatureSet.features) < 1:
             logging.info("Attributset wird nicht gespeichert, da kein Attribute enthalten sind.")
-        elif BMEcatHandler.__featureSetBlacklist.contains(self.__currentFeatureSet.referenceSytem):
+        elif self.__featureSetBlacklist.contains(self.__currentFeatureSet.referenceSytem):
             logging.info("Attributset wird nicht gespeichert, da es auf der Blacklist ist.")
         else:
             self.__currentArticle.addFeatureSet(self.__currentFeatureSet)
@@ -370,7 +370,7 @@ class BMEcatHandler(handler.ContentHandler):
     def saveFeature(self, attrs = None):
         if self.__currentFeatureSet is None:
             raise Exception("Attribut soll gespeichert werden. Aber es ist kein Attributset vorhanden")
-        elif BMEcatHandler.__featureBlacklist.contains(self.__currentFeature.name):
+        elif self.__featureBlacklist.contains(self.__currentFeature.name):
             logging.info("Attribut wird nicht gespeichert, da es auf der Blacklist ist.")
         else:
             self.__currentFeatureSet.addFeature(self.__currentFeature)
@@ -556,9 +556,9 @@ class BMEcatHandler(handler.ContentHandler):
     def getUnit(self, value):
         currentUnit = None
         if self.__bmecatUnitMapper.hasKey(value):
-            currentUnit = BMEcatHandler.__bmecatUnitMapper.getSIUnit(value)
+            currentUnit = self.__bmecatUnitMapper.getSIUnit(value)
         elif self.__etimUnitMapper.hasKey(value):
-            currentUnit = BMEcatHandler.__etimUnitMapper.getSIUnit(value)
+            currentUnit = self.__etimUnitMapper.getSIUnit(value)
         else:
             currentUnit = value
         return currentUnit 

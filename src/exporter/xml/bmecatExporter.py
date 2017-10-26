@@ -11,7 +11,7 @@ from lxml import etree
 from lxml.etree import Element, SubElement
 
 
-class BMEcatHandler(object):
+class BMEcatExporter(object):
     
     def __init__(self, articles, filename, merchant='fiege'):
         self._articles = articles # dict!

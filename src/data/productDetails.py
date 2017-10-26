@@ -55,7 +55,7 @@ class ProductDetails(ValidatingObject, XmlObject, ComparableEqual):
             super().logError("Ein Artikelname fehlt", raiseException)
         if self.description is None or self.description.strip() == "":
             logging.warning("Die Artikelbeschreibung fehlt.")
-        if self.ean is None or self.ean.strip() == "":
+        if self.ean is None or (isinstance(self.ean, str) and self.ean.strip() == ""):
             logging.warning("Keine EAN vorhanden.")
     
     def addSpecialTreatmentClass(self, treatmentclass):

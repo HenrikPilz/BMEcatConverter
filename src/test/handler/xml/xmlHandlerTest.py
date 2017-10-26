@@ -6,8 +6,8 @@ Created on 09.10.2017
 from xml.sax import make_parser
 
 from data import Feature, FeatureSet, Mime, OrderDetails, Price, PriceDetails, Product, ProductDetails, Reference, TreatmentClass
-from exportHandler.xml import BMEcatHandler as BMEcatExporter
-from importHandler.xml import BMEcatHandler as BMEcatImporter
+from exporter.xml import BMEcatExporter
+from importer.xml import BMEcatImportHandler
 from resolver import DTDResolver
 from test.handler.basicHandlerTest import BasicHandlerTest
 
@@ -125,8 +125,8 @@ class xmlHandlerTest(BasicHandlerTest):
         
         # import again
         parser = make_parser()
-        importer = BMEcatImporter("%Y-%m-%d", ".", ",")
-        parser.setContentHandler(importer)
+        importHandler = BMEcatImportHandler("%Y-%m-%d", ".", ",")
+        parser.setContentHandler(importHandler)
         parser.setEntityResolver(DTDResolver())
         parser.parse("file:" + filename)
-        return importer.articles['new']
+        return importHandler.articles['new']

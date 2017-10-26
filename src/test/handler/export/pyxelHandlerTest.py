@@ -3,12 +3,11 @@ Created on 08.10.2017
 
 @author: Henrik Pilz
 '''
-import unittest
 
 from data import Product, ProductDetails, TreatmentClass, Mime, Reference, OrderDetails, Feature, Price, PriceDetails
 from data.featureSet import FeatureSet
-from exportHandler.excel.pyxelHandler import PyxelHandler
-from importHandler.excel.excelImporter import ExcelImporter
+from exporter.excel import PyxelExporter
+from importer.excel import ExcelImporter
 from test.handler.basicHandlerTest import BasicHandlerTest
 
 
@@ -143,7 +142,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         articles = { 'new' : [ article ]}
 
         # export as Excel
-        pyxelHandler = PyxelHandler(articles, filename)
+        pyxelHandler = PyxelExporter(articles, filename)
         pyxelHandler.createNewWorkbook()
 
         # import again

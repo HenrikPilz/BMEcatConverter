@@ -9,7 +9,7 @@ import logging
 from openpyxl.workbook import Workbook
 
 
-class PyxelHandler(object):
+class PyxelExporter(object):
     '''
     classdocs
     '''

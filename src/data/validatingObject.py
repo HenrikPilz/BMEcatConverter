@@ -93,10 +93,10 @@ class ValidatingObject(object):
         if raiseException:
             raise Exception(errMsg)
 
-    def addToListIfValid(self, item, listToAddTo, errorMessage):
+    def addToListIfValid(self, item, listToAddTo, errorMessage, raiseException=True):
         try:
             self.determineOrderIfNeeded(item, listToAddTo)
-            item.validate(True)
+            item.validate(raiseException)
             listToAddTo.append(item)
         except Exception as ve:
             logging.warn(errorMessage + "{0}".format(str(ve)))

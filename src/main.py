@@ -89,6 +89,9 @@ if __name__ == '__main__':
         inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName = ArgumentParser().parse(argv)
         converter = Converter(inputFilename, outputFilename, dateFormat, separatorMode, manufacturerName, merchantName)        
         converter.convert()
+    except FileNotFoundError as fnfe:
+        print("Dateiname konnte nicht gefunden werden: ", str(fnfe))
+        sys.exit(5)
     except HelpCalledException:
         printHelp()
     except ConversionModeException as cme:

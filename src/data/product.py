@@ -78,8 +78,8 @@ class Product(ValidatingObject, XmlObject, ComparableEqual):
     def addDeliveryTime(self, deliveryTime):
         self.details.deliveryTime = deliveryTime
         
-    def addMime(self, mime):
-        self.addToListIfValid(mime, self.mimeInfo, "Das Bild enthaelt keine validen Einträge. Es wird nicht hinzugefuegt.")
+    def addMime(self, mime, raiseException=True):
+        self.addToListIfValid(mime, self.mimeInfo, "Das Bild enthaelt keine validen Einträge. Es wird nicht hinzugefuegt.", raiseException)
 
     def addReference(self, reference):
         self.references.append(reference)
@@ -124,7 +124,7 @@ class Product(ValidatingObject, XmlObject, ComparableEqual):
         articleElement.append(self.orderDetails.toXml())
         super().addListOfSubElements(articleElement, self.priceDetails)
         mimeInfoElement = SubElement(articleElement, "MIME_INFO")        
-        super().addListOfSubElements(mimeInfoElement, sorted(self.mimeInfo, key=lambda mime: mime.order))
+        super().addListOfSubElements(mimeInfoElement, sorted(self.mimeInfo, key=lambda mime: int(mime.order)))
         super().addListOfSubElements(articleElement, self.featureSets)
         super().addListOfSubElements(articleElement, self.references)        
         return articleElement
