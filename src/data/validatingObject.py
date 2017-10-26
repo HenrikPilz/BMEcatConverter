@@ -99,7 +99,7 @@ class ValidatingObject(object):
             item.validate(raiseException)
             listToAddTo.append(item)
         except Exception as ve:
-            logging.warn(errorMessage + "{0}".format(str(ve)))
+            logging.warning(errorMessage + "{0}".format(str(ve)))
 
 
     def determineOrderIfNeeded(self, item, listToAddTo):
