@@ -4,8 +4,7 @@ Created on 08.10.2017
 @author: Henrik Pilz
 '''
 
-from data import Product, ProductDetails, TreatmentClass, Mime, Reference, OrderDetails, Feature, Price, PriceDetails
-from data.featureSet import FeatureSet
+from datamodel import Product, ProductDetails, TreatmentClass, Mime, Reference, OrderDetails, Feature, Price, PriceDetails, FeatureSet
 from exporter.excel import PyxelExporter
 from importer.excel import ExcelImporter
 from test.handler.basicHandlerTest import BasicHandlerTest

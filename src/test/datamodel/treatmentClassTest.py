@@ -5,7 +5,7 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data import TreatmentClass
+from datamodel import TreatmentClass
 
 class TreatmentClassTest(unittest.TestCase):
 

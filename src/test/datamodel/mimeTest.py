@@ -5,7 +5,7 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data import Mime
+from datamodel import Mime
 
 class MimeTest(unittest.TestCase):
 

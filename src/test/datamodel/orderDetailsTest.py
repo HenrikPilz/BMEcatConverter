@@ -5,7 +5,7 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data import OrderDetails
+from datamodel import OrderDetails
 
 class OrderDetailsTest(unittest.TestCase):
 

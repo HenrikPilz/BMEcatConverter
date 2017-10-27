@@ -5,7 +5,7 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data import Feature, FeatureSet
+from datamodel import Feature, FeatureSet
 
 
 class FeatureSetTest(unittest.TestCase):

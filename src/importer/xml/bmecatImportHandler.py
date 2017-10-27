@@ -8,7 +8,7 @@ import logging
 import os
 from xml.sax import handler
 
-from data import Feature, FeatureSet, Mime, OrderDetails, Price, PriceDetails, Product, ProductDetails, Reference, TreatmentClass, Variant, VariantSet
+from datamodel import Feature, FeatureSet, Mime, OrderDetails, Price, PriceDetails, Product, ProductDetails, Reference, TreatmentClass, Variant, VariantSet
 from mapping import Blacklist, UnitMapper
 
 

@@ -5,7 +5,7 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data import Mime, Reference
+from datamodel import Mime, Reference
 
 
 class ReferenceTest(unittest.TestCase):

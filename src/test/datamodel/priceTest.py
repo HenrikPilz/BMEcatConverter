@@ -5,7 +5,7 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data import Price
+from datamodel import Price
 
 class PriceTest(unittest.TestCase):
 

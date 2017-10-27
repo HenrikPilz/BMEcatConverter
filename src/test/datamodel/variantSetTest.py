@@ -5,7 +5,7 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data import Variant, VariantSet
+from datamodel import Variant, VariantSet
 
 
 class VariantSetTest(unittest.TestCase):

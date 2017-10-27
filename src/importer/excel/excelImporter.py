@@ -9,7 +9,7 @@ import logging
 from openpyxl import load_workbook
 import regex
 
-from data import FeatureSet, Mime, OrderDetails, PriceDetails, Product, ProductDetails, Price, Feature
+from datamodel import FeatureSet, Mime, OrderDetails, PriceDetails, Product, ProductDetails, Price, Feature
 
 
 class ExcelImporter(object):

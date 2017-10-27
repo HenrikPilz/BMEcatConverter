@@ -5,7 +5,7 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data import Feature, FeatureSet, Mime, Product, ProductDetails, Reference, Variant, OrderDetails, PriceDetails
+from datamodel import Feature, FeatureSet, Mime, Product, ProductDetails, Reference, Variant, OrderDetails, PriceDetails
 
 
 class ProductTest(unittest.TestCase):

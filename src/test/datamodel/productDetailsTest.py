@@ -5,7 +5,7 @@ Created on 16.07.2017
 '''
 import unittest
 
-from data import ProductDetails
+from datamodel import ProductDetails
 
 class ProductDetailsTest(unittest.TestCase):
 
