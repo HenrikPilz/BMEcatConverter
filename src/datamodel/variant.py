@@ -4,7 +4,7 @@ Created on 17.05.2017
 @author: henrik.pilz
 '''
 from . import ValidatingXMLObject, ComparableEqual
-from lxml.etree import Element
+
 
 class Variant(ValidatingXMLObject, ComparableEqual):
     '''

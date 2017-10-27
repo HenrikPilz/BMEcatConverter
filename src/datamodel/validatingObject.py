@@ -147,7 +147,7 @@ class XMLObject(object):
         '''
         Erstellt eiin Child-Element, falls value nicht None
         '''
-        if value is not None:
+        if value is not None and len(str(value)) > 0:
             return self.addMandatorySubElement(parent, tag, value)
         return None
 

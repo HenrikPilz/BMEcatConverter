@@ -5,8 +5,6 @@ Created on 05.05.2017
 '''
 import logging
 from . import ValidatingXMLObject, ComparableEqual
-from lxml.etree import Element
-
 
 class Reference(ValidatingXMLObject, ComparableEqual):
     '''

@@ -4,8 +4,6 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 from . import ValidatingXMLObject, ComparableEqual
-from lxml.etree import Element
-
 
 class Mime(ValidatingXMLObject, ComparableEqual):
     

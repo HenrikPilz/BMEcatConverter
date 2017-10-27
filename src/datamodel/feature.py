@@ -5,7 +5,6 @@ Created on 05.05.2017
 '''
 from . import ValidatingXMLObject, ComparableEqual
 from .variantSet import VariantSet
-from lxml.etree import Element
 
 class Feature(ValidatingXMLObject, ComparableEqual):
     def __init__(self):

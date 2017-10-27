@@ -5,7 +5,6 @@ Created on 05.05.2017
 '''
 import logging
 from . import ValidatingXMLObject, ComparableEqual
-from lxml.etree import Element, SubElement
 
 class ProductDetails(ValidatingXMLObject, ComparableEqual):
     
@@ -83,7 +82,7 @@ class ProductDetails(ValidatingXMLObject, ComparableEqual):
         super().addMandatorySubElement(detailsXmlElement, "DELIVERY_TIME", self.deliveryTime)
         
         for keyword in self.keywords:
-            SubElement(detailsXmlElement,"KEYWORD").text = keyword
+            super().addOptionalSubElement(detailsXmlElement,"KEYWORD", keyword)
         
         super().addListOfSubElements(detailsXmlElement, self.specialTreatmentClasses)
         return detailsXmlElement

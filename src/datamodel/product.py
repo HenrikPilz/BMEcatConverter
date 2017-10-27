@@ -5,7 +5,7 @@ Created on 05.05.2017
 '''
 import logging
 
-from lxml.etree import Element, SubElement
+from lxml.etree import SubElement
 
 from . import ValidatingXMLObject, ComparableEqual
 

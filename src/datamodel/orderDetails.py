@@ -6,8 +6,6 @@ Created on 05.05.2017
 
 import logging
 
-from lxml.etree import Element
-
 from . import ValidatingXMLObject, ComparableEqual
 
 
