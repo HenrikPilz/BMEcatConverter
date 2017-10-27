@@ -47,7 +47,7 @@ class ProductDetails(ValidatingXMLObject, ComparableEqual):
             eanEqual = int(self.ean) == int(other.ean)
             manufacturerArticleIdEqual = str(self.manufacturerArticleId) == str(other.manufacturerArticleId)
             deliveryTimeEqual = float(self.deliveryTime) == float(other.deliveryTime)
-            return self.title == other.title and self.description == other.description and eanEqual and manufacturerArticleIdEqual and self.manufacturerName == self.manufacturerName and deliveryTimeEqual
+            return self.title == other.title and self.description == other.description and eanEqual and manufacturerArticleIdEqual and self.manufacturerName == other.manufacturerName and deliveryTimeEqual
 
     def validate(self, raiseException=False):
         if self.title is None or self.title.strip() == "":
@@ -63,8 +63,8 @@ class ProductDetails(ValidatingXMLObject, ComparableEqual):
     def addKeyword(self, keyword):
         self.keywords.append(keyword)
     
-    def toXml(self):
-        detailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_DETAILS")
+    def toXml(self, raiseExceptionOnValidate=True):
+        detailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_DETAILS", raiseExceptionOnValidate=raiseExceptionOnValidate)
         super().addMandatorySubElement(detailsXmlElement, "DESCRIPTION_SHORT", self.title)
         
         super().addOptionalSubElement(detailsXmlElement, "DESCRIPTION_LONG", self.description)
@@ -84,5 +84,5 @@ class ProductDetails(ValidatingXMLObject, ComparableEqual):
         for keyword in self.keywords:
             super().addOptionalSubElement(detailsXmlElement,"KEYWORD", keyword)
         
-        super().addListOfSubElements(detailsXmlElement, self.specialTreatmentClasses)
+        super().addListOfSubElements(detailsXmlElement, self.specialTreatmentClasses, raiseExceptionOnValidate)
         return detailsXmlElement

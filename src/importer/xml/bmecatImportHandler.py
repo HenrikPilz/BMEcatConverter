@@ -122,24 +122,26 @@ class BMEcatImportHandler(handler.ContentHandler):
     
     
     ''' Handlernamen fuer das XML-Element ermitteln. '''
-    def __determinteHandlername(self, tag, bOpen):
+
+    def __determineTagName(self, tag, bOpen):
         name = tag.lower()
         if tag.lower() in self.__alias:
-            logging.debug("[" + str(bOpen) +"] '" + tag + "' has an alias")
+            logging.debug("[" + str(bOpen) + "] '" + tag + "' has an alias")
             name = self.__alias[tag.lower()]
+        return name
 
-        handlerName = None
+    def __determineTagHandlername(self, tag, bOpen):
+        name = self.__determineTagName(tag, bOpen)
         if bOpen:
+            return self.__determineHandlername(name, self.__startElementHandler)
+        else:
+            return self.__determineHandlername(name, self.__endElementHandler)
+
+    def __determineHandlername(self, name, handlerByName):
             try:
-                handlerName = self.__startElementHandler[name]
+                return handlerByName[name]
             except KeyError:
-                logging.debug("Call for Start Tag <" + name + "> FAILED:")            
-        else :
-            try:
-                handlerName = self.__endElementHandler[name]
-            except KeyError:
-                logging.debug("Call for End Tag <" + name + "> FAILED:")            
-        return handlerName
+                logging.debug("Call for Tag <" + name + "> FAILED:")       
 
     ''' Konstruktor '''
     def __init__(self, dateFormat, decimalSeparator, thousandSeparator):
@@ -184,7 +186,7 @@ class BMEcatImportHandler(handler.ContentHandler):
         logging.debug("Call for Tag <" + name + ">")
         elementHandler = None
         try:
-            handlerName = self.__determinteHandlername(name, bOpen)
+            handlerName = self.__determineTagHandlername(name, bOpen)
             if not handlerName is None:
                 elementHandler = getattr(self, handlerName)
                 elementHandler(attrs)
@@ -647,6 +649,20 @@ class BMEcatImportHandler(handler.ContentHandler):
             self.__currentArticle.addKeyword(self.__currentContent)
             
     ''' ---------------------------------------------------------------------'''
+    def valueIsNone(self, value, message=None, outputLevel=logging.WARN):
+        if value is None:
+            logging.log(outputLevel, message)
+            return True 
+        return False
+        
+    def valueIsNoneOrNotInlist(self, value, inList, message=None, outputLevel=logging.WARN):
+        if self.valueIsNone(value, message, outputLevel):
+            return True
+        if value not in inList:
+            logging.log(outputLevel, message)
+            return True
+        return False
+        
     '''aktuellen Inhalt des XML-Elements ermitteln'''
     def characters(self, content):
         logging.debug("Original input: '{0}'".format(content))

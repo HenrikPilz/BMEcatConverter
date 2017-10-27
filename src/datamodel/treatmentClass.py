@@ -33,7 +33,7 @@ class TreatmentClass(ValidatingXMLObject, ComparableEqual):
             logging.info("Es wurde kein Wert zur Klassifizierung angegeben.")
     
     
-    def toXml(self):
-        xmlElement = super().validateAndCreateBaseElement("SPECIAL_TREATMENT_CLASS", { "type" : self.classType })
+    def toXml(self, raiseExceptionOnValidate=True):
+        xmlElement = super().validateAndCreateBaseElement("SPECIAL_TREATMENT_CLASS", { "type" : self.classType }, raiseExceptionOnValidate)
         xmlElement.text = self.value
         return xmlElement

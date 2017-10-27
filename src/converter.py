@@ -30,16 +30,16 @@ class Converter(object):
                    "english" : { "decimalSeparator" : ".", "thousandSeparator" : "," }
                  }
 
-    def __init__(self, inputfile, outputfile, dateFormat, separatorMode="detect", manufacturerName=None, merchant=None):
+    def __init__(self, config):
         '''
         Constructor
         '''
-        self.inputfile=inputfile
-        self.outputfile=outputfile
-        self.dateFormat=dateFormat
-        self.separatorMode=separatorMode
-        self.manufacturerName=manufacturerName
-        self.merchant=merchant
+        self._inputfile=config['inputfile']
+        self._outputfile=config['outputfile']
+        self._dateFormat=config['dateFormat']
+        self._separatorMode=config['separatorMode']
+        self._manufacturerName=config['manufacturerName']
+        self._merchant=config['merchant']
         
     def xmlToExcel(self):
         '''
@@ -47,20 +47,20 @@ class Converter(object):
         '''
         parser = make_parser()
         
-        decimalSeparator = self.separators[self.separatorMode]["decimalSeparator"]
-        thousandSeparator = self.separators[self.separatorMode]["thousandSeparator"]
+        decimalSeparator = self.separators[self._separatorMode]["decimalSeparator"]
+        thousandSeparator = self.separators[self._separatorMode]["thousandSeparator"]
             
-        importer = BMEcatImportHandler(self.dateFormat, decimalSeparator, thousandSeparator)
+        importer = BMEcatImportHandler(self._dateFormat, decimalSeparator, thousandSeparator)
         parser.setContentHandler(importer)
         parser.setEntityResolver(DTDResolver())
-        if self.inputfile.startswith(".") or self.inputfile.startswith(".."):
-            self.inputfile = os.getcwd() + "//" + self.inputfile
-        if self.outputfile.startswith(".") or self.outputfile.startswith(".."):
-            self.outputfile = os.getcwd() + "//" + self.outputfile
-        parser.parse("file:" + self.inputfile)
+        if self._inputfile.startswith(".") or self._inputfile.startswith(".."):
+            self._inputfile = os.getcwd() + "//" + self._inputfile
+        if self._outputfile.startswith(".") or self._outputfile.startswith(".."):
+            self._outputfile = os.getcwd() + "//" + self._outputfile
+        parser.parse("file:" + self._inputfile)
         logging.info("Daten eingelesen")
     
-        exporter = PyxelExporter(importer.articles, self.outputfile, self.manufacturerName)
+        exporter = PyxelExporter(importer.articles, self._outputfile, self._manufacturerName)
         logging.info("Erstelle Excel-Datei")
         exporter.createNewWorkbook()
         logging.info("Fertig.")
@@ -72,9 +72,9 @@ class Converter(object):
 
         importer = ExcelImporter()
         
-        if os.path.isfile(self.inputfile):
+        if os.path.isfile(self._inputfile):
             t1 = time.clock()
-            importer.readWorkbook(self.inputfile)
+            importer.readWorkbook(self._inputfile)
             t2 = time.clock()
             print ("Einlesen:")
             self.computeDuration(t1, t2)
@@ -84,7 +84,7 @@ class Converter(object):
             logging.info("Daten eingelesen")
             print("Daten eingelesen")
         
-            exporter = BMEcatExporter(articles, self.outputfile)
+            exporter = BMEcatExporter(articles, self._outputfile, self._merchant)
         
             logging.info("Erstelle XML-Datei")
             print("Erstelle XML-Datei")
@@ -94,14 +94,14 @@ class Converter(object):
             print ("Wegschreiben:")
             self.computeDuration(t3, t4)
         else:
-            raise FileNotFoundError("Datei '{0}' wurde nicht gefunden".format(self.inputfile))
+            raise FileNotFoundError("Datei '{0}' wurde nicht gefunden".format(self._inputfile))
         logging.info("Fertig.")
         print("Fertig.")
         
     def convert(self):
-        if self.inputfile.endswith(".xml") and self.outputfile.endswith(".xlsx"):
+        if self._inputfile.endswith(".xml") and self._outputfile.endswith(".xlsx"):
             self.xmlToExcel()
-        elif self.inputfile.endswith(".xlsx") and self.outputfile.endswith(".xml"):
+        elif self._inputfile.endswith(".xlsx") and self._outputfile.endswith(".xml"):
             self.excelToXml()
         else:
             raise ConversionModeException("Mode not supported")

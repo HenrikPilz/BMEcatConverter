@@ -44,11 +44,11 @@ class PriceDetails(ValidatingXMLObject, ComparableEqual):
         if price is not None:
             self.prices.append(price)
 
-    def toXml(self):
-        priceDetailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_PRICE_DETAILS")
+    def toXml(self, raiseExceptionOnValidate=True):
+        priceDetailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_PRICE_DETAILS", raiseExceptionOnValidate=raiseExceptionOnValidate)
         if self.validFrom is not None and self.validTo is not None:
             super().addDateTimeSubElement(priceDetailsXmlElement, "valid_start_date", self.validFrom)
             super().addDateTimeSubElement(priceDetailsXmlElement, "valid_end_date", self.validTo)
         super().addOptionalSubElement(priceDetailsXmlElement, "DAILY_PRICE", self.dailyPrice)
-        super().addListOfSubElements(priceDetailsXmlElement, self.prices)
+        super().addListOfSubElements(priceDetailsXmlElement, self.prices, raiseExceptionOnValidate)
         return priceDetailsXmlElement

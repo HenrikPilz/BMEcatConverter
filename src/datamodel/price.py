@@ -43,8 +43,8 @@ class Price(ValidatingXMLObject, ComparableEqual):
         if float(self.lowerBound) < 1:
             logging.warning("Staffelmenge falsch!")
             
-    def toXml(self):
-        priceXmlElement = super().validateAndCreateBaseElement("ARTICLE_PRICE", { "price_type" : self.priceType })
+    def toXml(self, raiseExceptionOnValidate=True):
+        priceXmlElement = super().validateAndCreateBaseElement("ARTICLE_PRICE", { "price_type" : self.priceType }, raiseExceptionOnValidate)
         super().addMandatorySubElement(priceXmlElement, "PRICE_AMOUNT", self.amount)
         super().addMandatorySubElement(priceXmlElement, "PRICE_CURRENCY", self.currency)
         super().addMandatorySubElement(priceXmlElement, "TAX", self.tax)

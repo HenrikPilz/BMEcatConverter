@@ -48,8 +48,8 @@ class OrderDetails(ValidatingXMLObject, ComparableEqual):
         if float(self.quantityMin) != float(self.priceQuantity):
             logging.info("PackagingQuantity und PriceQuantity untscheiden sich!")
 
-    def toXml(self):
-        orderDetailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_ORDER_DETAILS")
+    def toXml(self, raiseExceptionOnValidate=True):
+        orderDetailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_ORDER_DETAILS", raiseExceptionOnValidate=raiseExceptionOnValidate)
         super().addMandatorySubElement(orderDetailsXmlElement, "ORDER_UNIT", self.orderUnit)
         super().addMandatorySubElement(orderDetailsXmlElement, "CONTENT_UNIT", self.contentUnit)
         super().addMandatorySubElement(orderDetailsXmlElement, "NO_CU_PER_OU", self.packingQuantity)

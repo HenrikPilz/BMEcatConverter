@@ -27,7 +27,7 @@ class BMEcatExporter(object):
     def __createArticleElementsForSet(self, articles, articleType='new'):
         articleElements = []
         for article in articles:
-            articleElement = article.toXml(articleType)
+            articleElement = article.toXml(articleType, self._merchant.lower()=='fiege')
             articleElements.append(articleElement)
         return articleElements
     

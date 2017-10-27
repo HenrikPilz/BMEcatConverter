@@ -33,8 +33,8 @@ class Mime(ValidatingXMLObject, ComparableEqual):
         if super().valueNotNone(self.purpose, "Bildverwendung nicht gesetzt.", raiseException) and self.purpose not in Mime.__allowedPurposes:
             super().logError("Bildverwendung fehlerhaft: " + str(self.purpose), raiseException)
 
-    def toXml(self):
-        mimeElement = super().validateAndCreateBaseElement("MIME")
+    def toXml(self, raiseExceptionOnValidate=True):
+        mimeElement = super().validateAndCreateBaseElement("MIME", raiseExceptionOnValidate=raiseExceptionOnValidate)
         super().addMandatorySubElement(mimeElement, "MIME_SOURCE", self.source)
         super().addMandatorySubElement(mimeElement, "MIME_TYPE", self.mimeType)
         super().addMandatorySubElement(mimeElement, "MIME_PURPOSE", self.purpose)

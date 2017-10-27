@@ -34,8 +34,8 @@ class Variant(ValidatingXMLObject, ComparableEqual):
             errMsg= "Das Suffix fuer die Variante " + str(self.value) + " wurde nicht definiert."
             super().logError(errMsg, raiseException)
 
-    def toXml(self):
-        xmlVariant = super().validateAndCreateBaseElement("VARIANT")
+    def toXml(self, raiseExceptionOnValidate=True):
+        xmlVariant = super().validateAndCreateBaseElement("VARIANT", raiseExceptionOnValidate=raiseExceptionOnValidate)
         super().addMandatorySubElement(xmlVariant, "FVALUE", self.value)
         super().addMandatorySubElement(xmlVariant, "SUPPLIER_AID_SUPPLEMENT", self.productIdSuffix)
         return xmlVariant

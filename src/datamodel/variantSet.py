@@ -33,8 +33,8 @@ class VariantSet(ValidatingXMLObject, ComparableEqual):
     def __len__(self):
         return len(self.variants)
     
-    def toXml(self):
-        xmlVariants = super().validateAndCreateBaseElement("VARIANTS")
+    def toXml(self, raiseExceptionOnValidate=True):
+        xmlVariants = super().validateAndCreateBaseElement("VARIANTS", raiseExceptionOnValidate=raiseExceptionOnValidate)
         super().addMandatorySubElement(xmlVariants, "VORDER", self.order)
-        super().addListOfSubElements(xmlVariants, self.variants)
+        super().addListOfSubElements(xmlVariants, self.variants, raiseExceptionOnValidate)
         return xmlVariants

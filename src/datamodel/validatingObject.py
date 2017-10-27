@@ -151,9 +151,9 @@ class XMLObject(object):
             return self.addMandatorySubElement(parent, tag, value)
         return None
 
-    def addListOfSubElements(self, parent, listOfSubElements):
+    def addListOfSubElements(self, parent, listOfSubElements, raiseExceptionOnValidate=True):
         for element in listOfSubElements:
-            parent.append(element.toXml())
+            parent.append(element.toXml(raiseExceptionOnValidate=raiseExceptionOnValidate))
 
     def addDateTimeSubElement(self, parent, dateType, date):
         dateTimeSubElement = SubElement(parent, "DATETIME", { "type"  : dateType})
@@ -167,7 +167,7 @@ class ValidatingXMLObject(ValidatingObject, XMLObject):
     def __init__(self):
         super().__init__()
 
-    def validateAndCreateBaseElement(self, tagname, attributes=None):
-        self.validate(True)
+    def validateAndCreateBaseElement(self, tagname, attributes=None, raiseExceptionOnValidate=True):
+        self.validate(raiseExceptionOnValidate)
         return Element(tagname, attributes)
 

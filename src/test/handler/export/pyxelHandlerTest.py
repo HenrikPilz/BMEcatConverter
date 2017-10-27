@@ -21,7 +21,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.details.ean = '12345678901234'
         article.details.keywords = [ 'Keyword 1', 'Keyword 2']
         article.details.manufacturerArticleId = '09876'
-        article.details.manufacturerName = 'Manufacturer'
+        article.details._manufacturerName = 'Manufacturer'
         tc = TreatmentClass()
         tc.classType = 'TestClass'
         tc.value = '12345'
@@ -177,7 +177,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.details.ean = '12345678901234'
         article.details.keywords = [ 'Keyword 1', 'Keyword 2']
         article.details.manufacturerArticleId = '09876'
-        article.details.manufacturerName = 'Manufacturer'
+        article.details._manufacturerName = 'Manufacturer'
         tc = TreatmentClass()
         tc.classType = 'TestClass'
         tc.value = '12345'
@@ -245,7 +245,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.details.ean = '12345678901234'
         article.details.keywords = [ 'Keyword 1', 'Keyword 2']
         article.details.manufacturerArticleId = '09876'
-        article.details.manufacturerName = 'Manufacturer'
+        article.details._manufacturerName = 'Manufacturer'
         tc = TreatmentClass()
         tc.classType = 'TestClass'
         tc.value = '12345'
@@ -312,7 +312,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.details.ean = '12345678901234'
         article.details.keywords = [ 'Keyword 1', 'Keyword 2']
         article.details.manufacturerArticleId = '09876'
-        article.details.manufacturerName = 'Manufacturer'
+        article.details._manufacturerName = 'Manufacturer'
         tc = TreatmentClass()
         tc.classType = 'TestClass'
         tc.value = '12345'

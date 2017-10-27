@@ -116,14 +116,14 @@ class Product(ValidatingXMLObject, ComparableEqual):
         self.numberOfVariants *= len(feature.variants)
         self.hasVariants = self.numberOfVariants > 1
     
-    def toXml(self, articleType='new'):
-        articleElement = super().validateAndCreateBaseElement("ARTICLE", { "mode" : articleType })
+    def toXml(self, articleType='new', raiseExceptionOnValidate=True):
+        articleElement = super().validateAndCreateBaseElement("ARTICLE", { "mode" : articleType }, raiseExceptionOnValidate)
         super().addMandatorySubElement(articleElement, "SUPPLIER_AID", self.productId)
-        articleElement.append(self.details.toXml())
-        articleElement.append(self.orderDetails.toXml())
+        articleElement.append(self.details.toXml(raiseExceptionOnValidate))
+        articleElement.append(self.orderDetails.toXml(raiseExceptionOnValidate))
         super().addListOfSubElements(articleElement, self.priceDetails)
         mimeInfoElement = SubElement(articleElement, "MIME_INFO")        
-        super().addListOfSubElements(mimeInfoElement, sorted(self.mimeInfo, key=lambda mime: int(mime.order)))
-        super().addListOfSubElements(articleElement, self.featureSets)
-        super().addListOfSubElements(articleElement, self.references)        
+        super().addListOfSubElements(mimeInfoElement, sorted(self.mimeInfo, key=lambda mime: int(mime.order)), raiseExceptionOnValidate)
+        super().addListOfSubElements(articleElement, self.featureSets, raiseExceptionOnValidate)
+        super().addListOfSubElements(articleElement, self.references, raiseExceptionOnValidate)        
         return articleElement

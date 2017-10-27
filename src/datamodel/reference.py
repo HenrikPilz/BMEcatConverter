@@ -58,11 +58,11 @@ class Reference(ValidatingXMLObject, ComparableEqual):
             raise Exception("Es wird schon eine Artikelnummer referenziert: {0}".format(self.supplierArticleId))
         self.supplierArticleId = supplierArticleId 
     
-    def toXml(self):
+    def toXml(self, raiseExceptionOnValidate=True):
         attributes = { "type" : self.referenceType }
         if self.quantity is not None:
             attributes["quantity"] = self.quantity
-        referenceElement = super().validateAndCreateBaseElement("ARTICLE_REFERENCE", attributes)
+        referenceElement = super().validateAndCreateBaseElement("ARTICLE_REFERENCE", attributes, raiseExceptionOnValidate)
         super().addMandatorySubElement(referenceElement, "ART_ID_TO", self.supplierArticleId)
         super().addOptionalSubElement(referenceElement, "CATALOG_ID", self.catalogId)
         super().addOptionalSubElement(referenceElement, "CATALOG_VERSION", self.catalogVersion)

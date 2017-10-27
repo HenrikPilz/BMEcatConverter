@@ -68,8 +68,8 @@ class Feature(ValidatingXMLObject, ComparableEqual):
             self.variants = VariantSet()
         self.variants.addVariant(variant)
     
-    def toXml(self):
-        xmlFeature = super().validateAndCreateBaseElement("FEATURE")
+    def toXml(self, raiseExceptionOnValidate=True):
+        xmlFeature = super().validateAndCreateBaseElement("FEATURE", raiseExceptionOnValidate=raiseExceptionOnValidate)
         super().addMandatorySubElement(xmlFeature, "FNAME", self.name)
         super().addOptionalSubElement(xmlFeature, "FORDER", self.order)
         super().addOptionalSubElement(xmlFeature, "FUNIT", self.unit)
@@ -80,5 +80,5 @@ class Feature(ValidatingXMLObject, ComparableEqual):
             for value in self.values:
                 super().addMandatorySubElement(xmlFeature, "FVALUE", value)
         if self.variants is not None:
-            xmlFeature.append(self.variants.toXml())
+            xmlFeature.append(self.variants.toXml(raiseExceptionOnValidate))
         return xmlFeature

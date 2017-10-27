@@ -24,7 +24,7 @@ class ArgumentParser():
     def __init__(self):
         self._inputfile = None
         self._outputfile = None
-        self._merchant = None
+        self._merchant = 'fiege'
         self._manufacturer = None
         self._dateformat = None
         self._separatorMode = None
