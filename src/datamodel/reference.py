@@ -4,11 +4,11 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject, XmlObject, ComparableEqual
+from . import ValidatingXMLObject, ComparableEqual
 from lxml.etree import Element
 
 
-class Reference(ValidatingObject, XmlObject, ComparableEqual):
+class Reference(ValidatingXMLObject, ComparableEqual):
     '''
     classdocs
     '''
@@ -61,11 +61,10 @@ class Reference(ValidatingObject, XmlObject, ComparableEqual):
         self.supplierArticleId = supplierArticleId 
     
     def toXml(self):
-        self.validate(True)
         attributes = { "type" : self.referenceType }
         if self.quantity is not None:
             attributes["quantity"] = self.quantity
-        referenceElement = Element("ARTICLE_REFERENCE", attributes)
+        referenceElement = super().validateAndCreateBaseElement("ARTICLE_REFERENCE", attributes)
         super().addMandatorySubElement(referenceElement, "ART_ID_TO", self.supplierArticleId)
         super().addOptionalSubElement(referenceElement, "CATALOG_ID", self.catalogId)
         super().addOptionalSubElement(referenceElement, "CATALOG_VERSION", self.catalogVersion)

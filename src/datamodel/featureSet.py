@@ -7,10 +7,10 @@ import logging
 
 from lxml.etree import Element
 
-from . import ValidatingObject, XmlObject, ComparableEqual, Feature
+from . import ValidatingXMLObject, ComparableEqual, Feature
 
 
-class FeatureSet(ValidatingObject, XmlObject, ComparableEqual):
+class FeatureSet(ValidatingXMLObject, ComparableEqual):
     def __init__(self):
         self.referenceSytem = None
         self.referenceGroupName = None
@@ -39,8 +39,7 @@ class FeatureSet(ValidatingObject, XmlObject, ComparableEqual):
         return len(self.features)
     
     def toXml(self):
-        self.validate(True)
-        xmlFeatureSet = Element("ARTICLE_FEATURES")
+        xmlFeatureSet = super().validateAndCreateBaseElement("ARTICLE_FEATURES")
         super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_SYSTEM_NAME", self.referenceSytem)
         super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_GROUP_ID", self.referenceGroupId)
         super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_GROUP_NAME", self.referenceGroupName)

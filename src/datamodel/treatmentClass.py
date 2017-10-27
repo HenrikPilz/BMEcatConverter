@@ -4,11 +4,11 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject, XmlObject, ComparableEqual
+from . import ValidatingXMLObject, ComparableEqual
 from lxml.etree import Element
 
 
-class TreatmentClass(ValidatingObject, XmlObject, ComparableEqual):
+class TreatmentClass(ValidatingXMLObject, ComparableEqual):
     '''
     classdocs
     '''
@@ -35,7 +35,6 @@ class TreatmentClass(ValidatingObject, XmlObject, ComparableEqual):
     
     
     def toXml(self):
-        self.validate(True)
-        xmlElement = Element("SPECIAL_TREATMENT_CLASS", { "type" : self.classType })
+        xmlElement = super().validateAndCreateBaseElement("SPECIAL_TREATMENT_CLASS", { "type" : self.classType })
         xmlElement.text = self.value
         return xmlElement

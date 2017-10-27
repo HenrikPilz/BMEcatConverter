@@ -4,10 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject, XmlObject, ComparableEqual
+from . import ValidatingXMLObject, ComparableEqual
 from lxml.etree import Element, SubElement
 
-class ProductDetails(ValidatingObject, XmlObject, ComparableEqual):
+class ProductDetails(ValidatingXMLObject, ComparableEqual):
     
     def __init__(self):
         self.title = None
@@ -65,8 +65,7 @@ class ProductDetails(ValidatingObject, XmlObject, ComparableEqual):
         self.keywords.append(keyword)
     
     def toXml(self):
-        self.validate(True)
-        detailsXmlElement = Element("ARTICLE_DETAILS")
+        detailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_DETAILS")
         super().addMandatorySubElement(detailsXmlElement, "DESCRIPTION_SHORT", self.title)
         
         super().addOptionalSubElement(detailsXmlElement, "DESCRIPTION_LONG", self.description)

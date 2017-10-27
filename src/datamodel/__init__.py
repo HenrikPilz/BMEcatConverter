@@ -1,6 +1,6 @@
 __all__ = [ 'Feature', 'FeatureSet', 'Mime', 'Product', 'ProductDetails', 'OrderDetails', 'PriceDetails', 'Price', 'Reference', 'TreatmentClass', 'Variant', 'VariantSet']
 
-from .validatingObject import ValidatingObject, XmlObject, ComparableEqual
+from .validatingObject import ValidatingObject, XMLObject, ComparableEqual, ValidatingXMLObject
 from .feature import Feature
 from .featureSet import FeatureSet
 from .mime import Mime

@@ -4,10 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject, XmlObject, ComparableEqual
+from . import ValidatingXMLObject, ComparableEqual
 from lxml.etree import Element
 
-class Price(ValidatingObject, XmlObject, ComparableEqual):
+class Price(ValidatingXMLObject, ComparableEqual):
     
     def __init__(self):
         self.priceType = None
@@ -45,8 +45,7 @@ class Price(ValidatingObject, XmlObject, ComparableEqual):
             logging.warning("Staffelmenge falsch!")
             
     def toXml(self):
-        self.validate(True)
-        priceXmlElement = Element("ARTICLE_PRICE", { "price_type" : self.priceType })
+        priceXmlElement = super().validateAndCreateBaseElement("ARTICLE_PRICE", { "price_type" : self.priceType })
         super().addMandatorySubElement(priceXmlElement, "PRICE_AMOUNT", self.amount)
         super().addMandatorySubElement(priceXmlElement, "PRICE_CURRENCY", self.currency)
         super().addMandatorySubElement(priceXmlElement, "TAX", self.tax)

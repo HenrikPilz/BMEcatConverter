@@ -3,10 +3,10 @@ Created on 17.05.2017
 
 @author: henrik.pilz
 '''
-from . import ValidatingObject, XmlObject, ComparableEqual
+from . import ValidatingXMLObject, ComparableEqual
 from lxml.etree import Element
 
-class Variant(ValidatingObject, XmlObject, ComparableEqual):
+class Variant(ValidatingXMLObject, ComparableEqual):
     '''
     classdocs
     '''
@@ -35,8 +35,7 @@ class Variant(ValidatingObject, XmlObject, ComparableEqual):
             super().logError(errMsg, raiseException)
 
     def toXml(self):
-        self.validate(True)
-        xmlVariant = Element("VARIANT")
+        xmlVariant = super().validateAndCreateBaseElement("VARIANT")
         super().addMandatorySubElement(xmlVariant, "FVALUE", self.value)
         super().addMandatorySubElement(xmlVariant, "SUPPLIER_AID_SUPPLEMENT", self.productIdSuffix)
         return xmlVariant

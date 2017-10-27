@@ -3,11 +3,11 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
-from . import ValidatingObject, XmlObject, ComparableEqual
+from . import ValidatingXMLObject, ComparableEqual
 from lxml.etree import Element
 
 
-class Mime(ValidatingObject, XmlObject, ComparableEqual):
+class Mime(ValidatingXMLObject, ComparableEqual):
     
     __allowedTypes = [ "url", "application/pdf", "image/jpeg", "image/jpg", "image/tif", "text/html", "text/plain", "image/tiff", "image/eps" ]
     __allowedPurposes = [ "thumbnail", "normal", "detail", "data_sheet", "logo", "others" ]
@@ -36,8 +36,7 @@ class Mime(ValidatingObject, XmlObject, ComparableEqual):
             super().logError("Bildverwendung fehlerhaft: " + str(self.purpose), raiseException)
 
     def toXml(self):
-        self.validate(True)
-        mimeElement = Element("MIME")
+        mimeElement = super().validateAndCreateBaseElement("MIME")
         super().addMandatorySubElement(mimeElement, "MIME_SOURCE", self.source)
         super().addMandatorySubElement(mimeElement, "MIME_TYPE", self.mimeType)
         super().addMandatorySubElement(mimeElement, "MIME_PURPOSE", self.purpose)

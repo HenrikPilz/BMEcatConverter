@@ -8,10 +8,10 @@ import logging
 
 from lxml.etree import Element
 
-from . import ValidatingObject, XmlObject, ComparableEqual
+from . import ValidatingXMLObject, ComparableEqual
 
 
-class OrderDetails(ValidatingObject, XmlObject, ComparableEqual):
+class OrderDetails(ValidatingXMLObject, ComparableEqual):
     __allowedOrderUnits = [ "C62", "MTR", "SET", "BX", "CT", "PF", "BG", "PK", "TN", "DR", "CA", "CS", "RO" ]
     __allowedContentUnits = [ "C62", "MTR", "SET", "RO", "DR", "CS", "PR", "RO" ]
     __allowedCombinations = {}
@@ -51,8 +51,7 @@ class OrderDetails(ValidatingObject, XmlObject, ComparableEqual):
             logging.info("PackagingQuantity und PriceQuantity untscheiden sich!")
 
     def toXml(self):
-        self.validate(True)
-        orderDetailsXmlElement = Element("ARTICLE_ORDER_DETAILS")
+        orderDetailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_ORDER_DETAILS")
         super().addMandatorySubElement(orderDetailsXmlElement, "ORDER_UNIT", self.orderUnit)
         super().addMandatorySubElement(orderDetailsXmlElement, "CONTENT_UNIT", self.contentUnit)
         super().addMandatorySubElement(orderDetailsXmlElement, "NO_CU_PER_OU", self.packingQuantity)

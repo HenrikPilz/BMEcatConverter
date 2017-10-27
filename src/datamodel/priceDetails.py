@@ -4,10 +4,10 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingObject, XmlObject, ComparableEqual
+from . import ValidatingXMLObject, ComparableEqual
 from lxml.etree import Element
 
-class PriceDetails(ValidatingObject, XmlObject, ComparableEqual):
+class PriceDetails(ValidatingXMLObject, ComparableEqual):
     
     neededPriceTypes = [ 'net_customer' ]
     additionalPriceTypes = [ 'net_list' ]
@@ -46,8 +46,7 @@ class PriceDetails(ValidatingObject, XmlObject, ComparableEqual):
             self.prices.append(price)
 
     def toXml(self):
-        self.validate(True)
-        priceDetailsXmlElement = Element("ARTICLE_PRICE_DETAILS")
+        priceDetailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_PRICE_DETAILS")
         if self.validFrom is not None and self.validTo is not None:
             super().addDateTimeSubElement(priceDetailsXmlElement, "valid_start_date", self.validFrom)
             super().addDateTimeSubElement(priceDetailsXmlElement, "valid_end_date", self.validTo)

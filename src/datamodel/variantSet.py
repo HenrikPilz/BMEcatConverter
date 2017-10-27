@@ -3,10 +3,10 @@ Created on 17.05.2017
 
 @author: henrik.pilz
 '''
-from . import ValidatingObject, XmlObject, ComparableEqual 
+from . import ValidatingXMLObject, ComparableEqual 
 from lxml.etree import Element
 
-class VariantSet(ValidatingObject, XmlObject, ComparableEqual):
+class VariantSet(ValidatingXMLObject, ComparableEqual):
     def __init__(self):
         self.order = None
         self.variants = []
@@ -34,8 +34,7 @@ class VariantSet(ValidatingObject, XmlObject, ComparableEqual):
         return len(self.variants)
     
     def toXml(self):
-        self.validate(True)
-        xmlVariants = Element("VARIANTS")
+        xmlVariants = super().validateAndCreateBaseElement("VARIANTS")
         super().addMandatorySubElement(xmlVariants, "VORDER", self.order)
         super().addListOfSubElements(xmlVariants, self.variants)
         return xmlVariants

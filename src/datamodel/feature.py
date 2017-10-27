@@ -3,11 +3,11 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
-from . import ValidatingObject, XmlObject, ComparableEqual
+from . import ValidatingXMLObject, ComparableEqual
 from .variantSet import VariantSet
 from lxml.etree import Element
 
-class Feature(ValidatingObject, XmlObject, ComparableEqual):
+class Feature(ValidatingXMLObject, ComparableEqual):
     def __init__(self):
         self.name = None
         self.order = None
@@ -70,8 +70,7 @@ class Feature(ValidatingObject, XmlObject, ComparableEqual):
         self.variants.addVariant(variant)
     
     def toXml(self):
-        self.validate(True)
-        xmlFeature = Element("FEATURE")
+        xmlFeature = super().validateAndCreateBaseElement("FEATURE")
         super().addMandatorySubElement(xmlFeature, "FNAME", self.name)
         super().addOptionalSubElement(xmlFeature, "FORDER", self.order)
         super().addOptionalSubElement(xmlFeature, "FUNIT", self.unit)

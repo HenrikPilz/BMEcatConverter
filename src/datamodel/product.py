@@ -7,10 +7,10 @@ import logging
 
 from lxml.etree import Element, SubElement
 
-from . import ValidatingObject, XmlObject, ComparableEqual
+from . import ValidatingXMLObject, ComparableEqual
 
 
-class Product(ValidatingObject, XmlObject, ComparableEqual):
+class Product(ValidatingXMLObject, ComparableEqual):
 
     def __init__(self):        
         self.productId = None
@@ -117,8 +117,7 @@ class Product(ValidatingObject, XmlObject, ComparableEqual):
         self.hasVariants = self.numberOfVariants > 1
     
     def toXml(self, articleType='new'):
-        self.validate(True)
-        articleElement = Element("ARTICLE", { "mode" : articleType })
+        articleElement = super().validateAndCreateBaseElement("ARTICLE", { "mode" : articleType })
         super().addMandatorySubElement(articleElement, "SUPPLIER_AID", self.productId)
         articleElement.append(self.details.toXml())
         articleElement.append(self.orderDetails.toXml())

@@ -4,9 +4,11 @@ Created on 07.10.2017
 @author: Henrik Pilz
 '''
 from abc import abstractmethod
-from lxml.etree import SubElement
-import logging
 from array import array
+import logging
+
+from lxml.etree import SubElement, Element
+
 
 class NoValueGivenException(Exception):
     def __init__(self, message):
@@ -70,17 +72,18 @@ class ValidatingObject(object):
         return True
 
     def valueNotNoneOrEmpty(self, attribute, message=None, raiseException=False):
-        if self.valueNotNone(attribute, message, raiseException):
-            isNotEmpty = True
-            if isinstance(attribute, str):
-                isNotEmpty = len(attribute.strip()) > 0                
-            elif isinstance(attribute, (list, array)):
-                isNotEmpty = len(attribute) > 0
-            else:
-                isNotEmpty = len(str(attribute).strip()) > 0
-            if not isNotEmpty:
-                self.logError(message, raiseException)
-            return isNotEmpty
+        if not self.valueNotNone(attribute, message, raiseException):
+            return False
+        isNotEmpty = True
+        if isinstance(attribute, str):
+            isNotEmpty = len(attribute.strip()) > 0                
+        elif isinstance(attribute, (list, array)):
+            isNotEmpty = len(attribute) > 0
+        else:
+            isNotEmpty = len(str(attribute).strip()) > 0
+        if isNotEmpty:
+            return True
+        self.logError(message, raiseException)
         return False
 
     
@@ -95,27 +98,29 @@ class ValidatingObject(object):
 
     def addToListIfValid(self, item, listToAddTo, errorMessage, raiseException=True):
         try:
-            self.determineOrderIfNeeded(item, listToAddTo)
+            self.__determineOrderIfNeeded(item, listToAddTo)
             item.validate(raiseException)
             listToAddTo.append(item)
         except Exception as ve:
             logging.warning(errorMessage + "{0}".format(str(ve)))
 
 
-    def determineOrderIfNeeded(self, item, listToAddTo):
+    def __determineOrderIfNeeded(self, item, orderedList):
         try:
             if getattr(item, "order") is None or int(item.order) <= 0:
-                maxItem = max(listToAddTo, key=lambda item: int(item.order), default=None)
-                if maxItem is None:                
-                    item.order = 1
-                else:
-                    item.order = int(maxItem.order) + 1
+                self.__determineOrder(item, orderedList)
         except AttributeError:
             pass
 
+    def __determineOrder(self, item, orderedList):
+        maxItem = max(orderedList, key=lambda item: int(item.order), default=None)
+        if maxItem is None:             
+            item.order = 1
+        else:
+            item.order = int(maxItem.order) + 1
 
 
-class XmlObject(object):
+class XMLObject(object):
     '''
     Interface Class for a Class which validates its content
     '''
@@ -126,7 +131,7 @@ class XmlObject(object):
     @abstractmethod
     def toXml(self):
         raise NotImplementedError("Please implement 'toXml' in your class '{0}".format(__file__))
-
+    
     def addMandatorySubElement(self, parent, tag, value):
         '''
         Erstellt eiin Child-Element und wirft eine Exception, falls value nicht None
@@ -156,3 +161,13 @@ class XmlObject(object):
         dateSubElement.text = date.strftime("%Y-%m-%d")
         timeSubElement = SubElement(dateTimeSubElement, "TIME")
         timeSubElement.text = date.strftime("%H:%M:%S")
+        
+class ValidatingXMLObject(ValidatingObject, XMLObject):
+
+    def __init__(self):
+        super().__init__()
+
+    def validateAndCreateBaseElement(self, tagname, attributes=None):
+        self.validate(True)
+        return Element(tagname, attributes)
+
