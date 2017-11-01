@@ -79,7 +79,8 @@ class Product(ValidatingXMLObject, ComparableEqual):
         self.details.deliveryTime = deliveryTime
         
     def addMime(self, mime, raiseException=True):
-        self.addToListIfValid(mime, self.mimeInfo, "Das Bild enthaelt keine validen Einträge. Es wird nicht hinzugefuegt.", raiseException)
+        if mime is not None:
+            self.addToListIfValid(mime, self.mimeInfo, "Das Bild enthaelt keine validen Einträge. Es wird nicht hinzugefuegt.", raiseException)
 
     def addReference(self, reference):
         self.references.append(reference)
