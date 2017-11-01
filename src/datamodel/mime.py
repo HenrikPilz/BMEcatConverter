@@ -7,7 +7,7 @@ from . import ValidatingXMLObject, ComparableEqual
 
 class Mime(ValidatingXMLObject, ComparableEqual):
     
-    __allowedTypes = [ "url", "application/pdf", "image/jpeg", "image/jpg", "image/tif", "text/html", "text/plain", "image/tiff", "image/eps" ]
+    __allowedTypes = [ "url", "application/pdf", "image/jpeg", "image/jpg", "image/tif", "image/tiff", "text/html", "text/plain", "image/eps", "image/png", "image/gif" ]
     __allowedPurposes = [ "thumbnail", "normal", "detail", "data_sheet", "logo", "others" ]
     __allowedCombinations = {}
     
