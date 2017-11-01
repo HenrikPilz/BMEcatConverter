@@ -23,10 +23,11 @@ class Mime(ValidatingXMLObject, ComparableEqual):
         if not super().__eq__(other):
             return False
         else:
-            return self.source == other.source
+            return self.source == other.source and self.mimeType == other.mimeType
 
     def validate(self, raiseException=False):
         super().valueNotNone(self.source, "Kein Bildpfad angegeben.", raiseException)
+        self.convertPathToLowerCase()
         super().valueNotNone(self.order, "Bildreihenfolge fehlerhaft: " + str(self.order), raiseException)
         if super().valueNotNone(self.mimeType, "Bildtyp nicht gesetzt.", raiseException) and self.mimeType not in Mime.__allowedTypes:
             super().logError("Bildtyp fehlerhaft: " + str(self.mimeType), raiseException)
@@ -42,3 +43,13 @@ class Mime(ValidatingXMLObject, ComparableEqual):
         super().addOptionalSubElement(mimeElement, "MIME_DESCR", self.description)
         super().addOptionalSubElement(mimeElement, "MIME_ALT", self.altenativeContent)
         return mimeElement
+    
+    def convertPathToLowerCase(self):
+        '''
+        Entfernt '/' und Leerzeichen im Pfad, aber NICHT im Dateinamen.
+        Erzwingt eine Kleinschreibung aller Pfadbestandteile, bis auf den Dateinamen.
+        Im Dateinamen werden die Leerzeichen durch Unterstriche ersetzt.  
+        '''
+        if self.source.find("/") >= 0:
+            filepath = self.source.strip(" /").split("/")
+            self.source = "/".join([elem.replace(" ","").lower() for elem in filepath[:-1]]) + "/" + filepath[-1].replace(" ","_")

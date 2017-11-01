@@ -122,7 +122,7 @@ class Product(ValidatingXMLObject, ComparableEqual):
         super().addMandatorySubElement(articleElement, "SUPPLIER_AID", self.productId)
         articleElement.append(self.details.toXml(raiseExceptionOnValidate))
         articleElement.append(self.orderDetails.toXml(raiseExceptionOnValidate))
-        super().addListOfSubElements(articleElement, self.priceDetails)
+        super().addListOfSubElements(articleElement, self.priceDetails, raiseExceptionOnValidate)
         mimeInfoElement = SubElement(articleElement, "MIME_INFO")        
         super().addListOfSubElements(mimeInfoElement, sorted(self.mimeInfo, key=lambda mime: int(mime.order)), raiseExceptionOnValidate)
         super().addListOfSubElements(articleElement, self.featureSets, raiseExceptionOnValidate)

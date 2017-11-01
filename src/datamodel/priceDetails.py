@@ -25,8 +25,8 @@ class PriceDetails(ValidatingXMLObject, ComparableEqual):
             return pricesEqual and self.validFrom == other.validFrom and self.validTo == other.validTo and self.dailyPrice == other.dailyPrice
         
     def validate(self, raiseException=False):
-        if self.prices is None or len(self.prices) == 0:
-            logging.warning("Keine Preisangaben hinterlegt.")
+        super().valueNotNoneOrEmpty(self.prices, "Keine Preisangaben hinterlegt.", False)
+        
         if not self.validFrom is None and not self.validTo is None and self.validFrom > self.validTo:
             logging.warning("Zeitspanne nicht gueltig.")
         if self.dailyPrice:
@@ -35,14 +35,17 @@ class PriceDetails(ValidatingXMLObject, ComparableEqual):
         for price in self.prices:
             price.validate(raiseException)
             if price.priceType in pricenames:
-                self.logError("Jeder Preistyp darf nur einmal auftreten.s", raiseException)
-    
-        if not set(pricenames).issubset(PriceDetails.neededPriceTypes):
+                self.logError("Jeder Preistyp darf nur einmal auftreten. Doppelt: '{0}'".format(price.priceType), raiseException)
+            else:
+                pricenames.append(price.priceType)
+
+        doeasNotContainAtleastOneOfTheMandatoryPrices = not set(pricenames).issubset(PriceDetails.neededPriceTypes) and not set(PriceDetails.neededPriceTypes).issubset(pricenames)
+        if len(pricenames) == 0 or doeasNotContainAtleastOneOfTheMandatoryPrices:
             self.logError("Mindestens ein Pflichtpreis ist nicht vorhanden: '{0}'".format(",".join(PriceDetails.neededPriceTypes)), raiseException)
 
     def addPrice(self, price, raiseException=True):
         if price is not None:
-            self.addToListIfValid(price, self.prices, "Der Preis enthaelt keine validen Einträge. Er wird nicht hinzugefuegt.", raiseException)
+            self.addToListIfValid(price, self.prices, "Der Preis enthaelt keine validen Einträge. Er wird nicht hinzugefuegt.", raiseException=raiseException)
 
     def toXml(self, raiseExceptionOnValidate=True):
         priceDetailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_PRICE_DETAILS", raiseExceptionOnValidate=raiseExceptionOnValidate)

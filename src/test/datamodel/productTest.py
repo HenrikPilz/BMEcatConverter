@@ -5,7 +5,7 @@ Created on 16.07.2017
 '''
 import unittest
 
-from datamodel import Feature, FeatureSet, Mime, Product, ProductDetails, Reference, Variant, OrderDetails, PriceDetails
+from datamodel import Feature, FeatureSet, Mime, Product, ProductDetails, Reference, Variant, OrderDetails, PriceDetails, Price
 
 
 class ProductTest(unittest.TestCase):
@@ -267,6 +267,10 @@ class ProductTest(unittest.TestCase):
         product.orderDetails = orderDetails
         
         priceDetails = PriceDetails()
+        price = Price()
+        price.amount = 1
+        price.priceType = "net_customer"
+        priceDetails.addPrice(price, True)
         product.addPriceDetails(priceDetails)
         product.validate(True)
 

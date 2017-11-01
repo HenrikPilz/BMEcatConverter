@@ -21,11 +21,16 @@ class Price(ValidatingXMLObject, ComparableEqual):
         if not super().__eq__(other):
             return False
         else:
-            amountEqual = float(self.amount) == float(other.amount)
+            amountNone = self.amount is None and other.amount is None
+            amountNotNone = self.amount is not None and other.amount is not None
+            amountEqual = amountNone or ( amountNotNone or  float(self.amount) == float(other.amount) )
             taxEqual = float(self.tax) == float(other.tax)
             lowerBoundEqual = int(self.lowerBound) == int(other.lowerBound)
-            factorEqual = float(self.factor) == float(other.factor)
-            return self.priceType == other.priceType and amountEqual and self.currency == other.currency and taxEqual and lowerBoundEqual and factorEqual and self.territory == other.territory
+            factorNone = self.factor is None and other.factor is None
+            factorNotNone = self.factor is not None and other.factor is not None
+            factorEqual = factorNone or ( factorNotNone and float(self.factor) == float(other.factor) )            
+            currencyEqual = str(self.currency) == str(other.currency)
+            return self.priceType == other.priceType and amountEqual and currencyEqual and taxEqual and lowerBoundEqual and factorEqual
 
     def validate(self, raiseException=False):
         if self.amount is None:

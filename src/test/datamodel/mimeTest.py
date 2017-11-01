@@ -70,3 +70,50 @@ class MimeTest(unittest.TestCase):
         mime.mimeType = "image/jpeg"
         mime.validate(True)
 
+    def testValidateChangePath(self):
+        mime = Mime()
+        mime.order = 1
+        mime.source = "/Dir1/Dir2/Filename.jpg"
+        mime.purpose = "detail"
+        mime.mimeType = "image/jpg"
+        mime.validate(True)
+        self.assertEqual(mime.source, "dir1/dir2/Filename.jpg", "Dateiname wurde nicht korrekt angepasst") 
+
+    def testValidateChangePathWithSpaces(self):
+        mime = Mime()
+        mime.order = 1
+        mime.source = " /Dir1 /Dir2/File name.jpg"
+        mime.purpose = "detail"
+        mime.mimeType = "image/jpg"
+        mime.validate(True)
+        self.assertEqual(mime.source, "dir1/dir2/File_name.jpg", "Dateiname wurde nicht korrekt angepasst") 
+
+    def testEqual(self):
+        mime1 = Mime()
+        self.assertNotEqual(mime1, "", "Mime should not be equal to str")
+        mime2 = Mime()
+        self.assertEqual(mime1, mime2, "Empty mimes should be equal.")
+        self.assertTrue(mime1==mime2, "Empty mimes should be equal via '=='.")
+        self.assertFalse(mime1!=mime2, "Empty mimes should not be unequal via '!='.")
+
+        mime1.order = 1
+        self.assertEqual(mime1, mime2, "Order should not matter")
+
+        mime1.purpose = "detail"
+        self.assertEqual(mime1, mime2, "Purpose should not matter")
+
+        mime1.mimeType = "image/jpg"
+        self.assertNotEqual(mime1, mime2, "Type should matter")
+        mime2.mimeType = "image/jpg"
+        self.assertEqual(mime1, mime2, "Same Type should work")
+
+        mime1.source = "image.jpg"
+        self.assertNotEqual(mime1, mime2, "Different source should matter")
+        mime2.source = "image.jpg"
+        self.assertEqual(mime1, mime2, "Same source should work")
+
+        mime1.altenativeContent = "detail"
+        self.assertEqual(mime1, mime2, "AltenativeContent should not matter")
+
+        mime1.description = "detail"
+        self.assertEqual(mime1, mime2, "Description should not matter")

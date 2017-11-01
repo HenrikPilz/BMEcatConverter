@@ -57,19 +57,18 @@ class xmlHandlerTest(BasicHandlerTest):
         article.orderDetails.quantityInterval = 1
         # Preise
         priceDetails = PriceDetails()
-        price = Price()
-        price.amount = 10.50
-        price.priceType ='net_customer'
-        price.lowerBound = 1
-        price.tax = 0.19
-        priceDetails.addPrice(price)
-        article.addPriceDetails(priceDetails)
-        price = Price()
-        price.amount = 17.50
-        price.priceType ='net_list'
-        price.lowerBound = 1
-        price.tax = 0.19
-        priceDetails.addPrice(price)
+        price1 = Price()
+        price1.amount = 10.50
+        price1.priceType ='net_customer'
+        price1.lowerBound = 1
+        price1.tax = 0.19
+        priceDetails.addPrice(price1)
+        price2 = Price()
+        price2.amount = 17.50
+        price2.priceType ='net_list'
+        price2.lowerBound = 1
+        price2.tax = 0.19
+        priceDetails.addPrice(price2)
         article.addPriceDetails(priceDetails)
 
         # Attribute

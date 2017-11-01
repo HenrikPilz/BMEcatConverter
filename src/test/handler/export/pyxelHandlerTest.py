@@ -130,7 +130,8 @@ class PyxelHandlerTest(BasicHandlerTest):
         
         priceDetails = PriceDetails()
         article.addPriceDetails(priceDetails)
-        super().runAndCheck(article, 'testConvertAndReimportWithoutPrice.xlsx')
+        with self.assertRaisesRegex(Exception, "Mindestens ein Pflichtpreis ist nicht vorhanden: 'net_customer'"):
+            super().runAndCheck(article, 'testConvertAndReimportWithoutPrice.xlsx')
 
     def testConvertAndReimportWithoutManufacturerArticleId(self):
         article = Product()
