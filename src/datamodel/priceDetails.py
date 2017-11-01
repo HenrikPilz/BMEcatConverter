@@ -40,9 +40,9 @@ class PriceDetails(ValidatingXMLObject, ComparableEqual):
         if not set(pricenames).issubset(PriceDetails.neededPriceTypes):
             self.logError("Mindestens ein Pflichtpreis ist nicht vorhanden: '{0}'".format(",".join(PriceDetails.neededPriceTypes)), raiseException)
 
-    def addPrice(self, price):
+    def addPrice(self, price, raiseException=True):
         if price is not None:
-            self.prices.append(price)
+            self.addToListIfValid(price, self.prices, "Der Preis enthaelt keine validen Einträge. Er wird nicht hinzugefuegt.", raiseException)
 
     def toXml(self, raiseExceptionOnValidate=True):
         priceDetailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_PRICE_DETAILS", raiseExceptionOnValidate=raiseExceptionOnValidate)
