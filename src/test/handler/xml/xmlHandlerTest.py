@@ -23,7 +23,7 @@ class xmlHandlerTest(BasicHandlerTest):
         article.details.ean = '12345678901234'
         article.details.keywords = [ 'Keyword 1', 'Keyword 2']
         article.details.manufacturerArticleId = '09876'
-        article.details._manufacturerName = 'Manufacturer'
+        article.details.manufacturerName = 'Manufacturer'
         tc = TreatmentClass()
         tc.classType = 'TestClass'
         tc.value = '12345'

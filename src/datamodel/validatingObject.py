@@ -11,17 +11,15 @@ from lxml.etree import SubElement, Element
 
 
 class NoValueGivenException(Exception):
-    def __init__(self, message):
-        super().__init__(message)
-
+    '''
+    Exception thrown when no Value is given.
+    '''
+    
 class ComparableEqual(object):
     '''
     Interface Class for a Class which are comparable
     '''
     
-    def __init__(self):
-        super().__init__()
-        
     def __eq__(self, other):
         return isinstance(other, self.__class__)
 
@@ -34,9 +32,6 @@ class ValidatingObject(object):
     Interface Class for a Class which validates its content
     '''
     
-    def __init__(self):
-        super().__init__()
-        
     def add(self, attributeName, attributeValue):
         try:
             if not isinstance(getattr(self, attributeName), (list, array)):
@@ -125,9 +120,6 @@ class XMLObject(object):
     Interface Class for a Class which validates its content
     '''
     
-    def __init__(self):
-        super().__init__()
-
     @abstractmethod
     def toXml(self):
         raise NotImplementedError("Please implement 'toXml' in your class '{0}".format(__file__))
@@ -163,9 +155,6 @@ class XMLObject(object):
         timeSubElement.text = date.strftime("%H:%M:%S")
         
 class ValidatingXMLObject(ValidatingObject, XMLObject):
-
-    def __init__(self):
-        super().__init__()
 
     def validateAndCreateBaseElement(self, tagname, attributes=None, raiseExceptionOnValidate=True):
         self.validate(raiseExceptionOnValidate)

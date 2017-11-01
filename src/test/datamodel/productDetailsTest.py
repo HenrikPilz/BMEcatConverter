@@ -56,3 +56,13 @@ class ProductDetailsTest(unittest.TestCase):
         productdetails.title = "Test"
         productdetails.validate(True)
 
+    def testEqual(self):
+        productdetails1 = ProductDetails()
+        self.assertNotEqual(productdetails1, None, "Productdetails should not be equal to None")
+        self.assertNotEqual(productdetails1, "", "Productdetails should not be equal to str")
+        
+        productdetails2 = ProductDetails()
+        self.assertEqual(productdetails1, productdetails2, "Empty Productdetails should not be equal")
+        self.assertTrue(productdetails1 == productdetails2, "Productdetails should be equal via '=='")
+        self.assertFalse(productdetails1 != productdetails2, "Productdetails should not be nonequal via '!='")
+        

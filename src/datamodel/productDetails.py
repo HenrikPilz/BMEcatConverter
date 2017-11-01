@@ -44,7 +44,9 @@ class ProductDetails(ValidatingXMLObject, ComparableEqual):
             # self.buyerId == other.buyerId
             # self.articleOrder == other.articleOrder
             # self.articleStatus == other.articleStatus
-            eanEqual = int(self.ean) == int(other.ean)
+            eanNone = self.ean is None and other.ean is None
+            eanNotNone = self.ean is not None and other.ean is not None
+            eanEqual = eanNone or (eanNotNone and int(self.ean) == int(other.ean))
             manufacturerArticleIdEqual = str(self.manufacturerArticleId) == str(other.manufacturerArticleId)
             deliveryTimeEqual = float(self.deliveryTime) == float(other.deliveryTime)
             return self.title == other.title and self.description == other.description and eanEqual and manufacturerArticleIdEqual and self.manufacturerName == other.manufacturerName and deliveryTimeEqual

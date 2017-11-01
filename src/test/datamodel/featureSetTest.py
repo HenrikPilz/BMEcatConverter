@@ -18,7 +18,30 @@ class FeatureSetTest(unittest.TestCase):
         self.assertIsNone(featureSet.referenceGroupId)
         # Leerer Array ohne Features
         self.assertIsNotNone(featureSet.features)
-        self.assertEqual(len(featureSet.features), 0) 
+        self.assertEqual(len(featureSet.features), 0)
+        
+    def testValidate(self):
+        featureSet = FeatureSet()
+        feature = Feature()
+        feature.name = "Name"
+        feature.addValue("Value")
+        featureSet.addFeature(feature)                
+        featureSet.validate(True)
+        featureSet.referenceGroupId = "01239"
+        featureSet.validate(True)
+
+    def testValidateEmpty(self):
+        featureSet = FeatureSet()
+        featureSet.validate(True)
+        featureSet.features = None
+        featureSet.validate(True)
+
+    def testValidateExceptionReferenceGroupIdAndName(self):
+        featureSet = FeatureSet()
+        featureSet.referenceGroupId = "01239"
+        featureSet.referenceGroupName = "TestGroupname"
+        with self.assertRaisesRegex(Exception, "Es darf nur entweder eine Referenzgruppen ID oder ein Referenzgruppenname angegeben werden."):
+            featureSet.validate(True)
 
     def testAddFeature(self):
         # Single Feature, Single Value per Feature
@@ -47,6 +70,8 @@ class FeatureSetTest(unittest.TestCase):
 
     def testEqualityOfEmptyAndEqualFeatureSets(self):
         featureSet1 = FeatureSet()
+        self.assertNotEqual(featureSet1, None, "FeatureSet not equal to None")
+        self.assertNotEqual(featureSet1, "", "FeatureSet not equal to str")
         featureSet2 = FeatureSet()
         
         self.assertEqual(featureSet1, featureSet2, "Two Empty FeatureSets should be equal.")

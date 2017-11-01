@@ -25,3 +25,12 @@ class TreatmentClassTest(unittest.TestCase):
         treatmentClass.classType = "1"
         treatmentClass.validate(True)
         
+    def testEqual(self):
+        treatmentClass1 = TreatmentClass()
+        self.assertNotEqual(treatmentClass1, None, "TreatmentClass should not be equal to None")
+        self.assertNotEqual(treatmentClass1, "", "TreatmentClass should not be equal to str")
+        
+        treatmentClass2 = TreatmentClass()
+        self.assertEqual(treatmentClass1, treatmentClass2, "Empty TreatmentClasses should not be equal")
+        self.assertTrue(treatmentClass1 == treatmentClass2, "TreatmentClasses should be equal via '=='")
+        self.assertFalse(treatmentClass1 != treatmentClass2, "TreatmentClasses should not be nonequal via '!='")

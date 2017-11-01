@@ -59,4 +59,13 @@ class ReferenceTest(unittest.TestCase):
         reference.addSupplierArticleId("Test")
         reference.validate(True)
         
-
+    def testEqual(self):
+        reference1 = Reference()
+        self.assertNotEqual(reference1, None, "Reference not equal to None")
+        self.assertNotEqual(reference1, "", "Reference not equal to str")
+        
+        reference2 = Reference()
+        
+        self.assertEqual(reference1, reference2, "Empty References should be equal")
+        self.assertTrue(reference1 == reference2, "Empty References should be equal via '==")
+        self.assertFalse(reference1 != reference2, "Empty References should not be nonequal via '!='")
