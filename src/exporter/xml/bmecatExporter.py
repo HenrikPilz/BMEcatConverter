@@ -144,7 +144,7 @@ class BMEcatExporter(object):
         for articleType, articles in self._articles.items():
             for article in articles:
                 parent = Element("ARTICLE_TO_CATALOGGROUP_MAP")
-                SubElement(parent,"ART_ID").text = article.productId
+                SubElement(parent,"ART_ID").text = str(article.productId)
                 SubElement(parent,"CATALOG_GROUP_ID").text = "2"
                 SubElement(parent,"ARTICLE_TO_CATALOGGROUP_MAP_ORDER").text = "2"
                 mapping.append(parent)
