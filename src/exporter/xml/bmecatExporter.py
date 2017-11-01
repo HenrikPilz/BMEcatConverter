@@ -89,10 +89,11 @@ class BMEcatExporter(object):
             usplit = userName.split(".")
 
         if len(usplit) > 1 and len(usplit[0].split("-")) > 1:
-            usplit = usplit[0].split("-").append(usplit[1])
-        initials = self.__extractInitials(usplit)
+            secondPart = usplit[1:]
+            usplit = usplit[0].split("-")
+            usplit.extend(secondPart)
             
-        return initials
+        return self.__extractInitials(usplit)
 
     def __createGenerationDate(self): 
         now = datetime.now()
