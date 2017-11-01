@@ -33,9 +33,7 @@ class Price(ValidatingXMLObject, ComparableEqual):
             return self.priceType == other.priceType and amountEqual and currencyEqual and taxEqual and lowerBoundEqual and factorEqual
 
     def validate(self, raiseException=False):
-        if self.amount is None:
-            super().logError("Kein Preis angegeben!", raiseException)
-        elif float(self.amount) < 0:
+        if self.valueNotNone(self.amount, "Kein Preis angegeben!", raiseException) and float(self.amount) < 0:
             self.amount = 0
             super().logError("Negativer Preis angegeben!", raiseException)
         if self.priceType is None:
