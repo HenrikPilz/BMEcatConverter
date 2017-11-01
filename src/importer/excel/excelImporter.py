@@ -144,7 +144,8 @@ class ExcelImporter(object):
                     # dann muessen wir splitten, da der Zahlenanteil
                     # Sowohl die Zusammengehörigkeit der Daten anzeigt,
                     # als auch die Reihenfolge bestimmt
-                    fieldName = regex.match("[a-zA-Z]*", currentFieldname).group(0)
+                    fieldName = regex.match("[a-zA-Z_]*", currentFieldname).group(0)
+                    fieldName = fieldName.stri("_")
                     fieldCount = currentFieldname.replace(fieldName, "").strip("_")
                     
                     logging.debug("'{0}' : '{1}'".format(fieldName, fieldCount))
