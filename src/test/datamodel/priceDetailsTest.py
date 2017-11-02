@@ -57,10 +57,12 @@ class PriceDetailsTest(unittest.TestCase):
         price.amount = 1
         price.priceType ="net_customer"
         priceDetails.addPrice(price, True)
+        self.assertEqual(len(priceDetails), 1, "Kein Preis hinzugefügt.")
         price = Price()
         price.amount = 3
         price.priceType ="net_customer"
         priceDetails.addPrice(price, True)
+        self.assertEqual(len(priceDetails), 2, "Kein Preis hinzugefügt.")
 
         with self.assertRaisesRegex(Exception, "Jeder Preistyp darf nur einmal auftreten. Doppelt: 'net_customer'"):
             priceDetails.validate(True)

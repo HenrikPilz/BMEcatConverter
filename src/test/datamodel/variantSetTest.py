@@ -25,7 +25,10 @@ class VariantSetTest(unittest.TestCase):
         
         # testLen #1
         self.assertEqual(len(variantSet), 0)
-        variantSet.addVariant(Variant())
+        variant = Variant()
+        variant.productIdSuffix = "1d"
+        variant.value = "1"
+        variantSet.addVariant(variant)
         # testLen #2
         self.assertEqual(len(variantSet.variants), 1)
         self.assertEqual(len(variantSet), 1)

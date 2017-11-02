@@ -27,8 +27,7 @@ class VariantSet(ValidatingXMLObject, ComparableEqual):
                 variant.validate(raiseException)
 
     def addVariant(self, variant):
-        if variant not in self.variants:
-            self.variants.append(variant)
+        super().addToListIfValid(variant, self.variants, "Keine Variante hinzugefügt.")
 
     def __len__(self):
         return len(self.variants)

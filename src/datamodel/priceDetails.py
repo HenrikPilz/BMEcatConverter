@@ -23,6 +23,9 @@ class PriceDetails(ValidatingXMLObject, ComparableEqual):
         else:
             pricesEqual = super().checkListForEquality(self.prices, other.prices)
             return pricesEqual and self.validFrom == other.validFrom and self.validTo == other.validTo and self.dailyPrice == other.dailyPrice
+    
+    def __len__(self):
+        return len(self.prices)
         
     def validate(self, raiseException=False):
         super().valueNotNoneOrEmpty(self.prices, "Keine Preisangaben hinterlegt.", False)

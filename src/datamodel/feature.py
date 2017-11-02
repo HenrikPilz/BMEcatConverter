@@ -16,6 +16,12 @@ class Feature(ValidatingXMLObject, ComparableEqual):
         self.description = None
         self.valueDetails = None
 
+    def __len__(self):
+        if self.variants is not None:
+            return len(self.variants)
+        else:
+            return len(self.values) 
+
     def __eq__(self, other):
         if not super().__eq__(other):
             return False

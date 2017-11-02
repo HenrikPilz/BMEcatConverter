@@ -23,7 +23,7 @@ class Price(ValidatingXMLObject, ComparableEqual):
         else:
             amountNone = self.amount is None and other.amount is None
             amountNotNone = self.amount is not None and other.amount is not None
-            amountEqual = amountNone or ( amountNotNone or  float(self.amount) == float(other.amount) )
+            amountEqual = amountNone or ( amountNotNone and float(self.amount) == float(other.amount) )
             taxEqual = float(self.tax) == float(other.tax)
             lowerBoundEqual = int(self.lowerBound) == int(other.lowerBound)
             factorNone = self.factor is None and other.factor is None

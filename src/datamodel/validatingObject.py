@@ -95,7 +95,8 @@ class ValidatingObject(object):
         try:
             self.__determineOrderIfNeeded(item, listToAddTo)
             item.validate(raiseException)
-            listToAddTo.append(item)
+            if item not in listToAddTo:
+                listToAddTo.append(item)
         except Exception as ve:
             logging.warning(errorMessage + "{0}".format(str(ve)))
 
