@@ -166,11 +166,11 @@ class ProductTest(unittest.TestCase):
         self.assertEqual(len(product.featureSets),1)        
         # Leerer Array ohne Varianten
         self.assertIsNotNone(product.variants)
-        self.assertEqual(len(product.variants), 1)
+        self.assertEqual(len(product.variants), 0)
         # Keine Varianten gegeben
         self.assertFalse(product.hasVariants)
         # Anzahl der Varianten ist mindestens 1, da der Artikel selber auch eine Variante darstellt.
-        self.assertEqual(product.numberOfVariants,1)
+        self.assertEqual(product.numberOfVariants, 1)
 
     def testAddFeatureSetMultiValueVariantFeature(self):
         # Single Feature, Multi ValueVariant

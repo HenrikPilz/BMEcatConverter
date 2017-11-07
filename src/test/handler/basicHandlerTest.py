@@ -52,7 +52,7 @@ class BasicHandlerTest(unittest.TestCase):
         self.assertEqual(article.details.manufacturerTypeDescription, article2.details.manufacturerTypeDescription, "manufacturerTypeDescription")
 
         self.assertEqual(article.orderDetails, article2.orderDetails, "orderDetails")
-        self.assertEqual(len(article.featureSets), len(article2.featureSets), "lean(featureSets)")
+        self.assertEqual(len(article.featureSets), len(article2.featureSets), "len(featureSets)")
         if len(article.featureSets) > 0:
             self.assertEqual(len(article.featureSets[0]), len(article2.featureSets[0]), "len(featureSets[0])")
             self.assertEqual(article.featureSets[0].referenceSytem, article2.featureSets[0].referenceSytem, "featureSets.referenceSytem")

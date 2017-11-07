@@ -3,14 +3,14 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
+from array import array
 from datetime import datetime
 import logging
 import os
 from xml.sax import handler
 
-from datamodel import Feature, FeatureSet, Mime, OrderDetails, Price, PriceDetails, Product, ProductDetails, Reference, TreatmentClass, Variant, VariantSet
+from datamodel import Feature, FeatureSet, Mime, Price, PriceDetails, Product, Reference, TreatmentClass, Variant
 from mapping import Blacklist, UnitMapper
-from array import array
 
 
 class BMEcatImportHandler(handler.ContentHandler):
@@ -248,13 +248,13 @@ class BMEcatImportHandler(handler.ContentHandler):
     def createProductDetails(self, attrs):
         self.raiseExceptionIfNone(self.__currentArticle, "Artikeldetails sollen erstellt werden. Aber es ist kein Artikel vorhanden")
         self.raiseExceptionIfNotNone(self.__currentArticle.details, "Fehler im BMEcat: Neue Artikeldetails sollen erstellt werden. Es werden schon Artikeldetails verarbeitet.")
-        self.__currentArticle.details = ProductDetails()
+        self.__currentArticle.addDetails() 
 
     ''' ---------------------------------------------------------------------'''
     def createOrderDetails(self, attrs):
         self.raiseExceptionIfNone(self.__currentArticle, "Bestelldetails sollen erstellt werden. Aber es ist kein Artikel vorhanden")        
         self.raiseExceptionIfNotNone(self.__currentArticle.orderDetails, "Fehler im BMEcat: Neue Bestelldetails sollen erstellt werden. Es werden schon Bestelldetails verarbeitet.")
-        self.__currentArticle.orderDetails = OrderDetails()
+        self.__currentArticle.addOrderDetails()
 
     ''' ---------------------------------------------------------------------'''
     def createPriceDetails(self, attrs):
@@ -545,7 +545,7 @@ class BMEcatImportHandler(handler.ContentHandler):
     def createFeatureVariantSet(self, attrs = None):
         self.raiseExceptionIfNotNoneOrNotEmpty(self.__currentFeature.values , "Fehler im BMEcat: FeatureVariants sollen hinzugefuegt werden, es existieren aber schon FeatureValues.")
         self.raiseExceptionIfNotNone(self.__currentFeature.variants, "Fehler im BMEcat: FeatureVariants sollen hinzugefuegt werden, es existieren aber schon FeatureVariants.")
-        self.__currentFeature.variants = VariantSet()
+        self.__currentFeature.addVariantSet()
 
     def addFeatureVariantSetOrder(self, attrs = None):
         self.__currentFeature.addVariantOrder(int(self.__currentContent))

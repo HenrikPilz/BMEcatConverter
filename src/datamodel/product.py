@@ -8,7 +8,8 @@ import logging
 from lxml.etree import SubElement
 
 from . import ValidatingXMLObject, ComparableEqual
-
+from .productDetails import ProductDetails
+from .orderDetails import OrderDetails 
 
 class Product(ValidatingXMLObject, ComparableEqual):
 
@@ -56,6 +57,12 @@ class Product(ValidatingXMLObject, ComparableEqual):
 
         if super().valueNotNoneOrEmpty(self.featureSets, "Für Artikel '{0}' wurden keine Attribute gefunden.".format(self.productId), False):
             super().validateList(self.featureSets, raiseException)
+    
+    def addDetails(self):
+        self.details = ProductDetails()
+    
+    def addOrderDetails(self):
+        self.orderDetails = OrderDetails()
 
     def addPriceDetails(self, priceDetails):
         self.priceDetails.append(priceDetails)
@@ -96,20 +103,18 @@ class Product(ValidatingXMLObject, ComparableEqual):
         self.details.addKeyword(keyword)
 
     def addFeatureSet(self, featureSet):
-        if len(featureSet) > 0 and featureSet not in self.featureSets:
-            self.featureSets.append(featureSet)
-        
+        message = None
+        if self.productId is not None:
+            message = "Artikel '{0}' Attributset ist leer und wird nicht gespeichert.".format(self.productId)
+        else:
+            message = "Das Attributset ist leer und wird nicht gespeichert."
+        if super().addToListIfValid(featureSet, self.featureSets, False):
             for feature in featureSet.features:
-                if feature.variants is not None:
+                if feature.hasVariants():
                     logging.info("Variante gefunden.")
                     self.__addVariant(feature)
         else:
-            message = None
-            if self.productId is not None:
-                message = "Artikel '{0}' Attributset ist leer und wird nicht gespeichert.".format(self.productId)
-            else:
-                message = "Das Attributset ist leer und wird nicht gespeichert."
-            logging.info(message)
+            logging.debug(message)
     
     def __addVariant(self, feature):
         self.variants.append((feature.variants.order, feature.name, feature.variants))

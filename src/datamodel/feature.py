@@ -63,6 +63,9 @@ class Feature(ValidatingXMLObject, ComparableEqual):
                 self.values.append(value)
             else: 
                 self.values.append(value)
+    def addVariantSet(self):
+        if self.variants is None:
+            self.variants = VariantSet()
 
     def addVariantOrder(self, order):
         if self.variants is None:
@@ -73,6 +76,9 @@ class Feature(ValidatingXMLObject, ComparableEqual):
         if self.variants is None:
             self.variants = VariantSet()
         self.variants.addVariant(variant)
+        
+    def hasVariants(self):
+        return self.variants is not None and len(self.variants) > 1
     
     def toXml(self, raiseExceptionOnValidate=True):
         xmlFeature = super().validateAndCreateBaseElement("FEATURE", raiseExceptionOnValidate=raiseExceptionOnValidate)

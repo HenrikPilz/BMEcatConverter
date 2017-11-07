@@ -97,8 +97,10 @@ class ValidatingObject(object):
             item.validate(raiseException)
             if item not in listToAddTo:
                 listToAddTo.append(item)
+                return True
         except Exception as ve:
             logging.warning(errorMessage + "{0}".format(str(ve)))
+        return False
 
 
     def __determineOrderIfNeeded(self, item, orderedList):

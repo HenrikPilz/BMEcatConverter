@@ -21,6 +21,9 @@ def printHelp():
     Hilfe ausgeben
     """
     print("python main.py -i <inputfile> -o <outputfile> --dateformat \"%Y-%m-%d\" --separators english")
+    print("\n")
+    print("There are two modes in which the converter can be used:")
+    print("\t1.\tInput XML and Output xlsx: This means converting from any BMEcat format to ")
     print("\t--dateformat <dateformat>")
     print("\t\te.g. '%Y-%m-%d' or '%d.%m.%Y' or anything else with Y as Year, d as day and m as month ")
     print("\t--separators <english|german|detect>")
