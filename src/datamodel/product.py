@@ -108,7 +108,7 @@ class Product(ValidatingXMLObject, ComparableEqual):
             message = "Artikel '{0}' Attributset ist leer und wird nicht gespeichert.".format(self.productId)
         else:
             message = "Das Attributset ist leer und wird nicht gespeichert."
-        if super().addToListIfValid(featureSet, self.featureSets, False):
+        if super().addToListIfValid(featureSet, self.featureSets, message):
             for feature in featureSet.features:
                 if feature.hasVariants():
                     logging.info("Variante gefunden.")

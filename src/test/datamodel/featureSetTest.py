@@ -32,9 +32,12 @@ class FeatureSetTest(unittest.TestCase):
 
     def testValidateEmpty(self):
         featureSet = FeatureSet()
-        featureSet.validate(True)
+        with self.assertRaisesRegex(Exception, "Keine Attribute fuer diese Attributgruppe vorhanden!"):
+            featureSet.validate(True)
+
         featureSet.features = None
-        featureSet.validate(True)
+        with self.assertRaisesRegex(Exception, "Keine Attribute fuer diese Attributgruppe vorhanden!"):
+            featureSet.validate(True)
 
     def testValidateExceptionReferenceGroupIdAndName(self):
         featureSet = FeatureSet()

@@ -28,7 +28,7 @@ class FeatureSet(ValidatingXMLObject, ComparableEqual):
         if self.referenceGroupName is not None and self.referenceGroupId is not None:
             super().logError("Es darf nur entweder eine Referenzgruppen ID oder ein Referenzgruppenname angegeben werden.", raiseException)
         if self.features is None or len(self.features) == 0:
-            logging.warning("Keine Attribute fuer diese Attributgruppe vorhanden!")
+            super().logError("Keine Attribute fuer diese Attributgruppe vorhanden!", raiseException)
         else:
             for feature in self.features:
                 feature.validate(raiseException)
