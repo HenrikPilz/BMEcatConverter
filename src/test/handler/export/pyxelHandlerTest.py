@@ -19,6 +19,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.details.deliveryTime = 10
         article.details.description = 'Test Description'
         article.details.ean = '12345678901234'
+        # Keywords können in Excel noch nicht importiert werden.
         article.details.keywords = [ 'Keyword 1', 'Keyword 2']
         article.details.manufacturerArticleId = '09876'
         article.details.manufacturerName = 'Manufacturer'
@@ -130,7 +131,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         
         priceDetails = PriceDetails()
         article.addPriceDetails(priceDetails)
-        with self.assertRaisesRegex(Exception, "Mindestens ein Pflichtpreis ist nicht vorhanden: 'net_customer'"):
+        with self.assertRaisesRegex(Exception, "Der Artikel '12345' hat keine Preisinformationen."):
             super().runAndCheck(article, 'testConvertAndReimportWithoutPrice.xlsx')
 
     def testConvertAndReimportWithoutManufacturerArticleId(self):
@@ -416,5 +417,9 @@ class PyxelHandlerTest(BasicHandlerTest):
         # if len(article.references) > 0 and len(article2.references) > 0 :
         #    self.assertEqual(article.references, article2.references, "references")        
     
-        
+ 
+#if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+#    unittest.main()
+       
     

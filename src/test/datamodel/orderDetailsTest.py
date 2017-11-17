@@ -65,4 +65,6 @@ class OrderDetailsTest(unittest.TestCase):
         orderDetails.priceQuantity= 18
         orderDetails.validate(True)
 
-
+#if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+#    unittest.main()

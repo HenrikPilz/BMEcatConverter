@@ -69,3 +69,7 @@ class ReferenceTest(unittest.TestCase):
         self.assertEqual(reference1, reference2, "Empty References should be equal")
         self.assertTrue(reference1 == reference2, "Empty References should be equal via '==")
         self.assertFalse(reference1 != reference2, "Empty References should not be nonequal via '!='")
+
+#if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+#    unittest.main()

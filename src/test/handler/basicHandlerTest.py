@@ -15,7 +15,6 @@ class BasicHandlerTest(unittest.TestCase):
         '''
         @return array of articles 
         '''
-        raise NotImplemented
 
     def runAndCheck(self, article, filename):        
         article.validate(True)
@@ -34,7 +33,7 @@ class BasicHandlerTest(unittest.TestCase):
 
         self.assertEqual(article.details.manufacturerName, article2.details.manufacturerName, "manufacturerName")
         
-        if len(article.details.keywords) > 0 and len(article2.details.keywords) > 0:
+        if len(article.details.keywords) > 0 and filename[-3:] == "xml":
             self.assertEqual(article.details.keywords, article2.details.keywords, "keywords")
         if len(article.details.specialTreatmentClasses) > 0 and len(article2.details.specialTreatmentClasses) > 0:
             self.assertEqual(article.details.specialTreatmentClasses, article2.details.specialTreatmentClasses, "specialTreatmentClasses")
@@ -56,9 +55,8 @@ class BasicHandlerTest(unittest.TestCase):
         if len(article.featureSets) > 0:
             self.assertEqual(len(article.featureSets[0]), len(article2.featureSets[0]), "len(featureSets[0])")
             self.assertEqual(article.featureSets[0].referenceSytem, article2.featureSets[0].referenceSytem, "featureSets.referenceSytem")
-            if len(article.featureSets[0].features) > 0:
-                self.assertEqual(article.featureSets[0].features[0].name, article2.featureSets[0].features[0].name, "feature[0].name")
-                self.assertEqual(article.featureSets[0].features[0], article2.featureSets[0].features[0], "feature[0]")
+            self.assertEqual(article.featureSets[0].features[0].name, article2.featureSets[0].features[0].name, "feature[0].name")
+            self.assertEqual(article.featureSets[0].features[0], article2.featureSets[0].features[0], "feature[0]")
             
             self.assertEqual(article.featureSets[0], article2.featureSets[0], "featureSet[0]")
         self.assertEqual(article.featureSets, article2.featureSets, "featureSets")

@@ -51,7 +51,15 @@ def createFileLoggingHandler(logfilename, logLevel=logging.DEBUG,
     setUp Logging for File
     '''
     if os.path.exists(logfilename):
-        os.remove(logfilename)
+        try:
+            os.remove(logfilename)
+        except:
+            for i in range(1,11):
+                if not os.path.exists(logfilename + "_{0:02n}".format(i)):
+                    logfilename += "_{0:02n}".format(i)
+                    break
+    
+    logfilename += ".log"
     ''' log File'''
     logFileHandler = logging.FileHandler(filename=logfilename, mode='w')
     logFileFormatter = logging.Formatter(logFormat)
@@ -81,12 +89,12 @@ def setUpLogging():
     # Debug Log File
     fmt = '%(levelname)7s - [%(filename)20s:%(lineno)s - %(funcName)20s()]: %(message)s'
     debugLogFileHandler = createFileLoggingHandler(
-                                        logfilename="convert_debug.log",
+                                        logfilename="convert_debug",
                                         logFormat=fmt)
     logger.addHandler(debugLogFileHandler)
 
     ''' Common Log File for Validation etc.'''
-    logFileHandler = createFileLoggingHandler(logfilename="convert.log",
+    logFileHandler = createFileLoggingHandler(logfilename="convert",
                                               logLevel=logging.WARNING)
     logger.addHandler(logFileHandler)
 
@@ -113,12 +121,12 @@ if __name__ == '__main__':
         argumentParser = ArgumentParser()
         argumentParser.parse(argv)
         config = {
-            'inputfile' : argumentParser.inputFilename,
-            'outputfile' : argumentParser.outputFilename,
-            'dateFormat' : argumentParser.dateFormat,
+            'inputfile' : argumentParser.inputfile,
+            'outputfile' : argumentParser.outputfile,
+            'dateFormat' : argumentParser.dateformat,
             'separatorMode' : argumentParser.separatorMode,
-            'manufacturerName': argumentParser.manufacturerName,
-            'merchant' : argumentParser.merchantName
+            'manufacturerName': argumentParser.manufacturer,
+            'merchant' : argumentParser.merchant
         }
         converter = Converter(config)
         converter.convert()

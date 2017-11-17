@@ -10,6 +10,7 @@ from openpyxl import load_workbook
 import regex
 
 from datamodel import FeatureSet, Mime, OrderDetails, PriceDetails, Product, ProductDetails, Price, Feature
+from transformer.Separators import SeparatorTransformer
 
 
 class ExcelImporter(object):
@@ -88,10 +89,13 @@ class ExcelImporter(object):
         "mime_order" : "order"
     }
 
+    __fieldsToTransform = [ "amount", "tax", "factor" ]
+        
+
     '''
     classdocs
     '''
-    def __init__(self):
+    def __init__(self, separatorTransformer=SeparatorTransformer("detect")):
         '''
         Constructor
         '''
@@ -101,6 +105,8 @@ class ExcelImporter(object):
         self.__indexPairsForFeatures = {}
         self.__indexTuplesForPrices = {}
         self.__indexTuplesForMimes = {}
+        self._separatorTransformer = separatorTransformer
+             
         self.articles = []
         
     def readWorkbook(self, filename):
@@ -203,7 +209,10 @@ class ExcelImporter(object):
             for order, colIndex in mapping[fieldname].items():
                 if order not in itemsToAddByOrder.keys(): 
                     itemsToAddByOrder[order] = typeOfMultiples()
-                itemsToAddByOrder[order].add(fieldname, sheet.cell(column=colIndex, row=rowIndex).value)                
+                value = sheet.cell(column=colIndex, row=rowIndex).value
+                if fieldname in self.__fieldsToTransform:
+                    value = self._separatorTransformer.transform(value)
+                itemsToAddByOrder[order].add(fieldname, value)                
         
         for key in sorted(itemsToAddByOrder.keys()):
             try:
@@ -218,7 +227,10 @@ class ExcelImporter(object):
         Überträgt die Informationen vom Objekt über das angegebene Mapping für das Produkt in der Zeile.
         """
         for fieldname in mapping.keys():
-            setattr(objectForValue, fieldname, sheet.cell(column=mapping[fieldname], row=rowIndex).value)
+            value = sheet.cell(column=mapping[fieldname], row=rowIndex).value
+            if fieldname in self.__fieldsToTransform:
+                value = self._separatorTransformer.transform(value)
+            setattr(objectForValue, fieldname, value)
             
     def __exectueAddMethod(self, objectWithAddMethod ,addMethodName, arg):
         elementHandler = None

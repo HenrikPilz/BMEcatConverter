@@ -11,6 +11,7 @@ from xml.sax import handler
 
 from datamodel import Feature, FeatureSet, Mime, Price, PriceDetails, Product, Reference, TreatmentClass, Variant
 from mapping import Blacklist, UnitMapper
+from transformer.Separators import SeparatorTransformer
 
 
 class BMEcatImportHandler(handler.ContentHandler):
@@ -111,7 +112,8 @@ class BMEcatImportHandler(handler.ContentHandler):
                 "variant" : "addFeatureVariant",
                 "supplier_aid_supplement" : "addFeatureVariantProductIdSuffix",
                 "reference_feature_system_name" : "addFeatureSetReferenceSystem",
-                "reference_feature_group_id" : "addFeatureSetReferenceGroupId"
+                "reference_feature_group_id" : "addFeatureSetReferenceGroupId",
+                "keyword" : "addKeyword"
                 }
     
     __baseDirectory = os.path.join(os.path.dirname(__file__),"..","..", "..","documents","BMEcat","version")
@@ -145,17 +147,11 @@ class BMEcatImportHandler(handler.ContentHandler):
                 logging.debug("Call for Tag <" + name + "> FAILED:")       
 
     ''' Konstruktor '''
-    def __init__(self, dateFormat, decimalSeparator, thousandSeparator):
+    def __init__(self, dateFormat, separatorTransformer=SeparatorTransformer("detect")):
         self.__dateFormat=dateFormat
         '''self.__separatorConverter = SeparatorConverter()'''
 
-        self.__decimalSeparator = decimalSeparator
-        self.__thousandSeparator = thousandSeparator
-        
-        if self.__decimalSeparator is None or self.__thousandSeparator  is None:
-            raise Exception("Dezimaltrennzeichen und Tausendertrennzeichen muessen angegeben werden.")
-        if self.__decimalSeparator==self.__thousandSeparator:
-            raise Exception("Dezimaltrennzeichen und Tausendertrennzeichen duerfen nicht gleich sein.")
+        self._separatorTransformer=separatorTransformer
         
         '''articles by SKU and Product Structure as Value'''
         self.articles = { "new" : [], "update" : [], "delete" : [], "failed" : [] }
@@ -432,34 +428,26 @@ class BMEcatImportHandler(handler.ContentHandler):
         self.__currentArticle.addDeliveryTime(self.__currentContent)
 
     ''' ---------------------------------------------------------------------'''
-    def __convertToEnglishDecimalValue(self, stringValue):
-        convertedString = stringValue
-        if not self.__decimalSeparator == ".": 
-            convertedString = convertedString.replace(",",";").replace(self.__thousandSeparator,"").replace(";",".")
-        logging.debug("'{0}'".format(convertedString))
-        if convertedString is not None and len(convertedString) > 0 :
-            return float(convertedString)
-        else:
-            return 0
+
 
 
     ''' ---------------------------------------------------------------------'''
 
     def addPriceAmount(self, attrs = None):
-        self.__currentPrice.amount = round(self.__convertToEnglishDecimalValue(self.__currentContent), 2)
+        self.__currentPrice.amount = round(self._separatorTransformer.transform(self.__currentContent), 2)
 
     def addPriceCurrency(self, attrs = None):
         self.__currentPrice.currency = self.__currentContent
 
     def addPriceTax(self, attrs = None):
         stringValue = self.__currentContent.replace("%", "").strip()
-        convertedValue = self.__convertToEnglishDecimalValue(stringValue)
+        convertedValue = self._separatorTransformer.transform(stringValue)
         if convertedValue > 1:
             convertedValue = convertedValue / 100
         self.__currentPrice.tax = round(convertedValue, 2)
 
     def addPriceFactor(self, attrs = None):
-        self.__currentPrice.factor = self.__convertToEnglishDecimalValue(self.__currentContent)
+        self.__currentPrice.factor = self._separatorTransformer.transform(self.__currentContent)
     
     def addPriceLowerBound(self, attrs = None):
         self.__currentPrice.lowerBound = self.__currentContent

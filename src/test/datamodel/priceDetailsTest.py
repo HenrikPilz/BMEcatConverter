@@ -22,6 +22,7 @@ class PriceDetailsTest(unittest.TestCase):
     def testValidateExceptionDailyPrice(self):
         priceDetails = PriceDetails()
         priceDetails.dailyPrice = True
+        priceDetails.addPrice(Price(), False)
         with self.assertRaisesRegex(Exception, "Tagespreis hinterlegt!"):
             priceDetails.validate(True)
                 
@@ -36,9 +37,10 @@ class PriceDetailsTest(unittest.TestCase):
 
     def testValidateExceptionMinOneMandatoryPriceMissing(self):
         priceDetails = PriceDetails()
-        with self.assertRaisesRegex(Exception, "Mindestens ein Pflichtpreis ist nicht vorhanden: 'net_customer'"):
+        with self.assertRaisesRegex(Exception, "Keine Preisangaben hinterlegt."):
             priceDetails.validate(True)
         priceDetails.addPrice(Price(), False)
+        
         with self.assertRaisesRegex(Exception, "Kein Preis angegeben!"):
             priceDetails.validate(True)
         
@@ -99,3 +101,7 @@ class PriceDetailsTest(unittest.TestCase):
         self.assertNotEqual(priceDetails1, priceDetails2, "priceDetails different startingdays should not be equal.")
         priceDetails2.validTo = "2017-08-21"        
         self.assertEqual(priceDetails1, priceDetails2, "Same Starting day priceDetails should be equal.")
+
+#if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+#    unittest.main()

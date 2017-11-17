@@ -117,3 +117,7 @@ class MimeTest(unittest.TestCase):
 
         mime1.description = "detail"
         self.assertEqual(mime1, mime2, "Description should not matter")
+
+#if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+#    unittest.main()

@@ -130,3 +130,7 @@ class FeatureSetTest(unittest.TestCase):
         self.assertNotEqual(featureSet1, featureSet2, "Two NonEmpty FeatureSets should not be equal, due to different Features")
         self.assertFalse(featureSet1 == featureSet2, "NonEmpty FeatureSets should not be equal to another another via '==', due to different Features")
         self.assertTrue(featureSet1 != featureSet2, "NonEmpty FeatureSets should be unequal to another another via '!=', due to different Features")
+
+#if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+#    unittest.main()

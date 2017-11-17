@@ -63,7 +63,8 @@ class ProductDetails(ValidatingXMLObject, ComparableEqual):
         self.specialTreatmentClasses.append(treatmentclass)
     
     def addKeyword(self, keyword):
-        self.keywords.append(keyword)
+        if super().valueNotNoneOrEmpty(keyword):
+            self.keywords.append(keyword)
     
     def toXml(self, raiseExceptionOnValidate=True):
         detailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_DETAILS", raiseExceptionOnValidate=raiseExceptionOnValidate)

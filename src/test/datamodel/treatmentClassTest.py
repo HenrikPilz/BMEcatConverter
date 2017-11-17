@@ -34,3 +34,7 @@ class TreatmentClassTest(unittest.TestCase):
         self.assertEqual(treatmentClass1, treatmentClass2, "Empty TreatmentClasses should not be equal")
         self.assertTrue(treatmentClass1 == treatmentClass2, "TreatmentClasses should be equal via '=='")
         self.assertFalse(treatmentClass1 != treatmentClass2, "TreatmentClasses should not be nonequal via '!='")
+
+#if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+#    unittest.main()

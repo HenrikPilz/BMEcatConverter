@@ -13,6 +13,7 @@ from exporter.xml import BMEcatExporter
 from importer.excel import ExcelImporter
 from importer.xml import BMEcatImportHandler
 from resolver.dtdResolver import DTDResolver
+from transformer.Separators import SeparatorTransformer
 
 
 class ConversionModeException(Exception):
@@ -25,11 +26,6 @@ class Converter(object):
     classdocs
     '''
 
-    # Tausendertrennzeichen und Dezimalkennzeichen dürfen nicht gleich sein. 
-    separators = { "german" : { "decimalSeparator" : ",", "thousandSeparator" : "." },
-                   "english" : { "decimalSeparator" : ".", "thousandSeparator" : "," }
-                 }
-
     def __init__(self, config):
         '''
         Constructor
@@ -37,9 +33,9 @@ class Converter(object):
         self._inputfile=config['inputfile']
         self._outputfile=config['outputfile']
         self._dateFormat=config['dateFormat']
-        self._separatorMode=config['separatorMode']
         self._manufacturerName=config['manufacturerName']
         self._merchant=config['merchant']
+        self._separatorTransformer = SeparatorTransformer(config['separatorMode'])
         
     def xmlToExcel(self):
         '''
@@ -47,22 +43,27 @@ class Converter(object):
         '''
         parser = make_parser()
         
-        decimalSeparator = self.separators[self._separatorMode]["decimalSeparator"]
-        thousandSeparator = self.separators[self._separatorMode]["thousandSeparator"]
-            
-        importer = BMEcatImportHandler(self._dateFormat, decimalSeparator, thousandSeparator)
+        importer = BMEcatImportHandler(self._dateFormat, self._separatorTransformer)
         parser.setContentHandler(importer)
         parser.setEntityResolver(DTDResolver())
         if self._inputfile.startswith(".") or self._inputfile.startswith(".."):
             self._inputfile = os.getcwd() + "//" + self._inputfile
         if self._outputfile.startswith(".") or self._outputfile.startswith(".."):
             self._outputfile = os.getcwd() + "//" + self._outputfile
+        t1 = time.clock()
         parser.parse("file:" + self._inputfile)
+        t2 = time.clock()
+        print ("Einlesen:")
+        self.computeDuration(t1, t2)
         logging.info("Daten eingelesen")
     
         exporter = PyxelExporter(importer.articles, self._outputfile, self._manufacturerName)
         logging.info("Erstelle Excel-Datei")
+        t3 = time.clock()
         exporter.createNewWorkbook()
+        t4 = time.clock()
+        print ("Wegschreiben:")
+        self.computeDuration(t3, t4)
         logging.info("Fertig.")
     
     def excelToXml(self):
@@ -70,7 +71,7 @@ class Converter(object):
         convert Excel-File to XML BMEcat
         '''
 
-        importer = ExcelImporter()
+        importer = ExcelImporter(self._separatorTransformer)
         
         if os.path.isfile(self._inputfile):
             t1 = time.clock()

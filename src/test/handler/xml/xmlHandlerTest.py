@@ -92,6 +92,32 @@ class xmlHandlerTest(BasicHandlerTest):
         article.addFeatureSet(featureSet)
 
         self.runAndCheck(article, 'testCreateBMEcatFullData.xml')
+
+    def testCreateBMEcatMinimumDataPlusKeywords(self):
+        article = Product()
+        article.productId = '12345'
+        article.details = ProductDetails()
+        article.details.title = 'Test Article'
+        article.orderDetails = OrderDetails()
+        article.orderDetails.contentUnit = 'C62'
+        article.orderDetails.orderUnit = 'C62'
+        article.orderDetails.packingQuantity = 25
+        article.orderDetails.priceQuantity = 100
+        article.orderDetails.quantityMin = 4
+        article.orderDetails.quantityInterval = 1
+        
+        priceDetails = PriceDetails()
+        price = Price()
+        price.amount = 10.50
+        price.priceType ='net_customer'
+        price.lowerBound = 1
+        price.tax = 0.19
+        priceDetails.addPrice(price)
+        article.addPriceDetails(priceDetails)
+        
+        article.addKeyword("Testkeyword")
+        
+        self.runAndCheck(article, 'testCreateBMEcatMinimumDataPlusKeywords.xml')
         
     def testCreateBMEcatMinimumData(self):
         article = Product()
@@ -124,8 +150,12 @@ class xmlHandlerTest(BasicHandlerTest):
         
         # import again
         parser = make_parser()
-        importHandler = BMEcatImportHandler("%Y-%m-%d", ".", ",")
+        importHandler = BMEcatImportHandler("%Y-%m-%d")
         parser.setContentHandler(importHandler)
         parser.setEntityResolver(DTDResolver())
         parser.parse("file:" + filename)
         return importHandler.articles['new']
+
+#if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+#    unittest.main()

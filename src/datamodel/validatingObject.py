@@ -14,7 +14,8 @@ class NoValueGivenException(Exception):
     '''
     Exception thrown when no Value is given.
     '''
-    
+
+
 class ComparableEqual(object):
     '''
     Interface Class for a Class which are comparable
@@ -26,6 +27,17 @@ class ComparableEqual(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    @classmethod
+    def checkListForEquality(self, lhs, rhs):
+        for leftItem in lhs:
+            if leftItem not in rhs:
+                return False
+
+        for rightItem in rhs:
+            if rightItem not in lhs:
+                return False
+        return True
+    
 
 class ValidatingObject(object):
     '''
@@ -41,20 +53,12 @@ class ValidatingObject(object):
         except AttributeError as ae:
             logging.error("Klassenattribut nicht gefunden: ", str(ae))
     
-    @classmethod
-    def checkListForEquality(self, lhs, rhs):
-        for leftItem in lhs:
-            if leftItem not in rhs:
-                return False
-
-        for rightItem in rhs:
-            if rightItem not in lhs:
-                return False
-        return True
-    
-    def validateList(self, listToValidate, raiseException):
-        for listItem in listToValidate:
-            listItem.validate(raiseException)
+    def validateList(self, listToValidate, additionalMessage, raiseException):
+        try:
+            for listItem in listToValidate:
+                listItem.validate(raiseException)
+        except Exception as e:
+            raise Exception(additionalMessage + " :: " + str(e))
     
     @abstractmethod
     def validate(self, raiseException=False):
@@ -120,7 +124,7 @@ class ValidatingObject(object):
 
 class XMLObject(object):
     '''
-    Interface Class for a Class which validates its content
+    Interface Class for a Class which writes its content to XML
     '''
     
     @abstractmethod
@@ -156,9 +160,13 @@ class XMLObject(object):
         dateSubElement.text = date.strftime("%Y-%m-%d")
         timeSubElement = SubElement(dateTimeSubElement, "TIME")
         timeSubElement.text = date.strftime("%H:%M:%S")
-        
-class ValidatingXMLObject(ValidatingObject, XMLObject):
 
+
+class ValidatingXMLObject(ValidatingObject, XMLObject):
+    '''
+    Interface Class for a Class which validates its content and writes its Content to XML
+    '''
+    
     def validateAndCreateBaseElement(self, tagname, attributes=None, raiseExceptionOnValidate=True):
         self.validate(raiseExceptionOnValidate)
         return Element(tagname, attributes)

@@ -96,3 +96,7 @@ class PriceTest(unittest.TestCase):
 
         price1.territory = "Deuschland"
         self.assertEqual(price1, price2, "Terrritory should not matter")
+
+#if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+#    unittest.main()

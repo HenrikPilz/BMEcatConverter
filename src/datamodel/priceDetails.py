@@ -8,8 +8,8 @@ from . import ValidatingXMLObject, ComparableEqual
 
 class PriceDetails(ValidatingXMLObject, ComparableEqual):
     
-    neededPriceTypes = [ 'net_customer' ]
-    additionalPriceTypes = [ 'net_list' ]
+    mandatoryPriceTypes = [ 'net_customer' ]
+    optionalPriceTypes = [ 'net_list' ]
    
     def __init__(self):
         self.validFrom = None
@@ -28,7 +28,7 @@ class PriceDetails(ValidatingXMLObject, ComparableEqual):
         return len(self.prices)
         
     def validate(self, raiseException=False):
-        super().valueNotNoneOrEmpty(self.prices, "Keine Preisangaben hinterlegt.", False)
+        super().valueNotNoneOrEmpty(self.prices, "Keine Preisangaben hinterlegt.", raiseException)
         
         if not self.validFrom is None and not self.validTo is None and self.validFrom > self.validTo:
             logging.warning("Zeitspanne nicht gueltig.")
@@ -42,9 +42,9 @@ class PriceDetails(ValidatingXMLObject, ComparableEqual):
             else:
                 pricenames.append(price.priceType)
 
-        doeasNotContainAtleastOneOfTheMandatoryPrices = not set(pricenames).issubset(PriceDetails.neededPriceTypes) and not set(PriceDetails.neededPriceTypes).issubset(pricenames)
-        if len(pricenames) == 0 or doeasNotContainAtleastOneOfTheMandatoryPrices:
-            self.logError("Mindestens ein Pflichtpreis ist nicht vorhanden: '{0}'".format(",".join(PriceDetails.neededPriceTypes)), raiseException)
+        atLeastOneOfTheMandatoryPricesIsMissing = not set(self.mandatoryPriceTypes).issubset(pricenames)
+        if len(pricenames) == 0 or atLeastOneOfTheMandatoryPricesIsMissing:
+            self.logError("Mindestens ein Pflichtpreis ist nicht vorhanden: '{0}'".format(",".join(set(self.mandatoryPriceTypes).difference(pricenames))), raiseException)
 
     def addPrice(self, price, raiseException=True):
         if price is not None:

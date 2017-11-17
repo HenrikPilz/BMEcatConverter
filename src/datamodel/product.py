@@ -45,18 +45,25 @@ class Product(ValidatingXMLObject, ComparableEqual):
    
     def validate(self, raiseException=False):
         super().valueNotNone(self.productId, "Der Artikel hat keine Artikelnummer.", raiseException)
-        super().valueNotNone(self.details, "Der Artikel '{0}' hat keine Artikeldetails.".format(self.productId), raiseException)
-        self.details.validate(raiseException)
-        super().valueNotNone(self.orderDetails, "Der Artikel '{0}' hat keine Bestellinformation.".format(self.productId), raiseException)
-        self.orderDetails.validate(raiseException)
-        super().valueNotNoneOrEmpty(self.priceDetails, "Der Artikel '{0}' hat keine Preisinformationen.".format(self.productId), raiseException)
-        super().validateList(self.priceDetails, raiseException)
+        messagePrefix = "Der Artikel '{0}' hat ".format(self.productId)
+        super().valueNotNone(self.details, messagePrefix + "keine Artikeldetails.".format(self.productId), raiseException)
+        try:
+            self.details.validate(raiseException)
+        except Exception as e:
+            raise Exception(messagePrefix + "fehlerhafte Artikeldetails. " + str(e))
+        super().valueNotNone(self.orderDetails, messagePrefix + "keine Bestellinformation.".format(self.productId), raiseException)
+        try:
+            self.orderDetails.validate(raiseException)
+        except Exception as e:
+            raise Exception(messagePrefix + "fehlerhafte Bestellinformationen. " + str(e))
+        super().valueNotNoneOrEmpty(self.priceDetails, messagePrefix + "keine Preisinformationen.".format(self.productId), raiseException)
+        super().validateList(self.priceDetails, messagePrefix + "fehlerhafte Preisinformationen.", raiseException)
             
-        if super().valueNotNoneOrEmpty(self.mimeInfo, "Für Artikel '{0}' wurden keine Bilder gefunden.".format(self.productId), False):
-            super().validateList(self.mimeInfo, raiseException)
+        if super().valueNotNoneOrEmpty(self.mimeInfo, messagePrefix + "keine Bilder.".format(self.productId), False):
+            super().validateList(self.mimeInfo, messagePrefix + "fehlerhafte Bildinformationen.", raiseException)
 
-        if super().valueNotNoneOrEmpty(self.featureSets, "Für Artikel '{0}' wurden keine Attribute gefunden.".format(self.productId), False):
-            super().validateList(self.featureSets, raiseException)
+        if super().valueNotNoneOrEmpty(self.featureSets, messagePrefix + "keine Attribute.".format(self.productId), False):
+            super().validateList(self.featureSets,messagePrefix + "fehlerhafte Attributinformationen.", raiseException)
     
     def addDetails(self):
         self.details = ProductDetails()
@@ -64,8 +71,9 @@ class Product(ValidatingXMLObject, ComparableEqual):
     def addOrderDetails(self):
         self.orderDetails = OrderDetails()
 
-    def addPriceDetails(self, priceDetails):
-        self.priceDetails.append(priceDetails)
+    def addPriceDetails(self, priceDetails, raiseException=True):
+        if priceDetails is not None:
+            self.addToListIfValid(priceDetails, self.priceDetails, "Die Preisdetails enthalten keine validen Einträge. Sie werden nicht hinzugefuegt.", raiseException)
         
     def addTitle(self, title):
         self.details.title = title
@@ -128,8 +136,9 @@ class Product(ValidatingXMLObject, ComparableEqual):
         articleElement.append(self.details.toXml(raiseExceptionOnValidate))
         articleElement.append(self.orderDetails.toXml(raiseExceptionOnValidate))
         super().addListOfSubElements(articleElement, self.priceDetails, raiseExceptionOnValidate)
-        mimeInfoElement = SubElement(articleElement, "MIME_INFO")        
-        super().addListOfSubElements(mimeInfoElement, sorted(self.mimeInfo, key=lambda mime: int(mime.order)), raiseExceptionOnValidate)
+        if super().valueNotNoneOrEmpty(self.mimeInfo):
+            mimeInfoElement = SubElement(articleElement, "MIME_INFO")        
+            super().addListOfSubElements(mimeInfoElement, sorted(self.mimeInfo, key=lambda mime: int(mime.order)), raiseExceptionOnValidate)
         super().addListOfSubElements(articleElement, self.featureSets, raiseExceptionOnValidate)
         super().addListOfSubElements(articleElement, self.references, raiseExceptionOnValidate)        
         return articleElement

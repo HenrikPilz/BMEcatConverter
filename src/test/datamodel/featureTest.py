@@ -200,3 +200,7 @@ class FeatureTest(unittest.TestCase):
         self.assertEqual(feature1, feature2, "Two Empty Features should be equal.")
         self.assertTrue(feature1 == feature2, "Empty Feature should be equal to another another via '=='")
         self.assertFalse(feature1 != feature2, "Empty Feature should not be unequal to another another via '!='")
+
+#if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+#    unittest.main()

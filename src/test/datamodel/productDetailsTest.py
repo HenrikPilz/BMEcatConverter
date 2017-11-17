@@ -65,4 +65,8 @@ class ProductDetailsTest(unittest.TestCase):
         self.assertEqual(productdetails1, productdetails2, "Empty Productdetails should not be equal")
         self.assertTrue(productdetails1 == productdetails2, "Productdetails should be equal via '=='")
         self.assertFalse(productdetails1 != productdetails2, "Productdetails should not be nonequal via '!='")
+
+#if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
+#    unittest.main()
         

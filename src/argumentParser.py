@@ -41,7 +41,7 @@ class ArgumentParser():
                                  "dateformat=",
                                  "separators="]
                                    )
-        print("Options: ", opts)
+        logging.debug("Options: ", opts)
 
         for opt, arg in opts:
             logging.debug("Option: " + opt)
