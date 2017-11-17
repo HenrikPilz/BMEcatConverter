@@ -6,13 +6,13 @@ Created on 05.05.2017
 import logging
 from . import ValidatingXMLObject, ComparableEqual
 
-class Reference(ValidatingXMLObject, ComparableEqual):
+class Reference( ValidatingXMLObject, ComparableEqual ):
     '''
     classdocs
     '''
 
 
-    def __init__(self):
+    def __init__( self ):
         '''
         Constructor
         '''
@@ -25,46 +25,46 @@ class Reference(ValidatingXMLObject, ComparableEqual):
         self.description = None
         self.mimeInfo = []
 
-    def __eq__(self, other):
-        if not super().__eq__(other):
+    def __eq__( self, other ):
+        if not super().__eq__( other ):
             return False
         else:
-            supplierArticleIdEqual = str(self.supplierArticleId) == str(other.supplierArticleId)
-            mimeInfoEqual = super().checkListForEquality(self.mimeInfo, other.mimeInfo)
-        
-            return supplierArticleIdEqual and mimeInfoEqual and self.referenceType == other.referenceType and str(self.quantity) == str(other.quantity)
+            supplierArticleIdEqual = str( self.supplierArticleId ) == str( other.supplierArticleId )
+            mimeInfoEqual = super().checkListForEquality( self.mimeInfo, other.mimeInfo )
+
+            return supplierArticleIdEqual and mimeInfoEqual and self.referenceType == other.referenceType and str( self.quantity ) == str( other.quantity )
 
 
-    def validate(self,  raiseException=False):
+    def validate( self, raiseException = False ):
         if self.referenceType is None:
-            super().logError("Der Referenz wurde kein Typ zugewiesen.",  raiseException)
+            super().logError( "Der Referenz wurde kein Typ zugewiesen.", raiseException )
         if self.supplierArticleId is None:
-            super().logError("Es wird keine Artikelnummer referenziert.",  raiseException)
+            super().logError( "Es wird keine Artikelnummer referenziert.", raiseException )
         if self.quantity is not None and self.referenceType != "constists_of":
-            logging.warning("Anzahl ist kein Attribute, welches gesetzt werden darf.")
+            logging.warning( "Anzahl ist kein Attribute, welches gesetzt werden darf." )
             self.quantity = None
-        if self.mimeInfo is None or len(self.mimeInfo) == 0:
-            logging.info("Es wurden keine Bilder gefunden.")
+        if self.mimeInfo is None or len( self.mimeInfo ) == 0:
+            logging.info( "Es wurden keine Bilder gefunden." )
         else:
             for mime in self.mimeInfo:
-                mime.validate(raiseException)
+                mime.validate( raiseException )
 
 
-    def addMime(self, mime):
-        self.mimeInfo.append(mime)
-        
-    def addSupplierArticleId(self, supplierArticleId):
+    def addMime( self, mime ):
+        super().addToListIfValid( mime, self.mimeInfo, "Bilddaten für Referenz fehlerhaft", False )
+
+    def addSupplierArticleId( self, supplierArticleId ):
         if self.supplierArticleId is not None:
-            raise Exception("Es wird schon eine Artikelnummer referenziert: {0}".format(self.supplierArticleId))
-        self.supplierArticleId = supplierArticleId 
-    
-    def toXml(self, raiseExceptionOnValidate=True):
+            raise Exception( "Es wird schon eine Artikelnummer referenziert: {0}".format( self.supplierArticleId ) )
+        self.supplierArticleId = supplierArticleId
+
+    def toXml( self, raiseExceptionOnValidate = True ):
         attributes = { "type" : self.referenceType }
         if self.quantity is not None:
             attributes["quantity"] = self.quantity
-        referenceElement = super().validateAndCreateBaseElement("ARTICLE_REFERENCE", attributes, raiseExceptionOnValidate)
-        super().addMandatorySubElement(referenceElement, "ART_ID_TO", self.supplierArticleId)
-        super().addOptionalSubElement(referenceElement, "CATALOG_ID", self.catalogId)
-        super().addOptionalSubElement(referenceElement, "CATALOG_VERSION", self.catalogVersion)
+        referenceElement = super().validateAndCreateBaseElement( "ARTICLE_REFERENCE", attributes, raiseExceptionOnValidate )
+        super().addMandatorySubElement( referenceElement, "ART_ID_TO", self.supplierArticleId )
+        super().addOptionalSubElement( referenceElement, "CATALOG_ID", self.catalogId )
+        super().addOptionalSubElement( referenceElement, "CATALOG_VERSION", self.catalogVersion )
         return referenceElement
-        
+
