@@ -35,6 +35,10 @@ class FeatureTest(unittest.TestCase):
         feature = Feature()
         feature.name = "Name"
         self.assertEqual(len(feature.values), 0)
+        feature.addValue(None)
+        self.assertEqual(len(feature.values), 0)
+        feature.addValue("Value")
+        self.assertEqual(len(feature.values), 1)
         feature.addValue("Value")
         self.assertEqual(len(feature.values), 1)
 
@@ -47,8 +51,13 @@ class FeatureTest(unittest.TestCase):
         variant.value = "Value"
         feature.addVariantOrder(1)
         self.assertEqual(feature.variants.order, 1)
+        self.assertEqual(len(feature), 0)
         self.assertEqual(len(feature.variants), 0)
         feature.addVariant(variant)
+        self.assertEqual(len(feature), 1)
+        self.assertEqual(len(feature.variants), 1)
+        feature.addVariantSet()
+        self.assertEqual(len(feature), 1)
         self.assertEqual(len(feature.variants), 1)
 
     def testValidateExceptionFeatureNameMissing(self):
@@ -81,6 +90,7 @@ class FeatureTest(unittest.TestCase):
         variant = Variant()
         variant.productIdSuffix = "01"
         variant.value = "Blau"
+        feature.addVariantSet()
         feature.addVariant(variant)
         variant = Variant()
         variant.productIdSuffix = "02"
@@ -96,6 +106,7 @@ class FeatureTest(unittest.TestCase):
         feature.name = "TestFeature"
         feature.addValue("10")
         feature.validate(True)
+        self.assertEqual(len(feature), 1)
 
     def testValidateVariant(self):
         feature = Feature()
