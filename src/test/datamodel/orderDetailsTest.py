@@ -66,6 +66,14 @@ class OrderDetailsTest(unittest.TestCase):
         orderDetails.priceQuantity = 18
         orderDetails.validate(True)
 
+    def testEqual(self):
+        orderDetails1 = OrderDetails()
+        self.assertNotEqual(orderDetails1, "", "Mime should not be equal to str")
+        orderDetails2 = OrderDetails()
+        self.assertEqual(orderDetails1, orderDetails2, "Empty mimes should be equal.")
+        self.assertTrue(orderDetails1 == orderDetails2, "Empty mimes should be equal via '=='.")
+        self.assertFalse(orderDetails1 != orderDetails2, "Empty mimes should not be unequal via '!='.")
+
 # if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
 #    unittest.main()

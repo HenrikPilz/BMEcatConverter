@@ -13,7 +13,7 @@ from exporter.xml import BMEcatExporter
 from importer.excel import ExcelImporter
 from importer.xml import BMEcatImportHandler
 from resolver.dtdResolver import DTDResolver
-from transformer.Separators import SeparatorTransformer
+from transformer import SeparatorTransformer
 
 
 class ConversionModeException(Exception):

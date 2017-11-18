@@ -11,7 +11,6 @@ from argumentParser import HelpCalledException
 from argumentParser import MissingArgumentException
 from converter import ConversionModeException
 from converter import Converter
-import packageInstaller
 
 
 loggingLevel = logging.INFO
@@ -104,11 +103,6 @@ def setUpLogging():
 
 
 if __name__ == '__main__':
-    # Check for openpyxl
-    packageInstaller.installIfNeeded("openpyxl")
-    packageInstaller.installIfNeeded("regex")
-    packageInstaller.installIfNeeded("lxml")
-
     # Loging einstgellen: zwei Outputdateien plus Konsole
     setUpLogging()
 

@@ -49,9 +49,11 @@ class ProductTest(unittest.TestCase):
         product.productId = "12345"
         self.assertEqual(product.productId, "12345")
         # Productdetails
-        product.details = ProductDetails()
+        product.addDetails()
 
         product.addTitle("TestTitel")
+        self.assertEqual(product.details.title, "TestTitel")
+        product.addDetails()
         self.assertEqual(product.details.title, "TestTitel")
 
         product.addDescription("TestBeschreibung")
@@ -232,7 +234,7 @@ class ProductTest(unittest.TestCase):
         product.productId = "12345"
 
         # Productdetails
-        product.details = ProductDetails()
+        product.addDetails()
         product.addTitle("TestTitel")
 
         with self.assertRaisesRegex(Exception, "Der Artikel '[0-9]{5}' hat keine Bestellinformation."):
@@ -266,7 +268,7 @@ class ProductTest(unittest.TestCase):
         product.productId = "12345"
 
         # Productdetails
-        product.details = ProductDetails()
+        product.addDetails()
         product.addTitle("TestTitel")
 
         orderDetails = OrderDetails()

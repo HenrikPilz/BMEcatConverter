@@ -1,16 +1,3 @@
-__all__ = ['Feature',
-           'FeatureSet',
-           'Mime',
-           'Product',
-           'ProductDetails',
-           'OrderDetails',
-           'PriceDetails',
-           'Price',
-           'Reference',
-           'TreatmentClass',
-           'Variant',
-           'VariantSet']
-
 from datamodel.feature import Feature
 from datamodel.featureSet import FeatureSet
 from datamodel.mime import Mime
@@ -27,3 +14,16 @@ from datamodel.validatingObject import ValidatingXMLObject
 from datamodel.validatingObject import XMLObject
 from datamodel.variant import Variant
 from datamodel.variantSet import VariantSet
+
+__all__ = ['Feature',
+           'FeatureSet',
+           'Mime',
+           'Product',
+           'ProductDetails',
+           'OrderDetails',
+           'PriceDetails',
+           'Price',
+           'Reference',
+           'TreatmentClass',
+           'Variant',
+           'VariantSet']

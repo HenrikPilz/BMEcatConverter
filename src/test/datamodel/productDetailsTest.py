@@ -49,6 +49,10 @@ class ProductDetailsTest(unittest.TestCase):
     def testAddKeyword(self,):
         productdetails = ProductDetails()
         self.assertEqual(len(productdetails.keywords), 0)
+        productdetails.addKeyword(None)
+        self.assertEqual(len(productdetails.keywords), 0)
+        productdetails.addKeyword("")
+        self.assertEqual(len(productdetails.keywords), 0)
         productdetails.addKeyword("Test")
         self.assertEqual(len(productdetails.keywords), 1)
 

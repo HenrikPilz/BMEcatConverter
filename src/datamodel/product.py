@@ -34,15 +34,15 @@ class Product(ValidatingXMLObject, ComparableEqual):
         else:
             priceDetailsEqual = super().checkListForEquality(self.priceDetails, other.priceDetails)
             mimeInfoEqual = super().checkListForEquality(self.mimeInfo, other.mimeInfo)
-            userDefinedExtensionsEqual = super().checkListForEquality(self.userDefinedExtensions, other.userDefinedExtensions)
             featureSetsEqual = super().checkListForEquality(self.featureSets, other.featureSets)
-            referencesEqual = super().checkListForEquality(self.references, other.references)
-            variantsEqualEqual = super().checkListForEquality(self.variants, other.variants)
             productIdEqual = str(self.productId) == str(other.productId)
+            # Varianten werden ueber Featuresets verglichen.
+            # Referenzen sind hierbei unwichtig.
+            # User Defined Extensions sind noch nicht implementiert.
+            # userDefinedExtensionsEqual = super().checkListForEquality(self.userDefinedExtensions, other.userDefinedExtensions)
 
-            return priceDetailsEqual and mimeInfoEqual and userDefinedExtensionsEqual and featureSetsEqual and \
-                referencesEqual and variantsEqualEqual and productIdEqual and self.details == other.details and \
-                self.orderDetails == other.orderDetails and self.hasVariants == other.hasVariants
+            return productIdEqual and self.details == other.details and self.orderDetails == other.orderDetails and \
+                priceDetailsEqual and mimeInfoEqual and featureSetsEqual
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -50,30 +50,40 @@ class Product(ValidatingXMLObject, ComparableEqual):
     def validate(self, raiseException=False):
         super().valueNotNone(self.productId, "Der Artikel hat keine Artikelnummer.", raiseException)
         messagePrefix = "Der Artikel '{0}' hat ".format(self.productId)
-        super().valueNotNone(self.details, messagePrefix + "keine Artikeldetails.".format(self.productId), raiseException)
-        try:
-            self.details.validate(raiseException)
-        except Exception as e:
-            raise Exception(messagePrefix + "fehlerhafte Artikeldetails. " + str(e))
-        super().valueNotNone(self.orderDetails, messagePrefix + "keine Bestellinformation.".format(self.productId), raiseException)
-        try:
-            self.orderDetails.validate(raiseException)
-        except Exception as e:
-            raise Exception(messagePrefix + "fehlerhafte Bestellinformationen. " + str(e))
-        super().valueNotNoneOrEmpty(self.priceDetails, messagePrefix + "keine Preisinformationen.".format(self.productId), raiseException)
+        super().valueNotNone(self.details, messagePrefix + "keine Artikeldetails.", raiseException)
+        self._tryValidatingSubElement(self.details, messagePrefix + "fehlerhafte Artikeldetails.", raiseException)
+        super().valueNotNone(self.orderDetails, messagePrefix + "keine Bestellinformation.", raiseException)
+        self._tryValidatingSubElement(self.orderDetails, messagePrefix + "fehlerhafte Bestellinformationen.", raiseException)
+        super().valueNotNoneOrEmpty(self.priceDetails, messagePrefix + "keine Preisinformationen.", raiseException)
         super().validateList(self.priceDetails, messagePrefix + "fehlerhafte Preisinformationen.", raiseException)
 
-        if super().valueNotNoneOrEmpty(self.mimeInfo, messagePrefix + "keine Bilder.".format(self.productId), False):
-            super().validateList(self.mimeInfo, messagePrefix + "fehlerhafte Bildinformationen.", raiseException)
+        self._validateIfNotNoneOrEmpty(self.mimeInfo,
+                                       messagePrefix + "keine Bilder.",
+                                       messagePrefix + "fehlerhafte Bildinformationen.",
+                                       raiseException)
 
-        if super().valueNotNoneOrEmpty(self.featureSets, messagePrefix + "keine Attribute.".format(self.productId), False):
-            super().validateList(self.featureSets, messagePrefix + "fehlerhafte Attributinformationen.", raiseException)
+        self._validateIfNotNoneOrEmpty(self.featureSets,
+                                       messagePrefix + "keine Attribute.",
+                                       messagePrefix + "fehlerhafte Attributinformationen.",
+                                       raiseException)
+
+    def _validateIfNotNoneOrEmpty(self, elementToCheck, noneOrEmptyMessage, validationMessage, raiseException=False):
+        if super().valueNotNoneOrEmpty(elementToCheck, noneOrEmptyMessage, False):
+            super().validateList(elementToCheck, validationMessage, raiseException)
+
+    def _tryValidatingSubElement(self, subElement, exceptionMessage, raiseException=True):
+        try:
+            subElement.validate(raiseException)
+        except Exception as e:
+            raise Exception(exceptionMessage + " " + str(e))
 
     def addDetails(self):
-        self.details = ProductDetails()
+        if self.details is None:
+            self.details = ProductDetails()
 
     def addOrderDetails(self):
-        self.orderDetails = OrderDetails()
+        if self.orderDetails is None:
+            self.orderDetails = OrderDetails()
 
     def addPriceDetails(self, priceDetails, raiseException=True):
         self.addToListIfValid(priceDetails, self.priceDetails,

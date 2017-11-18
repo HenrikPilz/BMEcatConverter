@@ -3,12 +3,19 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
+import os
+
 from datamodel.validatingObject import ComparableEqual
 from datamodel.validatingObject import ValidatingXMLObject
 from datamodel.variantSet import VariantSet
+from mapping import UnitMapper
 
 
 class Feature(ValidatingXMLObject, ComparableEqual):
+    __baseDirectory = os.path.join(os.path.dirname(__file__), "..", "..", "documents", "BMEcat", "version")
+    __bmecatUnitMapper = UnitMapper(os.path.join(__baseDirectory, "BMEcatUnitMapping.csv"))
+    __etimUnitMapper = UnitMapper(os.path.join(__baseDirectory, "ETIMUnitMapping.csv"))
+
     def __init__(self):
         self.name = None
         self.order = None
@@ -40,6 +47,12 @@ class Feature(ValidatingXMLObject, ComparableEqual):
                 variantsAreEqual = noVariantsAtAll
             return namesEqual and unitsEqual and valuesEqual and variantsAreEqual
 
+    def _mapUnitIfNecessary(self):
+        if self.__bmecatUnitMapper.hasKey(self.unit):
+            self.unit = self.__bmecatUnitMapper.getSIUnit(self.unit)
+        elif self.__etimUnitMapper.hasKey(self.unit):
+            self.unit = self.__etimUnitMapper.getSIUnit(self.unit)
+
     def validate(self, raiseException=False):
         errMsg = None
         super().valueNotNoneOrEmpty(self.name, "Der Merkmalsname fehlt.", raiseException)
@@ -54,6 +67,7 @@ class Feature(ValidatingXMLObject, ComparableEqual):
         else:
             if hasVariants:
                 self.variants.validate(raiseException)
+        self._mapUnitIfNecessary()
 
     def addValue(self, value):
         """

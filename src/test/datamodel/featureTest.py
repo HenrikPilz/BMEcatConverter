@@ -104,6 +104,7 @@ class FeatureTest(unittest.TestCase):
     def testValidateValue(self):
         feature = Feature()
         feature.name = "TestFeature"
+        feature.unit = "MMT"
         feature.addValue("10")
         feature.validate(True)
         self.assertEqual(len(feature), 1)
