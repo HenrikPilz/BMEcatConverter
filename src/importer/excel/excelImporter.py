@@ -9,8 +9,15 @@ import logging
 from openpyxl import load_workbook
 import regex
 
-from datamodel import FeatureSet, Mime, OrderDetails, PriceDetails, Product, ProductDetails, Price, Feature
-from transformer.Separators import SeparatorTransformer
+from datamodel import Feature
+from datamodel import FeatureSet
+from datamodel import Mime
+from datamodel import OrderDetails
+from datamodel import Price
+from datamodel import PriceDetails
+from datamodel import Product
+from datamodel import ProductDetails
+from transformer import SeparatorTransformer
 
 
 class ExcelImporter(object):

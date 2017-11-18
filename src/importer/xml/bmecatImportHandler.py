@@ -9,9 +9,18 @@ from xml.sax import handler
 import logging
 import os
 
-from datamodel import Feature, FeatureSet, Mime, Price, PriceDetails, Product, Reference, TreatmentClass, Variant
-from mapping import Blacklist, UnitMapper
-from transformer.Separators import SeparatorTransformer
+from datamodel import Feature
+from datamodel import FeatureSet
+from datamodel import Mime
+from datamodel import Price
+from datamodel import PriceDetails
+from datamodel import Product
+from datamodel import Reference
+from datamodel import TreatmentClass
+from datamodel import Variant
+from mapping import Blacklist
+from mapping import UnitMapper
+from transformer import SeparatorTransformer
 
 
 class BMEcatImportHandler(handler.ContentHandler):

@@ -3,8 +3,9 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
-from . import ValidatingXMLObject, ComparableEqual
-from .variantSet import VariantSet
+from datamodel.validatingObject import ComparableEqual
+from datamodel.validatingObject import ValidatingXMLObject
+from datamodel.variantSet import VariantSet
 
 
 class Feature(ValidatingXMLObject, ComparableEqual):

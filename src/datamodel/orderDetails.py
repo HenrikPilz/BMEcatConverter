@@ -6,7 +6,8 @@ Created on 05.05.2017
 
 import logging
 
-from . import ValidatingXMLObject, ComparableEqual
+from datamodel.validatingObject import ComparableEqual
+from datamodel.validatingObject import ValidatingXMLObject
 
 
 class OrderDetails(ValidatingXMLObject, ComparableEqual):
@@ -39,7 +40,8 @@ class OrderDetails(ValidatingXMLObject, ComparableEqual):
     def validate(self, raiseException=False):
         if super().valueNotNoneOrEmpty(self.orderUnit, "Keine Bestelleinheit angeben.", raiseException) and self.orderUnit not in self.__allowedOrderUnits:
             super().logError("Falsche Bestelleinheit angeben: " + str(self.orderUnit), raiseException)
-        if super().valueNotNoneOrEmpty(self.contentUnit, "Keine Verpackungseinheit angeben.", raiseException) and self.contentUnit not in self.__allowedContentUnits:
+        if super().valueNotNoneOrEmpty(self.contentUnit, "Keine Verpackungseinheit angeben.", raiseException) and \
+           self.contentUnit not in self.__allowedContentUnits:
             super().logError("Falsche Verpackungseinheit angeben: " + str(self.contentUnit), raiseException)
         if float(self.quantityMin) != float(self.quantityInterval):
             logging.info("Mindestbestellmenge und Bestellintervall sollten gleich sein.")

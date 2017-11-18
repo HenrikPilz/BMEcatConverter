@@ -7,9 +7,10 @@ import logging
 
 from lxml.etree import SubElement
 
-from . import ValidatingXMLObject, ComparableEqual
-from .orderDetails import OrderDetails
-from .productDetails import ProductDetails
+from datamodel.orderDetails import OrderDetails
+from datamodel.productDetails import ProductDetails
+from datamodel.validatingObject import ComparableEqual
+from datamodel.validatingObject import ValidatingXMLObject
 
 
 class Product(ValidatingXMLObject, ComparableEqual):

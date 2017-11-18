@@ -4,7 +4,9 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
-from . import ValidatingXMLObject, ComparableEqual
+
+from datamodel.validatingObject import ComparableEqual
+from datamodel.validatingObject import ValidatingXMLObject
 
 
 class Price(ValidatingXMLObject, ComparableEqual):

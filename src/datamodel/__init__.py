@@ -11,16 +11,19 @@ __all__ = ['Feature',
            'Variant',
            'VariantSet']
 
-from .feature import Feature
-from .featureSet import FeatureSet
-from .mime import Mime
-from .orderDetails import OrderDetails
-from .price import Price
-from .priceDetails import PriceDetails
-from .product import Product
-from .productDetails import ProductDetails
-from .reference import Reference
-from .treatmentClass import TreatmentClass
-from .validatingObject import ValidatingObject, XMLObject, ComparableEqual, ValidatingXMLObject
-from .variant import Variant
-from .variantSet import VariantSet
+from datamodel.feature import Feature
+from datamodel.featureSet import FeatureSet
+from datamodel.mime import Mime
+from datamodel.orderDetails import OrderDetails
+from datamodel.price import Price
+from datamodel.priceDetails import PriceDetails
+from datamodel.product import Product
+from datamodel.productDetails import ProductDetails
+from datamodel.reference import Reference
+from datamodel.treatmentClass import TreatmentClass
+from datamodel.validatingObject import ComparableEqual
+from datamodel.validatingObject import ValidatingObject
+from datamodel.validatingObject import ValidatingXMLObject
+from datamodel.validatingObject import XMLObject
+from datamodel.variant import Variant
+from datamodel.variantSet import VariantSet

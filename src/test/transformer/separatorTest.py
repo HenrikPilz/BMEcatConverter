@@ -5,8 +5,9 @@ Created on 17.11.2017
 '''
 import unittest
 
-from transformer.Separators import SeparatorTransformer, SeparatorNotDetectableException, \
-    NumberFormatException
+from transformer import NumberFormatException
+from transformer import SeparatorNotDetectableException
+from transformer import SeparatorTransformer
 
 
 class SeparatorTransformerTest(unittest.TestCase):
