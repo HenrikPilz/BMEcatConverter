@@ -38,7 +38,6 @@ class VariantSetTest( unittest.TestCase ):
         with self.assertRaisesRegex( Exception, "Die Reihenfolge der Suffixe ist nicht definitiert." ):
             variantSet.validate( True )
 
-
     def testValidateExceptionNoVariant( self ):
         variantSet = VariantSet()
         variantSet.order = 1

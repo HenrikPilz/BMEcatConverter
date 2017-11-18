@@ -32,7 +32,7 @@ class xmlHandlerTest(BasicHandlerTest):
         article.details.supplierAltId = '23456'
         reference = Reference()
         reference.referenceType = 'accessory'
-        reference.supplierArticleId = '09876'     
+        reference.supplierArticleId = '09876'
         article.addReference(reference)
         # Bilder
         mime = Mime()
@@ -59,13 +59,13 @@ class xmlHandlerTest(BasicHandlerTest):
         priceDetails = PriceDetails()
         price1 = Price()
         price1.amount = 10.50
-        price1.priceType ='net_customer'
+        price1.priceType = 'net_customer'
         price1.lowerBound = 1
         price1.tax = 0.19
         priceDetails.addPrice(price1)
         price2 = Price()
         price2.amount = 17.50
-        price2.priceType ='net_list'
+        price2.priceType = 'net_list'
         price2.lowerBound = 1
         price2.tax = 0.19
         priceDetails.addPrice(price2)
@@ -105,20 +105,20 @@ class xmlHandlerTest(BasicHandlerTest):
         article.orderDetails.priceQuantity = 100
         article.orderDetails.quantityMin = 4
         article.orderDetails.quantityInterval = 1
-        
+
         priceDetails = PriceDetails()
         price = Price()
         price.amount = 10.50
-        price.priceType ='net_customer'
+        price.priceType = 'net_customer'
         price.lowerBound = 1
         price.tax = 0.19
         priceDetails.addPrice(price)
         article.addPriceDetails(priceDetails)
-        
+
         article.addKeyword("Testkeyword")
-        
+
         self.runAndCheck(article, 'testCreateBMEcatMinimumDataPlusKeywords.xml')
-        
+
     def testCreateBMEcatMinimumData(self):
         article = Product()
         article.productId = '12345'
@@ -131,23 +131,23 @@ class xmlHandlerTest(BasicHandlerTest):
         article.orderDetails.priceQuantity = 100
         article.orderDetails.quantityMin = 4
         article.orderDetails.quantityInterval = 1
-        
+
         priceDetails = PriceDetails()
         price = Price()
         price.amount = 10.50
-        price.priceType ='net_customer'
+        price.priceType = 'net_customer'
         price.lowerBound = 1
         price.tax = 0.19
         priceDetails.addPrice(price)
         article.addPriceDetails(priceDetails)
         self.runAndCheck(article, 'testCreateBMEcatMinimumData.xml')
-        
-    def runTestMethod(self, article, filename):   
+
+    def runTestMethod(self, article, filename):
         articles = { 'new' : [ article ]}
         # export
         bmecatExporter = BMEcatExporter(articles, filename)
         bmecatExporter.writeBMEcatAsXML()
-        
+
         # import again
         parser = make_parser()
         importHandler = BMEcatImportHandler("%Y-%m-%d")
@@ -156,6 +156,6 @@ class xmlHandlerTest(BasicHandlerTest):
         parser.parse("file:" + filename)
         return importHandler.articles['new']
 
-#if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
+# if __name__ == "__main__":
+    # import sys;sys.argv = ['', 'Test.testName']
 #    unittest.main()

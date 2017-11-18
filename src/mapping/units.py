@@ -11,7 +11,7 @@ import logging
 import os
 
 
-class units( Dialect ):
+class units(Dialect):
     """Describe the usual properties of Excel-generated CSV files."""
     delimiter = ';'
     quotechar = None
@@ -20,12 +20,13 @@ class units( Dialect ):
     lineterminator = '\n'
     quoting = QUOTE_NONE
 
-class UnitMapper( object ):
+
+class UnitMapper(object):
     '''
     classdocs
     '''
 
-    def __init__( self, filename ):
+    def __init__(self, filename):
         '''
         Constructor
         '''
@@ -34,21 +35,21 @@ class UnitMapper( object ):
         if self.filename is not None:
             self.readFile()
 
-    def readFile( self ):
+    def readFile(self):
         if self.filename:
-            logging.debug( os.getcwd() )
-            logging.debug( self.filename )
-            staplefile = csv.reader( open( self.filename, newline = '\n', encoding = 'utf-8' ), dialect = units() )
+            logging.debug(os.getcwd())
+            logging.debug(self.filename)
+            staplefile = csv.reader(open(self.filename, newline='\n', encoding='utf-8'), dialect=units())
             for row in staplefile:
-                if len( row ) < 2:
+                if len(row) < 2:
                     self._units[row[0]] = ""
-                    logging.debug( "BMEcat Unit: '{k:s}' mapped to '{v:s}'".format( k = row[0], v = "" ) )
+                    logging.debug("BMEcat Unit: '{k:s}' mapped to '{v:s}'".format(k=row[0], v=""))
                 else:
                     self._units[row[0]] = row[1]
-                    logging.debug( "BMEcat Unit: '{k:s}' mapped to '{v:s}'".format( k = row[0], v = row[1] ) )
+                    logging.debug("BMEcat Unit: '{k:s}' mapped to '{v:s}'".format(k=row[0], v=row[1]))
 
-    def hasKey( self, bmecatUnit ):
-        return bmecatUnit in list( self._units.keys() )
+    def hasKey(self, bmecatUnit):
+        return bmecatUnit in list(self._units.keys())
 
-    def getSIUnit( self, bmecatUnit ):
+    def getSIUnit(self, bmecatUnit):
         return self._units[bmecatUnit]
