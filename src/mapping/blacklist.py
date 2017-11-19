@@ -29,7 +29,7 @@ class Blacklist(object):
             logging.debug(self.filename)
             staplefile = csv.reader(open(self.filename, newline='', encoding='utf-8'), delimiter=';')
             for row in staplefile:
-                if len(row) < 2:
+                if len(row) == 1:
                     self._blacklist.append(row[0])
                     logging.debug("Blacklistentry: '{v:s}'".format(v=row[0]))
                 else:

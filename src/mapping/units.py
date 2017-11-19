@@ -41,7 +41,9 @@ class UnitMapper(object):
             logging.debug(self.filename)
             staplefile = csv.reader(open(self.filename, newline='\n', encoding='utf-8'), dialect=units())
             for row in staplefile:
-                if len(row) < 2:
+                if len(row) == 0:
+                    continue
+                elif len(row) == 1:
                     self._units[row[0]] = ""
                     logging.debug("BMEcat Unit: '{k:s}' mapped to '{v:s}'".format(k=row[0], v=""))
                 else:

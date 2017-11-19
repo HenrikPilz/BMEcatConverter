@@ -105,7 +105,8 @@ class SeparatorTransformer(object):
         lastIndexDot = stringValue.rfind(self._dot)
         lastIndexComma = stringValue.rfind(self._comma)
 
-        if (firstIndexComma < firstIndexDot and firstIndexDot < lastIndexComma) or (firstIndexDot < firstIndexComma and firstIndexComma < lastIndexDot):
+        if (firstIndexComma < firstIndexDot and firstIndexDot < lastIndexComma) or \
+           (firstIndexDot < firstIndexComma and firstIndexComma < lastIndexDot):
             raise SeparatorNotDetectableException("Could not detect Separators.")
 
         distanceCountMin = abs(firstIndexComma - firstIndexDot)

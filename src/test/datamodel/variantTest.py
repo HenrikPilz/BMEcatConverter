@@ -5,6 +5,8 @@ Created on 16.07.2017
 '''
 import unittest
 
+from lxml import etree
+
 from datamodel import Variant
 
 
@@ -31,6 +33,25 @@ class VariantTest(unittest.TestCase):
         variant.value = "10"
         variant.productIdSuffix = "IT"
         variant.validate(True)
+
+    def testEqual(self):
+        variant1 = Variant()
+        self.assertNotEqual(variant1, None, "Variant not equal to None")
+        self.assertNotEqual(variant1, "", "Variant not equal to str")
+
+        variant2 = Variant()
+
+        self.assertEqual(variant1, variant2, "Empty Variants should be equal")
+        self.assertTrue(variant1 == variant2, "Empty Variants should be equal via '==")
+        self.assertFalse(variant1 != variant2, "Empty Variants should not be nonequal via '!='")
+
+    def testToXML(self):
+        variant = Variant()
+        variant.value = "10"
+        variant.productIdSuffix = "IT"
+        self.assertEqual(etree.tostring(variant.toXml()),
+                         b'<VARIANT><FVALUE>10</FVALUE><SUPPLIER_AID_SUPPLEMENT>IT</SUPPLIER_AID_SUPPLEMENT></VARIANT>',
+                         "XML Output Kaputt")
 
 # if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
