@@ -54,7 +54,8 @@ class ValidatingObject(object):
                     errorMessage = "Item '{0}' could not be added to List '{1}'.".format(attributeValue, attributeName)
                     self.addToListIfValid(attributeValue, attributeList, errorMessage)
                 else:
-                    attributeList.append(attributeValue)
+                    if attributeValue not in attributeList:
+                        attributeList.append(attributeValue)
         except AttributeError as ae:
             logging.error("Klassenattribut nicht gefunden: ", str(ae))
 
