@@ -49,7 +49,12 @@ class ValidatingObject(object):
             if not isinstance(getattr(self, attributeName), (list, array)):
                 setattr(self, attributeName, attributeValue)
             else:
-                getattr(self, attributeName).append(attributeValue)
+                attributeList = getattr(self, attributeName)
+                if isinstance(attributeList, ValidatingObject):
+                    errorMessage = "Item '{0}' could not be added to List '{1}'.".format(attributeValue, attributeName)
+                    self.addToListIfValid(attributeValue, attributeList, errorMessage)
+                else:
+                    attributeList.append(attributeValue)
         except AttributeError as ae:
             logging.error("Klassenattribut nicht gefunden: ", str(ae))
 

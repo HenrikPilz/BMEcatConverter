@@ -54,7 +54,7 @@ class Converter(object):
         t1 = time.clock()
         parser.parse("file:" + self._inputfile)
         t2 = time.clock()
-        print ("Einlesen:")
+        print("Einlesen:")
         self.computeDuration(t1, t2)
         logging.info("Daten eingelesen")
 
@@ -63,7 +63,7 @@ class Converter(object):
         t3 = time.clock()
         exporter.createNewWorkbook()
         t4 = time.clock()
-        print ("Wegschreiben:")
+        print("Wegschreiben:")
         self.computeDuration(t3, t4)
         logging.info("Fertig.")
 
@@ -78,7 +78,7 @@ class Converter(object):
             t1 = time.clock()
             importer.readWorkbook(self._inputfile)
             t2 = time.clock()
-            print ("Einlesen:")
+            print("Einlesen:")
             self.computeDuration(t1, t2)
 
             articles = { 'new' : importer.articles }
@@ -93,7 +93,7 @@ class Converter(object):
             t3 = time.clock()
             exporter.writeBMEcatAsXML()
             t4 = time.clock()
-            print ("Wegschreiben:")
+            print("Wegschreiben:")
             self.computeDuration(t3, t4)
         else:
             raise FileNotFoundError("Datei '{0}' wurde nicht gefunden".format(self._inputfile))
