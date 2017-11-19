@@ -3,7 +3,7 @@
   "checks": {
     "argument-count": {
       "config": {
-        "threshold": "5"
+        "threshold": 5
       }
     }
   }
