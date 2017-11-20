@@ -10,5 +10,5 @@ setup(name='BMEcatConverter',
       package_dir={'' : 'src'},
       requires=['lxml', 'regex', 'openpyxl', 'coverage(==4.3)'],
       py_modules=['main', 'converter', 'argumentParser', 'test_main'],
-      data_files={'documents' : 'documents/*'}
+      data_files={'documents' : 'documents'}
       )
