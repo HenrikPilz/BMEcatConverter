@@ -50,7 +50,7 @@ class ValidatingObject(object):
                 setattr(self, attributeName, attributeValue)
             else:
                 attributeList = getattr(self, attributeName)
-                if isinstance(attributeList, ValidatingObject):
+                if isinstance(attributeValue, ValidatingObject):
                     errorMessage = "Item '{0}' could not be added to List '{1}'.".format(attributeValue, attributeName)
                     self.addToListIfValid(attributeValue, attributeList, errorMessage)
                 else:
