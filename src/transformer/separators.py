@@ -65,15 +65,14 @@ class SeparatorTransformer(object):
     def transform(self, value):
         if value is None:
             return None
+
+        convertedString = str(value).strip()
+
         '''
         transformiert vom gegebenen Ausgangsmodus in die englische Dezimalversion.
         '''
         if self._decimalSeparator is None:
-            self._autodetectSeparators(value)
-
-        convertedString = value
-        if convertedString is not None:
-            convertedString = str(convertedString).strip()
+            self._autodetectSeparators(convertedString)
 
         if self._decimalSeparator is not None:
             self._checkOccurenceOfSeparatorsForSelectedMode(convertedString)
@@ -82,7 +81,7 @@ class SeparatorTransformer(object):
             convertedString = convertedString.replace(";", self._separators[self._destinationEncoding]["decimalSeparator"], 1)
             logging.debug("'{0}'".format(convertedString))
 
-        if convertedString is not None and len(convertedString) > 0 :
+        if len(convertedString) > 0 :
             return float(convertedString)
         else:
             return None

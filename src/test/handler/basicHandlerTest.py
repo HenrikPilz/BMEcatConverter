@@ -22,8 +22,11 @@ class BasicHandlerTest(unittest.TestCase):
         self.assertEqual(article.productId, article2.productId, "Artikelnummer")
         self.assertEqual(article.details.deliveryTime, int(article2.details.deliveryTime), "deliveryTime")
         self.assertEqual(article.details.ean, article2.details.ean, "ean")
-        self.assertEqual(article.details.title, article2.details.title, "title")
-        self.assertEqual(article.details.description, article2.details.description, "description")
+        self.assertEqual(article.details.title.strip(), article2.details.title, "title")
+        if article.details.description is not None:
+            self.assertEqual(article.details.description.replace("\n", "<br>").strip(), article2.details.description, "description")
+        else:
+            self.assertEqual(article.details.description, article2.details.description, "description")
         if article.details.manufacturerArticleId is None and article2.details.manufacturerArticleId is not None:
             self.assertEqual(article.productId, article2.details.manufacturerArticleId, "manufacturerArticleId")
         else:

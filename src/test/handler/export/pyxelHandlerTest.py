@@ -417,6 +417,6 @@ class PyxelHandlerTest(BasicHandlerTest):
         #    self.assertEqual(article.references, article2.references, "references")
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()
+#    unittest.main()

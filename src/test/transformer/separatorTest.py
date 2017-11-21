@@ -78,6 +78,7 @@ class SeparatorTransformerTest(unittest.TestCase):
     def testSeparatorEnglishValid(self):
         for inputValue, validationValue in [
                                 (None, None),
+                                ("", None),
                                 (180, 180),
                                 ("180", 180), (" 180", 180), ("180 ", 180), (" 180 ", 180),
                                 (" 180. ", 180.0),
@@ -89,6 +90,7 @@ class SeparatorTransformerTest(unittest.TestCase):
     def testSeparatorGermanValid(self):
         for inputValue, validationValue in [
                                 (None, None),
+                                ("", None),
                                 (180, 180),
                                 ("180", 180), (" 180", 180), ("180 ", 180), (" 180 ", 180),
                                 (" 180, ", 180.0),
@@ -100,6 +102,7 @@ class SeparatorTransformerTest(unittest.TestCase):
     def testSeparatorAutoDetectValid(self):
         for inputValue, validationValue in [
                                 (None, None),
+                                ("", None),
                                 (180, 180),
                                 ("180", 180), (" 180", 180), ("180 ", 180), (" 180 ", 180),
                                 (" 180. ", 180.0), (" 180, ", 180.0),

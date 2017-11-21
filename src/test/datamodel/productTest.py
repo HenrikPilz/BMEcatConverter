@@ -224,7 +224,7 @@ class ProductTest(unittest.TestCase):
         with self.assertRaisesRegex(Exception, "Der Artikel '[0-9]{5}' hat keine Artikeldetails."):
             product.validate(True)
         # Productdetails
-        product.details = ProductDetails()
+        product.addDetails()
         with self.assertRaisesRegex(Exception, "Ein Artikelname fehlt"):
             product.validate(True)
 
@@ -249,11 +249,9 @@ class ProductTest(unittest.TestCase):
         product.details = ProductDetails()
         product.addTitle("TestTitel")
 
-        orderDetails = OrderDetails()
-        orderDetails.orderUnit = "C62"
-        orderDetails.contentUnit = "C62"
-
-        product.orderDetails = orderDetails
+        product.addOrderDetails()
+        product.orderDetails.orderUnit = "C62"
+        product.orderDetails.contentUnit = "C62"
 
         with self.assertRaisesRegex(Exception, "Der Artikel '[0-9]{5}' hat keine Preisinformationen."):
             product.validate(True)
@@ -283,6 +281,8 @@ class ProductTest(unittest.TestCase):
         price.priceType = "net_customer"
         priceDetails.addPrice(price, True)
         product.addPriceDetails(priceDetails)
+        product.validate(True)
+        product.addOrderDetails()
         product.validate(True)
 
     def testEqual(self):

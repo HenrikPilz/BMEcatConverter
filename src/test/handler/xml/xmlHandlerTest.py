@@ -19,7 +19,7 @@ class xmlHandlerTest(BasicHandlerTest):
         article.productId = '12345'
         article.details = ProductDetails()
         article.details.deliveryTime = 10
-        article.details.description = 'Test Description'
+        article.details.description = 'Test Description\nTest Descirption Line 2   '
         article.details.ean = '12345678901234'
         article.details.keywords = [ 'Keyword 1', 'Keyword 2']
         article.details.manufacturerArticleId = '09876'
@@ -28,7 +28,7 @@ class xmlHandlerTest(BasicHandlerTest):
         tc.classType = 'TestClass'
         tc.value = '12345'
         article.details.specialTreatmentClasses = [ tc ]
-        article.details.title = 'Test Article'
+        article.details.title = '    Test Article    '
         article.details.supplierAltId = '23456'
         reference = Reference()
         reference.referenceType = 'accessory'
