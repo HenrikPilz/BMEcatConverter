@@ -5,7 +5,8 @@ Created on 16.07.2017
 '''
 import unittest
 
-from datamodel import Feature, Variant
+from datamodel import Feature
+from datamodel import Variant
 
 
 class FeatureTest(unittest.TestCase):
@@ -107,6 +108,8 @@ class FeatureTest(unittest.TestCase):
         feature.unit = "MMT"
         feature.addValue("10")
         feature.validate(True)
+        feature.unit = "EU000045"
+        feature.validate(True)
         self.assertEqual(len(feature), 1)
 
     def testValidateVariant(self):
@@ -206,6 +209,30 @@ class FeatureTest(unittest.TestCase):
         self.assertEqual(feature1, feature2, "Two Empty Features should be equal.")
         self.assertTrue(feature1 == feature2, "Empty Feature should be equal to another another via '=='")
         self.assertFalse(feature1 != feature2, "Empty Feature should not be unequal to another another via '!='")
+
+    def testEqualityForSameVariantDifferentOrder(self):
+        feature1 = Feature()
+        feature1.name = "Test"
+        feature1.unit = "EU000045"
+        variant1 = Variant()
+        variant1.value = "10"
+        variant1.productIdSuffix = "IT"
+        feature1.addVariant(variant1)
+        feature1.addVariantOrder(1)
+
+        feature2 = Feature()
+        feature2.name = "Test"
+        feature2.unit = "EU000045"
+        variant1 = Variant()
+        variant1.value = "10"
+        variant1.productIdSuffix = "IT"
+        feature2.addVariant(variant1)
+        feature2.addVariantOrder(2)
+
+        self.assertEqual(feature1, feature2, "Features should be equal.")
+        self.assertTrue(feature1 == feature2, "Features should be equal to another another via '=='")
+        self.assertFalse(feature1 != feature2, "Features should not be unequal to another another via '!='")
+
 
 # if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

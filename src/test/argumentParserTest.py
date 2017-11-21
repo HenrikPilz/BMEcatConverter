@@ -44,6 +44,19 @@ class ArgumentParserTest(unittest.TestCase):
         with self.assertRaisesRegex(MissingArgumentException, "SeparatorMode is missing."):
             argumentParser.parse(argv)
 
+    def testParseArgumentsWithMerchantSetToNone(self):
+        argumentParser = ArgumentParser()
+        argumentParser.merchant = None
+        argv = ['-i', 'test.xml', '-o', 'test.xlsx', '--dateformat="%Y-%m-%d"', '--separators="english"']
+        argv.append('--manufacturer=Test')
+        argumentParser.parse(argv)
+        self.assertEqual(argumentParser.inputfile, "test.xml", "Inputfile nicht richtig gesetzt.")
+        self.assertEqual(argumentParser.outputfile, "test.xlsx", "Outputfile nicht richtig gesetzt.")
+        self.assertEqual(argumentParser.dateformat, '"%Y-%m-%d"', "Dateformat nicht richtig gesetzt.")
+        self.assertEqual(argumentParser.separatorMode, '"english"', "Separatormode nicht richtig gesetzt.")
+        self.assertEqual(argumentParser.manufacturer, "Test", "Manufacturer nicht richtig gesetzt.")
+        self.assertIsNone(argumentParser.merchant, "Merchant nicht richtig gesetzt.")
+
     def testParseArgumentsWithManufacturer(self):
         argumentParser = ArgumentParser()
         argv = ['-i', 'test.xml', '-o', 'test.xlsx', '--dateformat="%Y-%m-%d"', '--separators="english"']
@@ -54,6 +67,7 @@ class ArgumentParserTest(unittest.TestCase):
         self.assertEqual(argumentParser.dateformat, '"%Y-%m-%d"', "Dateformat nicht richtig gesetzt.")
         self.assertEqual(argumentParser.separatorMode, '"english"', "Separatormode nicht richtig gesetzt.")
         self.assertEqual(argumentParser.manufacturer, "Test", "Manufacturer nicht richtig gesetzt.")
+        self.assertEqual(argumentParser.merchant, "fiege", "Merchant nicht richtig gesetzt.")
 
     def testParseArgumentsWithMerchant(self):
         argumentParser = ArgumentParser()
@@ -64,6 +78,7 @@ class ArgumentParserTest(unittest.TestCase):
         self.assertEqual(argumentParser.outputfile, "test.xlsx", "Outputfile nicht richtig gesetzt.")
         self.assertEqual(argumentParser.dateformat, '"%Y-%m-%d"', "Dateformat nicht richtig gesetzt.")
         self.assertEqual(argumentParser.separatorMode, '"english"', "Separatormode nicht richtig gesetzt.")
+        self.assertIsNone(argumentParser.manufacturer, "Manufacturer nicht richtig gesetzt.")
         self.assertEqual(argumentParser.merchant, "Test", "Merchant nicht richtig gesetzt.")
 
 

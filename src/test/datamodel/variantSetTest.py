@@ -70,6 +70,22 @@ class VariantSetTest(unittest.TestCase):
         self.assertTrue(variantSet1 == variantSet2, "Empty VariantSets should be equal via '==")
         self.assertFalse(variantSet1 != variantSet2, "Empty VariantSets should not be nonequal via '!='")
 
+        variantSet1.order = 1
+        variant = Variant()
+        variant.value = 1
+        variant.productIdSuffix = "IT"
+        variantSet1.addVariant(variant)
+
+        variantSet2.order = 2
+        variant = Variant()
+        variant.value = 1
+        variant.productIdSuffix = "IT"
+        variantSet2.addVariant(variant)
+
+        self.assertEqual(variantSet1, variantSet2, "Empty VariantSets should be equal")
+        self.assertTrue(variantSet1 == variantSet2, "Empty VariantSets should be equal via '==")
+        self.assertFalse(variantSet1 != variantSet2, "Empty VariantSets should not be nonequal via '!='")
+
     def testToXML(self):
         variantSet = VariantSet()
         variantSet.order = 1

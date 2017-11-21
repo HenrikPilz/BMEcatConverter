@@ -43,19 +43,6 @@ class SeparatorTransformerTest(unittest.TestCase):
                                 ("18,00.01", "Could not detect Separators.")]:
             self._transformRaiseException(inputValue, SeparatorNotDetectableException, exceptionMessage)
 
-    def testSeparatorAutoDetectValid(self):
-        for inputValue, validationValue in [
-                                (None, None),
-                                (180, 180),
-                                ("180", 180), (" 180", 180), ("180 ", 180), (" 180 ", 180),
-                                (" 180. ", 180.0), (" 180, ", 180.0),
-                                ("180.01", 180.01), ("180,01", 180.01),
-                                ("180.001", 180.001), ("180,001", 180.001),
-                                ("180.0001", 180.0001), ("180,0001", 180.0001),
-                                ("18,000.01", 18000.01), ("18.000,01", 18000.01),
-                                ("1,918,000.01", 1918000.01), ("1.918.000,01", 1918000.01)]:
-            self._transformAutoDetect(inputValue, validationValue)
-
     def testSeparatorEnglishException(self):
         for inputValue in [ " 180, ",
                             "180,0001",
@@ -72,26 +59,6 @@ class SeparatorTransformerTest(unittest.TestCase):
             exceptionMessage = "Das Format '{0}' stimmmt nicht mit den gewählten Separatoren überein.".format(str(inputValue).strip())
             self._transformRaiseException(inputValue, NumberFormatException, exceptionMessage, "english")
 
-    def testSeparatorEnglishValid(self):
-        for inputValue, validationValue in [
-                                (180, 180),
-                                ("180", 180), (" 180", 180), ("180 ", 180), (" 180 ", 180),
-                                (" 180. ", 180.0),
-                                ("180.0001", 180.0001),
-                                ("18,000.01", 18000.01),
-                                ("1,918,000.01", 1918000.01)]:
-            self._transformEnglish(inputValue, validationValue)
-
-    def testSeparatorGermanValid(self):
-        for inputValue, validationValue in [
-                                (180, 180),
-                                ("180", 180), (" 180", 180), ("180 ", 180), (" 180 ", 180),
-                                (" 180, ", 180.0),
-                                ("180,0001", 180.0001),
-                                ("18.000,01", 18000.01),
-                                ("1.918.000,01", 1918000.01)]:
-            self._transformGerman(inputValue, validationValue)
-
     def testSeparatorGermanException(self):
         for inputValue in [ " 180. ",
                             "180.0001",
@@ -107,6 +74,41 @@ class SeparatorTransformerTest(unittest.TestCase):
                             "19,180.00.01"]:
             exceptionMessage = "Das Format '{0}' stimmmt nicht mit den gewählten Separatoren überein.".format(str(inputValue).strip())
             self._transformRaiseException(inputValue, NumberFormatException, exceptionMessage, "german")
+
+    def testSeparatorEnglishValid(self):
+        for inputValue, validationValue in [
+                                (None, None),
+                                (180, 180),
+                                ("180", 180), (" 180", 180), ("180 ", 180), (" 180 ", 180),
+                                (" 180. ", 180.0),
+                                ("180.0001", 180.0001),
+                                ("18,000.01", 18000.01),
+                                ("1,918,000.01", 1918000.01)]:
+            self._transformEnglish(inputValue, validationValue)
+
+    def testSeparatorGermanValid(self):
+        for inputValue, validationValue in [
+                                (None, None),
+                                (180, 180),
+                                ("180", 180), (" 180", 180), ("180 ", 180), (" 180 ", 180),
+                                (" 180, ", 180.0),
+                                ("180,0001", 180.0001),
+                                ("18.000,01", 18000.01),
+                                ("1.918.000,01", 1918000.01)]:
+            self._transformGerman(inputValue, validationValue)
+
+    def testSeparatorAutoDetectValid(self):
+        for inputValue, validationValue in [
+                                (None, None),
+                                (180, 180),
+                                ("180", 180), (" 180", 180), ("180 ", 180), (" 180 ", 180),
+                                (" 180. ", 180.0), (" 180, ", 180.0),
+                                ("180.01", 180.01), ("180,01", 180.01),
+                                ("180.001", 180.001), ("180,001", 180.001),
+                                ("180.0001", 180.0001), ("180,0001", 180.0001),
+                                ("18,000.01", 18000.01), ("18.000,01", 18000.01),
+                                ("1,918,000.01", 1918000.01), ("1.918.000,01", 1918000.01)]:
+            self._transformAutoDetect(inputValue, validationValue)
 
     def _transformAutoDetect(self, inputValue, validationValue):
         self._transform(inputValue, validationValue)

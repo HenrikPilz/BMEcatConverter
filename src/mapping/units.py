@@ -39,16 +39,17 @@ class UnitMapper(object):
         if self.filename:
             logging.debug(os.getcwd())
             logging.debug(self.filename)
-            staplefile = csv.reader(open(self.filename, newline='\n', encoding='utf-8'), dialect=units())
-            for row in staplefile:
-                if len(row) == 0:
-                    continue
-                elif len(row) == 1:
-                    self._units[row[0]] = ""
-                    logging.debug("BMEcat Unit: '{k:s}' mapped to '{v:s}'".format(k=row[0], v=""))
-                else:
-                    self._units[row[0]] = row[1]
-                    logging.debug("BMEcat Unit: '{k:s}' mapped to '{v:s}'".format(k=row[0], v=row[1]))
+            with open(self.filename, newline='\n', encoding='utf-8') as unitFile:
+                unitFileReader = csv.reader(unitFile, dialect=units())
+                for row in unitFileReader:
+                    if len(row) == 0:
+                        continue
+                    elif len(row) == 1:
+                        self._units[row[0]] = ""
+                        logging.debug("BMEcat Unit: '{k:s}' mapped to '{v:s}'".format(k=row[0], v=""))
+                    else:
+                        self._units[row[0]] = row[1]
+                        logging.debug("BMEcat Unit: '{k:s}' mapped to '{v:s}'".format(k=row[0], v=row[1]))
 
     def hasKey(self, bmecatUnit):
         return bmecatUnit in list(self._units.keys())

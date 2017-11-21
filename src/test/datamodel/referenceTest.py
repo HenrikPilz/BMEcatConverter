@@ -5,6 +5,8 @@ Created on 16.07.2017
 '''
 import unittest
 
+from lxml import etree
+
 from datamodel import Mime, Reference
 
 
@@ -102,6 +104,16 @@ class ReferenceTest(unittest.TestCase):
         mime.mimeType = "image/jpeg"
         reference.addMime(mime)
         reference.validate(True)
+
+    def testXmlConsistsOf(self):
+        reference = Reference()
+        reference.referenceType = "consists_of"
+        reference.quantity = 1
+        reference.addSupplierArticleId("Test")
+
+        self.assertEqual(etree.tostring(reference.toXml()),
+                         b'<ARTICLE_REFERENCE quantity="1" type="consists_of"><ART_ID_TO>Test</ART_ID_TO></ARTICLE_REFERENCE>',
+                         "XML Ouput ist kaputt")
 
 
 # if __name__ == "__main__":

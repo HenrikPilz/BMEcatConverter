@@ -63,7 +63,7 @@ class Reference(ValidatingXMLObject, ComparableEqual):
     def toXml(self, raiseExceptionOnValidate=True):
         attributes = { "type" : self.referenceType }
         if self.quantity is not None:
-            attributes["quantity"] = self.quantity
+            attributes["quantity"] = str(int(self.quantity))
         referenceElement = super().validateAndCreateBaseElement("ARTICLE_REFERENCE", attributes, raiseExceptionOnValidate)
         super().addMandatorySubElement(referenceElement, "ART_ID_TO", self.supplierArticleId)
         super().addOptionalSubElement(referenceElement, "CATALOG_ID", self.catalogId)

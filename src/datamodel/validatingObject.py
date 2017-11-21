@@ -45,6 +45,8 @@ class ValidatingObject(object):
     '''
 
     def add(self, attributeName, attributeValue):
+        if attributeValue is None:
+            return
         try:
             if not isinstance(getattr(self, attributeName), (list, array)):
                 setattr(self, attributeName, attributeValue)
@@ -126,6 +128,10 @@ class ValidatingObject(object):
             item.order = 1
         else:
             item.order = int(maxItem.order) + 1
+
+    def valueNotEmptyOrNoneAndNotIn(self, value, errorMessageNone, listToCheck, errorMessageNotIn, raiseException=False):
+        if self.valueNotNoneOrEmpty(value, errorMessageNone, raiseException) and value not in listToCheck:
+            self.logError("{0} Wert: {1}".format(errorMessageNotIn, str(value)), raiseException)
 
 
 class XMLObject(object):

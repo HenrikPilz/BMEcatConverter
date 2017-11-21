@@ -40,12 +40,10 @@ class Mime(ValidatingXMLObject, ComparableEqual):
 
     def validate(self, raiseException=False):
         super().valueNotNone(self.source, "Kein Bildpfad angegeben.", raiseException)
-        self.convertPathToLowerCase()
+        self.__convertPathToLowerCase()
         super().valueNotNone(self.order, "Bildreihenfolge fehlerhaft: " + str(self.order), raiseException)
-        if super().valueNotNone(self.mimeType, "Bildtyp nicht gesetzt.", raiseException) and self.mimeType not in Mime.__allowedTypes:
-            super().logError("Bildtyp fehlerhaft: " + str(self.mimeType), raiseException)
-        if super().valueNotNone(self.purpose, "Bildverwendung nicht gesetzt.", raiseException) and self.purpose not in Mime.__allowedPurposes:
-            super().logError("Bildverwendung fehlerhaft: " + str(self.purpose), raiseException)
+        super().valueNotEmptyOrNoneAndNotIn(self.mimeType, "Bildtyp nicht gesetzt.", self.__allowedTypes, "Bildtyp fehlerhaft.", raiseException)
+        super().valueNotEmptyOrNoneAndNotIn(self.purpose, "Bildverwendung nicht gesetzt.", self.__allowedPurposes, "Bildverwendung fehlerhaft.", raiseException)
 
     def toXml(self, raiseExceptionOnValidate=True):
         mimeElement = super().validateAndCreateBaseElement("MIME", raiseExceptionOnValidate=raiseExceptionOnValidate)
@@ -57,7 +55,7 @@ class Mime(ValidatingXMLObject, ComparableEqual):
         super().addOptionalSubElement(mimeElement, "MIME_ALT", self.altenativeContent)
         return mimeElement
 
-    def convertPathToLowerCase(self):
+    def __convertPathToLowerCase(self):
         '''
         Entfernt '/' und Leerzeichen im Pfad, aber NICHT im Dateinamen.
         Erzwingt eine Kleinschreibung aller Pfadbestandteile, bis auf den Dateinamen.

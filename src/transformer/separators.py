@@ -63,6 +63,8 @@ class SeparatorTransformer(object):
             self._thousandSeparator = None
 
     def transform(self, value):
+        if value is None:
+            return None
         '''
         transformiert vom gegebenen Ausgangsmodus in die englische Dezimalversion.
         '''

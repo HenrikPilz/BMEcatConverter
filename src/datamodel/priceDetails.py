@@ -33,7 +33,7 @@ class PriceDetails(ValidatingXMLObject, ComparableEqual):
     def validate(self, raiseException=False):
         super().valueNotNoneOrEmpty(self.prices, "Keine Preisangaben hinterlegt.", raiseException)
 
-        if self.validFrom is not None and self.validTo is not None and self.validFrom > self.validTo:
+        if self.validFrom is not None and self.validTo is not None and self.validFrom >= self.validTo:
             logging.warning("Zeitspanne nicht gueltig.")
         if self.dailyPrice:
             super().logError("Tagespreis hinterlegt!", raiseException)

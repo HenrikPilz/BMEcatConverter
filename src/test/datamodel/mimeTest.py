@@ -42,7 +42,7 @@ class MimeTest(unittest.TestCase):
         mime.source = "Test"
         mime.order = 1
         mime.mimeType = "Test"
-        with self.assertRaisesRegex(Exception, "Bildtyp fehlerhaft: Test"):
+        with self.assertRaisesRegex(Exception, "Bildtyp fehlerhaft. Wert: Test"):
             mime.validate(True)
 
     def testValidateExceptionNoPurpose(self):
@@ -59,7 +59,7 @@ class MimeTest(unittest.TestCase):
         mime.order = 1
         mime.mimeType = "image/jpg"
         mime.purpose = "TEST"
-        with self.assertRaisesRegex(Exception, "Bildverwendung fehlerhaft: TEST"):
+        with self.assertRaisesRegex(Exception, "Bildverwendung fehlerhaft. Wert: TEST"):
             mime.validate(True)
 
     def testValidate(self):

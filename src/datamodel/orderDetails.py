@@ -38,11 +38,11 @@ class OrderDetails(ValidatingXMLObject, ComparableEqual):
             return unitsEqual and orderUnitValuesEqual and priceQuantityEqual and packingQuantityEqual
 
     def validate(self, raiseException=False):
-        if super().valueNotNoneOrEmpty(self.orderUnit, "Keine Bestelleinheit angeben.", raiseException) and self.orderUnit not in self.__allowedOrderUnits:
-            super().logError("Falsche Bestelleinheit angeben: " + str(self.orderUnit), raiseException)
-        if super().valueNotNoneOrEmpty(self.contentUnit, "Keine Verpackungseinheit angeben.", raiseException) and \
-           self.contentUnit not in self.__allowedContentUnits:
-            super().logError("Falsche Verpackungseinheit angeben: " + str(self.contentUnit), raiseException)
+        super().valueNotEmptyOrNoneAndNotIn(self.orderUnit, "Keine Bestelleinheit angeben.",
+                                            self.__allowedOrderUnits, "Falsche Bestelleinheit angeben.", raiseException)
+        super().valueNotEmptyOrNoneAndNotIn(self.contentUnit, "Keine Verpackungseinheit angeben.",
+                                            self.__allowedContentUnits, "Falsche Verpackungseinheit angeben.", raiseException)
+
         if float(self.quantityMin) != float(self.quantityInterval):
             logging.info("Mindestbestellmenge und Bestellintervall sollten gleich sein.")
         if float(self.packingQuantity) > 1 and float(self.quantityMin) > 1:

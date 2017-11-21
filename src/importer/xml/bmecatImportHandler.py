@@ -20,6 +20,7 @@ from datamodel import TreatmentClass
 from datamodel import Variant
 from mapping import Blacklist
 from transformer import SeparatorTransformer
+from datamodel.validatingObject import ValidatingObject
 
 
 class BMEcatImportHandler(handler.ContentHandler):
@@ -67,7 +68,6 @@ class BMEcatImportHandler(handler.ContentHandler):
 
     ''' alle registrierten EndElementhandler '''
     __endElementHandler = {
-                "article_features" : "saveFeatureSet",
                 "feature" : "saveFeature",
                 "article" : "saveProduct",
                 "mime_info" : "endMimeInfo",
@@ -117,14 +117,15 @@ class BMEcatImportHandler(handler.ContentHandler):
                 "variants" : "saveFeatureVariantSet",
                 "vorder" : "addFeatureVariantSetOrder",
                 "variant" : "addFeatureVariant",
+                "article_features" : "saveFeatureSet",
                 "special_treatment_class" : "saveTreatmentClass",
                 "catalog_group_system" : "_resetAll",
                 "article_reference" : "saveReference",
                 "art_id_to" : "addReferenceArticleId",
                 "reference_descr" : "addReferenceDescription",
                 "supplier_aid_supplement" : "addFeatureVariantProductIdSuffix",
-                "reference_feature_system_name" : "addFeatureSetReferenceSystem",
-                "reference_feature_group_id" : "addFeatureSetReferenceGroupId"}
+                "reference_feature_system_name" : ("_addAttributeToCurrentFeatureSet", "referenceSystemName", False),
+                "reference_feature_group_id" : ("_addAttributeToCurrentFeatureSet", "referenceGroupId", False) }
 
     __baseDirectory = os.path.join(os.path.dirname(__file__), "..", "..", "..", "documents", "BMEcat", "version")
     __featureSetBlacklist = Blacklist(os.path.join(__baseDirectory, "FeatureSetBlacklist.csv"))
@@ -391,47 +392,58 @@ class BMEcatImportHandler(handler.ContentHandler):
 
     ''' Referenz speichern'''
     def saveReference(self, attrs=None):
-        self.__currentArticle.addReference(self.__currentReference)
+        self.save(self.__currentReference, self.__currentArticle, "references")
+        # self.__currentArticle.addReference(self.__currentReference)
         self.__currentReference = None
         self.__currentElement = None
 
     ''' ---------------------------------------------------------------------'''
-    def _addAttributeToCurrentArticle(self, attrName, raiseException):
+    ''' Erstellen '''
+    def create(self, typeToCreate, referenceToSet, setCurrentElement=False):
+        self._raiseExceptionIfNotNone(referenceToSet,
+                                      "Fehler im BMEcat: Neues Bild soll erstellt werden. Es wird schon ein Bild verarbeitet.")
+        referenceToSet = typeToCreate()
+        if setCurrentElement:
+            self.__currentElement = referenceToSet
+
+    ''' speichern '''
+    def save(self, elementToBeSaved, elementToSaveAt, attributeName):
+        if not isinstance(elementToSaveAt, ValidatingObject):
+            logging.warning("'{0}' konnte nicht gespeichert werden.".format(elementToBeSaved.__class__.__name__))
+        else:
+            elementToSaveAt.add(attributeName, elementToBeSaved)
+
+    ''' ---------------------------------------------------------------------'''
+    def _addAttribute(self, elementWithAddMethod, attrName, raiseException):
+        if not isinstance(elementWithAddMethod, ValidatingObject):
+            raise Exception("Could not execute addMethod. No ValidatingObject")
         if raiseException:
-            self._raiseExceptionIfNone(self.__currentArticle, "{0} soll gespeichert werden. Aber es ist kein Artikel vorhanden".format(attrName))
-        logging.debug("Artikel '{0}': {1} ".format(attrName, self.__currentContent))
-        self.__currentArticle.add(attrName, self.__currentContent)
+            self._raiseExceptionIfNone(elementWithAddMethod,
+                                       "{0} soll gespeichert werden. Aber es ist kein {1} vorhanden.".format(attrName, elementWithAddMethod.__class__.__name__))
+        elementWithAddMethod.add(attrName, self.__currentContent)
+        logging.debug("Artikel '{0}': {1} ".format(attrName, self.__currentArticle.productId))
+
+    def _addAttributeToCurrentArticle(self, attrName, raiseException):
+        self._addAttribute(self.__currentArticle, attrName, raiseException)
 
     def _addAttributeToCurrentArticleDetails(self, attrName, raiseException):
         self.__currentArticle.addDetails()
-        if raiseException:
-            self._raiseExceptionIfNone(self.__currentArticle,
-                                       "{0} soll in den Artikeldetails gespeichert werden. Aber es wurde kein Wert übergeben".format(attrName))
-        self.__currentArticle.details.add(attrName, self.__currentContent)
+        self._addAttribute(self.__currentArticle.details, attrName, raiseException)
 
     def _addAttributeToCurrentArticleOrderDetails(self, attrName, raiseException):
-        if raiseException:
-            self._raiseExceptionIfNone(self.__currentArticle,
-                                       "{0} soll in der Bestellinformationen gespeichert werden. Aber es wurde kein Wert übergeben".format(attrName))
-        self.__currentArticle.orderDetails.add(attrName, self.__currentContent)
+        self._addAttribute(self.__currentArticle.orderDetails, attrName, raiseException)
 
     def _addAttributeToCurrentPrice(self, attrName, raiseException):
-        if raiseException:
-            self._raiseExceptionIfNone(self.__currentArticle,
-                                       "{0} soll am Preis gespeichert werden. Aber es wurde kein Wert übergeben".format(attrName))
-        self.__currentPrice.add(attrName, self.__currentContent)
+        self._addAttribute(self.__currentPrice, attrName, raiseException)
 
     def _addAttributeToCurrentMime(self, attrName, raiseException):
-        if raiseException:
-            self._raiseExceptionIfNone(self.__currentArticle,
-                                       "{0} soll am Bild gespeichert werden. Aber es wurde kein Wert übergeben".format(attrName))
-        self.__currentMime.add(attrName, self.__currentContent)
+        self._addAttribute(self.__currentMime, attrName, raiseException)
+
+    def _addAttributeToCurrentFeatureSet(self, attrName, raiseException):
+        self._addAttribute(self.__currentFeatureSet, attrName, raiseException)
 
     def _addAttributeToCurrentFeature(self, attrName, raiseException):
-        if raiseException:
-            self._raiseExceptionIfNone(self.__currentArticle,
-                                       "{0} soll am Attribut gespeichert werden. Aber es wurde kein Wert übergeben".format(attrName))
-        self.__currentFeature.add(attrName, self.__currentContent)
+        self._addAttribute(self.__currentFeature, attrName, raiseException)
 
     ''' ---------------------------------------------------------------------'''
     ''' Referenz ID speichern'''

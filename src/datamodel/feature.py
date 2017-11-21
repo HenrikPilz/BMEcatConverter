@@ -73,25 +73,18 @@ class Feature(ValidatingXMLObject, ComparableEqual):
         """
         Validiert, ob der übergebene Wert nicht leer ist und fügt ihn zur Liste der Values hinzu, falls das der Fall ist.
         """
-        valueNotEmpty = super().valueNotNoneOrEmpty(value, "Kein Wert übergeben.", False)
-        if valueNotEmpty and value not in self.values:
-            if type(value) is str:
-                self.values.append(value)
-            else:
-                self.values.append(value)
+        self.add("values", value)
 
     def addVariantSet(self):
         if self.variants is None:
             self.variants = VariantSet()
 
     def addVariantOrder(self, order):
-        if self.variants is None:
-            self.variants = VariantSet()
+        self.addVariantSet()
         self.variants.order = order
 
     def addVariant(self, variant):
-        if self.variants is None:
-            self.variants = VariantSet()
+        self.addVariantSet()
         self.variants.addVariant(variant)
 
     def hasVariants(self):
@@ -108,6 +101,6 @@ class Feature(ValidatingXMLObject, ComparableEqual):
         if len(self.values) > 0:
             for value in self.values:
                 super().addMandatorySubElement(xmlFeature, "FVALUE", value)
-        if self.variants is not None:
+        else:
             xmlFeature.append(self.variants.toXml(raiseExceptionOnValidate))
         return xmlFeature

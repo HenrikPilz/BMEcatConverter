@@ -32,7 +32,7 @@ class OrderDetailsTest(unittest.TestCase):
     def testValidateExceptionWrongOrderUnitSet(self):
         orderDetails = OrderDetails()
         orderDetails.orderUnit = "Bla"
-        with self.assertRaisesRegex(Exception, "Falsche Bestelleinheit angeben: " + str(orderDetails.orderUnit)):
+        with self.assertRaisesRegex(Exception, "Falsche Bestelleinheit angeben. Wert: " + str(orderDetails.orderUnit)):
             orderDetails.validate(True)
 
     def testValidateExceptionNoContentUnitSet(self):
@@ -49,7 +49,7 @@ class OrderDetailsTest(unittest.TestCase):
         orderDetails = OrderDetails()
         orderDetails.orderUnit = "C62"
         orderDetails.contentUnit = "Blubb"
-        with self.assertRaisesRegex(Exception, "Falsche Verpackungseinheit angeben: " + str(orderDetails.contentUnit)):
+        with self.assertRaisesRegex(Exception, "Falsche Verpackungseinheit angeben. Wert: " + str(orderDetails.contentUnit)):
             orderDetails.validate(True)
 
     def testValidate(self):
@@ -68,11 +68,11 @@ class OrderDetailsTest(unittest.TestCase):
 
     def testEqual(self):
         orderDetails1 = OrderDetails()
-        self.assertNotEqual(orderDetails1, "", "Mime should not be equal to str")
+        self.assertNotEqual(orderDetails1, "", "OrderDetails should not be equal to str")
         orderDetails2 = OrderDetails()
-        self.assertEqual(orderDetails1, orderDetails2, "Empty mimes should be equal.")
-        self.assertTrue(orderDetails1 == orderDetails2, "Empty mimes should be equal via '=='.")
-        self.assertFalse(orderDetails1 != orderDetails2, "Empty mimes should not be unequal via '!='.")
+        self.assertEqual(orderDetails1, orderDetails2, "Empty orderDetails should be equal.")
+        self.assertTrue(orderDetails1 == orderDetails2, "Empty orderDetails should be equal via '=='.")
+        self.assertFalse(orderDetails1 != orderDetails2, "Empty orderDetails should not be unequal via '!='.")
 
 # if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

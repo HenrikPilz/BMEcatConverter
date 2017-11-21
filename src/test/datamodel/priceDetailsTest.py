@@ -3,9 +3,13 @@ Created on 16.07.2017
 
 @author: Henrik Pilz
 '''
+from datetime import datetime
 import unittest
 
-from datamodel import PriceDetails, Price
+from lxml import etree
+
+from datamodel import Price
+from datamodel import PriceDetails
 
 
 class PriceDetailsTest(unittest.TestCase):
@@ -77,6 +81,28 @@ class PriceDetailsTest(unittest.TestCase):
         priceDetails.addPrice(price, True)
         priceDetails.validate(True)
 
+    def testValidateWithValidityTimeSlice(self):
+        priceDetails = PriceDetails()
+        priceDetails.validFrom = datetime.strptime("2017-09-22", "%Y-%m-%d")
+        priceDetails.validTo = datetime.strptime("2018-09-21", "%Y-%m-%d")
+
+        price = Price()
+        price.amount = 1
+        price.priceType = "net_customer"
+        priceDetails.addPrice(price, True)
+        priceDetails.validate(True)
+
+    def testValidateWithValidityTimeSliceNotCorrect(self):
+        priceDetails = PriceDetails()
+        priceDetails.validFrom = datetime.strptime("2018-09-22", "%Y-%m-%d")
+        priceDetails.validTo = datetime.strptime("2018-09-21", "%Y-%m-%d")
+
+        price = Price()
+        price.amount = 1
+        price.priceType = "net_customer"
+        priceDetails.addPrice(price, True)
+        priceDetails.validate(True)
+
     def testEqual(self):
         priceDetails1 = PriceDetails()
         self.assertNotEqual(priceDetails1, "", "PriceDetails should not be equal to str")
@@ -100,6 +126,24 @@ class PriceDetailsTest(unittest.TestCase):
         self.assertNotEqual(priceDetails1, priceDetails2, "priceDetails different startingdays should not be equal.")
         priceDetails2.validTo = "2017-08-21"
         self.assertEqual(priceDetails1, priceDetails2, "Same Starting day priceDetails should be equal.")
+
+    def testToXml(self):
+        priceDetails = PriceDetails()
+        priceDetails.validFrom = datetime.strptime("2017-09-22", "%Y-%m-%d")
+        priceDetails.validTo = datetime.strptime("2018-09-21", "%Y-%m-%d")
+
+        price = Price()
+        price.amount = 1
+        price.priceType = "net_customer"
+        priceDetails.addPrice(price, True)
+        self.assertEqual(etree.tostring(priceDetails.toXml()),
+                         b'<ARTICLE_PRICE_DETAILS>' +
+                         b'<DATETIME type="valid_start_date"><DATE>2017-09-22</DATE><TIME>00:00:00</TIME></DATETIME>' +
+                         b'<DATETIME type="valid_end_date"><DATE>2018-09-21</DATE><TIME>00:00:00</TIME></DATETIME>' +
+                         b'<ARTICLE_PRICE price_type="net_customer"><PRICE_AMOUNT>1</PRICE_AMOUNT><PRICE_CURRENCY>EUR</PRICE_CURRENCY>' +
+                         b'<TAX>0.19</TAX><LOWER_BOUND>1</LOWER_BOUND></ARTICLE_PRICE></ARTICLE_PRICE_DETAILS>',
+                         "XML Output Kaputt")
+
 
 # if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
