@@ -205,7 +205,7 @@ class ExcelImporter(object):
         featureSet = FeatureSet()
         self.__addMultipleOrderedObjects(self.__indexPairsForFeatures, featureSet, Feature)
         currentProduct.addFeatureSet(featureSet)
-        currentProduct.validate(True)
+        currentProduct.validate(raiseException=True)
         return currentProduct
 
     def __addMultipleOrderedObjects(self, mapping, objectContainer, typeOfMultiples):

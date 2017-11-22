@@ -24,8 +24,8 @@ class PyxelExporter(object):
     __priceFields = [ "validFrom", "validTo", "priceType", "priceAmount",
                       "priceCurrency", "tax", "priceFactor", "lowerBound" ]
 
-    __mimeFields = [ "mimeType", "mimeSource", "mimeAlt", "mimeDescription",
-                     "mimePurpose", "mimeOrder" ]
+    __mimeFields = [ "mimeType", "mimeSource",  # "mimeAlt",
+                     "mimeDescription", "mimePurpose", "mimeOrder" ]
 
     __attributeFields = [ "attributeName", "attributeValue" ]  # , "attributeUnit" ]
 
@@ -202,7 +202,7 @@ class PyxelExporter(object):
         for mime in mimeInfo:
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(mime.mimeType)
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(mime.source)
-            self.__writeValueToCurrentCellAndIncreaseColumnIndex(mime.altenativeContent)
+            # self.__writeValueToCurrentCellAndIncreaseColumnIndex(mime.altenativeContent)
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(mime.description)
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(mime.purpose)
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(mime.order)
