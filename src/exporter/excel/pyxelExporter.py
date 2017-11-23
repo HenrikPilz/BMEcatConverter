@@ -56,24 +56,17 @@ class PyxelExporter(object):
         for articleSet in self._articles.values():
             self.__countValuesForArticleSet(articleSet)
 
-    def __extractNumberOfPrices(self, priceDetails):
-        numberOfPrices = 0
-        for priceDetailEntry in priceDetails:
-            numberOfPrices += len(priceDetailEntry.prices)
+    def __extractCount(self, entryList):
+        countEntries = 0
+        for entry in entryList:
+            countEntries += len(entry)
 
-        self._maxNumberOfPrices = max(self._maxNumberOfPrices, numberOfPrices)
-
-    def __extractNumberOfFeatures(self, featureSets):
-        numberOfAttributes = 0
-        for featureSet in featureSets:
-            numberOfAttributes += len(featureSet.features)
-
-        self._maxNumberOfAttributes = max(self._maxNumberOfAttributes, numberOfAttributes)
+        return countEntries
 
     def __extractNumbersFromArticle(self, article):
-        self.__extractNumberOfPrices(article.priceDetails)
+        self._maxNumberOfPrices = max(self._maxNumberOfPrices, self.__extractCount(article.priceDetails))
+        self._maxNumberOfAttributes = max(self._maxNumberOfAttributes, self.__extractCount(article.featureSets))
         self._numberOfArticlesProcessed += article.numberOfVariants
-        self.__extractNumberOfFeatures(article.featureSets)
         self._maxNumberOfMimes = max(self._maxNumberOfMimes, len(article.mimeInfo))
         self._maxNumberOfSpecialTreatmentClasses = max(self._maxNumberOfSpecialTreatmentClasses, len(article.details.specialTreatmentClasses))
 
@@ -208,16 +201,17 @@ class PyxelExporter(object):
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(mime.order)
 
     def __getValuesFromFeature(self, feature):
-        cellValue = None
+        cellValue = ""
         for value in feature.values:
-            if cellValue is None:
-                cellValue = value
-            else:
+            if len(cellValue) > 0:
                 cellValue += " | "
-                cellValue += value
-            if feature.unit is not None and feature.unit.strip() != "":
-                cellValue += " " + feature.unit
+            cellValue += self.__joinValueAndUnitIfNecessary(value, feature.unit)
         return cellValue
+
+    def __joinValueAndUnitIfNecessary(self, value, unit):
+        if unit is not None and unit.strip() != "":
+            value = "{0} {1}".format(value, unit)
+        return str(value)
 
     def __writeFeatureSetForArticle(self, features):
         for feature in features:

@@ -63,6 +63,12 @@ class ProductDetails(ValidatingXMLObject, ComparableEqual):
         if self.ean is None or (isinstance(self.ean, str) and self.ean.strip() == ""):
             logging.warning("Keine EAN vorhanden.")
 
+        if self.title is not None:
+            self.title = self.title.replace("\n", " ").strip()
+
+        if self.description is not None:
+            self.description = self.description.replace("\n", "<br>")
+
     def addSpecialTreatmentClass(self, treatmentclass):
         super().addToListIfValid(treatmentclass, self.specialTreatmentClasses, "Keine Treatmentclass übergeben")
 

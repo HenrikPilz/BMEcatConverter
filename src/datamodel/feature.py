@@ -48,6 +48,9 @@ class Feature(ValidatingXMLObject, ComparableEqual):
             return namesEqual and unitsEqual and valuesEqual and variantsAreEqual
 
     def _mapUnitIfNecessary(self):
+        if self.unit is None:
+            return
+        self.unit = self.unit.strip()
         if self.__bmecatUnitMapper.hasKey(self.unit):
             self.unit = self.__bmecatUnitMapper.getSIUnit(self.unit)
         elif self.__etimUnitMapper.hasKey(self.unit):

@@ -194,18 +194,18 @@ class ExcelImporter(object):
     def __createProduct(self):
         currentProduct = Product()
         self.__transferInformationForMapping(self.__indexForProduct, currentProduct)
-        currentProduct.details = ProductDetails()
+        currentProduct.addDetails()
         self.__transferInformationForMapping(self.__indexForProductDetails, currentProduct.details)
-        currentProduct.orderDetails = OrderDetails()
+        currentProduct.addOrderDetails()
         self.__transferInformationForMapping(self.__indexForOrderDetails, currentProduct.orderDetails)
         self.__addMultipleOrderedObjects(self.__indexTuplesForMimes, currentProduct, Mime)
         priceDetails = PriceDetails()
         self.__addMultipleOrderedObjects(self.__indexTuplesForPrices, priceDetails, Price)
-        currentProduct.addPriceDetails(priceDetails)
+        currentProduct.addPriceDetails(priceDetails, raiseException=False)
         featureSet = FeatureSet()
         self.__addMultipleOrderedObjects(self.__indexPairsForFeatures, featureSet, Feature)
         currentProduct.addFeatureSet(featureSet)
-        currentProduct.validate(raiseException=True)
+        currentProduct.validate(raiseException=False)
         return currentProduct
 
     def __addMultipleOrderedObjects(self, mapping, objectContainer, typeOfMultiples):
