@@ -5,6 +5,8 @@ Created on 16.07.2017
 '''
 import unittest
 
+from lxml import etree
+
 from datamodel import Feature
 from datamodel import Variant
 
@@ -232,6 +234,59 @@ class FeatureTest(unittest.TestCase):
         self.assertEqual(feature1, feature2, "Features should be equal.")
         self.assertTrue(feature1 == feature2, "Features should be equal to another another via '=='")
         self.assertFalse(feature1 != feature2, "Features should not be unequal to another another via '!='")
+
+    def testToXMLSingleValueInt(self):
+        feature = Feature()
+        feature.addValue(10)
+        feature.name = "Test"
+        self.assertEqual(etree.tostring(feature.toXml()),
+                         b'<FEATURE><FNAME>Test</FNAME><FVALUE>10</FVALUE></FEATURE>',
+                         "XML Output Kaputt")
+
+    def testToXMLSingleValueFloat(self):
+        feature = Feature()
+        feature.addValue(10.0)
+        feature.name = "Test"
+        self.assertEqual(etree.tostring(feature.toXml()),
+                         b'<FEATURE><FNAME>Test</FNAME><FVALUE>10.0</FVALUE></FEATURE>',
+                         "XML Output Kaputt")
+
+    def testToXMLSingleValueString(self):
+        feature = Feature()
+        feature.addValue("10")
+        feature.name = "Test"
+        self.assertEqual(etree.tostring(feature.toXml()),
+                         b'<FEATURE><FNAME>Test</FNAME><FVALUE>10</FVALUE></FEATURE>',
+                         "XML Output Kaputt")
+
+    def testToXMLMultipleValues(self):
+        feature = Feature()
+        feature.addValue(10)
+        feature.addValue(12)
+        feature.name = "Test"
+        self.assertEqual(etree.tostring(feature.toXml()),
+                         b'<FEATURE><FNAME>Test</FNAME><FVALUE>10</FVALUE><FVALUE>12</FVALUE></FEATURE>',
+                         "XML Output Kaputt")
+
+    def testToXMLMultipleVariants(self):
+        feature = Feature()
+        feature.name = "Test"
+        feature.addVariantOrder(1)
+        variant1 = Variant()
+        variant1.value = "10"
+        variant1.productIdSuffix = "IT"
+        feature.addVariant(variant1)
+        variant2 = Variant()
+        variant2.value = "13"
+        variant2.productIdSuffix = "IU"
+        feature.addVariant(variant2)
+
+        self.assertEqual(etree.tostring(feature.toXml()),
+                         b'<FEATURE><FNAME>Test</FNAME><VARIANTS><VORDER>1</VORDER>' +
+                         b'<VARIANT><FVALUE>10</FVALUE><SUPPLIER_AID_SUPPLEMENT>IT</SUPPLIER_AID_SUPPLEMENT></VARIANT>' +
+                         b'<VARIANT><FVALUE>13</FVALUE><SUPPLIER_AID_SUPPLEMENT>IU</SUPPLIER_AID_SUPPLEMENT></VARIANT>' +
+                         b'</VARIANTS></FEATURE>',
+                         "XML Output Kaputt")
 
 
 # if __name__ == "__main__":

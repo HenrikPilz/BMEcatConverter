@@ -119,6 +119,30 @@ class xmlHandlerTest(BasicHandlerTest):
 
         self.runAndCheck(article, 'testCreateBMEcatMinimumDataPlusKeywords.xml')
 
+    def testCreateBMEcatMinimumDataFloatDescription(self):
+        article = Product()
+        article.productId = '12345'
+        article.details = ProductDetails()
+        article.details.title = 'Test Article'
+        article.details.description = 123.567
+        article.orderDetails = OrderDetails()
+        article.orderDetails.contentUnit = 'C62'
+        article.orderDetails.orderUnit = 'C62'
+        article.orderDetails.packingQuantity = 25
+        article.orderDetails.priceQuantity = 100
+        article.orderDetails.quantityMin = 4
+        article.orderDetails.quantityInterval = 1
+
+        priceDetails = PriceDetails()
+        price = Price()
+        price.amount = 10.50
+        price.priceType = 'net_customer'
+        price.lowerBound = 1
+        price.tax = 0.19
+        priceDetails.addPrice(price)
+        article.addPriceDetails(priceDetails)
+        self.runAndCheck(article, 'testCreateBMEcatMinimumDataFloatDescription.xml')
+
     def testCreateBMEcatMinimumData(self):
         article = Product()
         article.productId = '12345'

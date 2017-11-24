@@ -18,9 +18,9 @@ from datamodel import Product
 from datamodel import Reference
 from datamodel import TreatmentClass
 from datamodel import Variant
+from datamodel.validatingObject import ValidatingObject
 from mapping import Blacklist
 from transformer import SeparatorTransformer
-from datamodel.validatingObject import ValidatingObject
 
 
 class BMEcatImportHandler(handler.ContentHandler):
@@ -421,7 +421,8 @@ class BMEcatImportHandler(handler.ContentHandler):
             self._raiseExceptionIfNone(elementWithAddMethod,
                                        "{0} soll gespeichert werden. Aber es ist kein {1} vorhanden.".format(attrName, elementWithAddMethod.__class__.__name__))
         elementWithAddMethod.add(attrName, self.__currentContent)
-        logging.debug("Artikel '{0}': {1} ".format(attrName, self.__currentArticle.productId))
+        if self.__currentArticle is not None:
+            logging.debug("Artikel '{0}': {1} ".format(attrName, self.__currentArticle.productId))
 
     def _addAttributeToCurrentArticle(self, attrName, raiseException):
         self._addAttribute(self.__currentArticle, attrName, raiseException)
