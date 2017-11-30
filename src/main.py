@@ -14,9 +14,6 @@ from converter import ConversionModeException
 from converter import Converter
 
 
-loggingLevel = logging.INFO
-
-
 def printHelp():
     """
     Hilfe ausgeben
@@ -68,7 +65,7 @@ def createFileLoggingHandler(logfilename, logLevel=logging.DEBUG,
     return logFileHandler
 
 
-def configureStdoutLogging():
+def configureStdoutLogging(logLevel=logging.DEBUG):
     '''
     setUp Logging for Console
     '''
@@ -76,15 +73,20 @@ def configureStdoutLogging():
     ''' Console out '''
     stdOutHandler = logging.StreamHandler(sys.stdout)
     stdOutHandler.setFormatter(frmStdOut)
-    stdOutHandler.setLevel(loggingLevel)
+    stdOutHandler.setLevel(logLevel)
     return stdOutHandler
 
 
 def setUpLogging():
+    loggingLevel = logging.INFO
     '''
     setUp Logging for File and Console
     '''
     logger = logging.getLogger()
+
+    if logger.hasHandlers():
+        for handler in logger.handlers:
+            logger.removeHandler(handler)
 
     # Debug Log File
     fmt = '%(levelname)7s - [%(filename)20s:%(lineno)s - %(funcName)20s()]: %(message)s'
