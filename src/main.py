@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+from urllib.error import URLError
 import getopt
 import logging
 import os
@@ -102,16 +103,16 @@ def setUpLogging():
     logger.setLevel(loggingLevel)
 
 
-if __name__ == '__main__':
+def main(argv):
     # Loging einstgellen: zwei Outputdateien plus Konsole
     setUpLogging()
 
-    logging.debug('Number of arguments:', len(sys.argv), 'arguments.')
-    logging.debug('Argument List:', str(sys.argv))
+    logging.debug('Number of arguments:', len(argv), 'arguments.')
+    logging.debug('Argument List:', str(argv))
+    print('Argument List:', str(argv))
     t1 = time.clock()
 
     try:
-        argv = sys.argv[1:]
         argumentParser = ArgumentParser()
         argumentParser.parse(argv)
         config = {
@@ -126,6 +127,9 @@ if __name__ == '__main__':
         converter.convert()
     except FileNotFoundError as fnfe:
         print("Dateiname konnte nicht gefunden werden: ", str(fnfe))
+        sys.exit(5)
+    except URLError as ue:
+        print("Dateiname konnte nicht gefunden werden: ", str(ue))
         sys.exit(5)
     except HelpCalledException:
         printHelp()
@@ -148,3 +152,7 @@ if __name__ == '__main__':
         print('Duration in seconds: ', (t2 - t1))
     else:
         print('Duration in minutes: ', (t2 - t1) / 60)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])

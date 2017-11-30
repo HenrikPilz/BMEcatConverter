@@ -59,6 +59,8 @@ class SeparatorTransformer(object):
         if sourceEncoding in self._separators.keys():
             self._setSeparators(sourceEncoding)
         else:
+            logging.warning("Das Erkennen des Dezimaltrennzeichens und des Tausendertrennzeichens wurde nicht übergeben und wird automatisch ermittelt." +
+                            " Dies kann zu Problemen führen.")
             self._decimalSeparator = None
             self._thousandSeparator = None
 

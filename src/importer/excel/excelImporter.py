@@ -12,12 +12,11 @@ import regex
 from datamodel import Feature
 from datamodel import FeatureSet
 from datamodel import Mime
-from datamodel import OrderDetails
 from datamodel import Price
 from datamodel import PriceDetails
 from datamodel import Product
-from datamodel import ProductDetails
 from transformer import SeparatorTransformer
+from transformer.separators import NumberFormatException
 
 
 class ExcelImporter(object):
@@ -222,6 +221,9 @@ class ExcelImporter(object):
                     if fieldname in self.__fieldsToTransform:
                         value = self._separatorTransformer.transform(value)
                     itemsToAddByOrder[order].add(fieldname, value)
+                except NumberFormatException as e:
+                    raise NumberFormatException("Zeile: {0}/Spalte {1}; '{2}{4}' Fehler: {3}".format(self.__currentRowIndex, colIndex,
+                                                                                                     fieldname, str(e), order))
                 except Exception as e:
                     raise Exception("Zeile: {0}/Spalte {1}; '{2}{4}' Fehler: {3}".format(self.__currentRowIndex, colIndex, fieldname, str(e), order))
 

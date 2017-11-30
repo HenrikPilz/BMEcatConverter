@@ -16,6 +16,12 @@ class NoValueGivenException(Exception):
     '''
 
 
+class FormulaFoundException(Exception):
+    '''
+    Exception thrown if an excel formula entry is found.
+    '''
+
+
 class ComparableEqual(object):
     '''
     Interface Class for a Class which are comparable
@@ -132,6 +138,19 @@ class ValidatingObject(object):
     def valueNotEmptyOrNoneAndNotIn(self, value, errorMessageNone, listToCheck, errorMessageNotIn, raiseException=False):
         if self.valueNotNoneOrEmpty(value, errorMessageNone, raiseException) and value not in listToCheck:
             self.logError("{0} Wert: {1}".format(errorMessageNotIn, str(value)), raiseException)
+
+    def checkAttributesForFormulas(self, listOfAttributeNames):
+        for attributeName in listOfAttributeNames:
+            value = self.__getattribute__(attributeName)
+            if isinstance(value, (array, list)):
+                for entry in value:
+                    self.__checkValueForFormulaEntry(entry, attributeName)
+            else:
+                self.__checkValueForFormulaEntry(value, attributeName)
+
+    def __checkValueForFormulaEntry(self, value, attributeName):
+        if str(value).startswith("="):
+            raise FormulaFoundException("Im Objekt vom Typ '{0}' wurde im Feld {1} ein Formeleintrag gefunden.".format(self.__class__.__name, attributeName))
 
 
 class XMLObject(object):

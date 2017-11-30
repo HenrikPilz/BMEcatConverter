@@ -44,6 +44,7 @@ class Mime(ValidatingXMLObject, ComparableEqual):
         super().valueNotNone(self.order, "Bildreihenfolge fehlerhaft: " + str(self.order), raiseException)
         super().valueNotEmptyOrNoneAndNotIn(self.mimeType, "Bildtyp nicht gesetzt.", self.__allowedTypes, "Bildtyp fehlerhaft.", raiseException)
         super().valueNotEmptyOrNoneAndNotIn(self.purpose, "Bildverwendung nicht gesetzt.", self.__allowedPurposes, "Bildverwendung fehlerhaft.", raiseException)
+        self.checkAttributesForFormulas(['source', 'order', 'mimeType', 'purpose', 'description'])
 
     def toXml(self, raiseExceptionOnValidate=True):
         mimeElement = super().validateAndCreateBaseElement("MIME", raiseExceptionOnValidate=raiseExceptionOnValidate)

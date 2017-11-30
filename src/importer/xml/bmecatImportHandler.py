@@ -131,6 +131,8 @@ class BMEcatImportHandler(handler.ContentHandler):
     __featureSetBlacklist = Blacklist(os.path.join(__baseDirectory, "FeatureSetBlacklist.csv"))
     __featureBlacklist = Blacklist(os.path.join(__baseDirectory, "FeatureBlacklist.csv"))
 
+    __fieldsToTransform = [ "amount", "tax", "factor"]
+
     ''' Handlernamen fuer das XML-Element ermitteln. '''
     def __determineTagName(self, tag, bOpen):
         name = tag.lower()
@@ -155,8 +157,6 @@ class BMEcatImportHandler(handler.ContentHandler):
     ''' Konstruktor '''
     def __init__(self, dateFormat, separatorTransformer=SeparatorTransformer("detect")):
         self.__dateFormat = dateFormat
-        '''self.__separatorConverter = SeparatorConverter()'''
-
         self._separatorTransformer = separatorTransformer
 
         '''articles by SKU and Product Structure as Value'''
@@ -435,6 +435,8 @@ class BMEcatImportHandler(handler.ContentHandler):
         self._addAttribute(self.__currentArticle.orderDetails, attrName, raiseException)
 
     def _addAttributeToCurrentPrice(self, attrName, raiseException):
+        if attrName in self.__fieldsToTransform:
+            self.__currentContent = self. _separatorTransformer.transform(self.__currentContent)
         self._addAttribute(self.__currentPrice, attrName, raiseException)
 
     def _addAttributeToCurrentMime(self, attrName, raiseException):

@@ -22,6 +22,12 @@ class ConversionModeException(Exception):
     '''
 
 
+class DateFormatMissingException(Exception):
+    '''
+    Exception if an argument is Missing
+    '''
+
+
 class Converter(object):
     '''
     classdocs
@@ -42,6 +48,9 @@ class Converter(object):
         '''
         convert XML BMEcat to Excel-File
         '''
+        if self._dateFormat is None or len(self._dateFormat.strip()) == 0:
+            raise DateFormatMissingException("Zum Konvertieren von XML in Excel muss ein Datumsformat angegeben werden.")
+
         parser = make_parser()
 
         importer = BMEcatImportHandler(self._dateFormat, self._separatorTransformer)

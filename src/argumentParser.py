@@ -72,10 +72,6 @@ class ArgumentParser():
             raise MissingArgumentException("Inputfile is missing.")
         if self.outputfile is None:
             raise MissingArgumentException("Outputfile is missing.")
-        if self.dateformat is None:
-            raise MissingArgumentException("Dateformat is missing.")
-        if self.separatorMode is None:
-            raise MissingArgumentException("SeparatorMode is missing.")
 
     def logData(self):
         logging.info("Input file is {0}".format(self.inputfile))

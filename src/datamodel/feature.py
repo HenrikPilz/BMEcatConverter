@@ -71,6 +71,7 @@ class Feature(ValidatingXMLObject, ComparableEqual):
             if hasVariants:
                 self.variants.validate(raiseException)
         self._mapUnitIfNecessary()
+        self.checkAttributesForFormulas(['name', 'order', 'unit', 'values'])
 
     def addValue(self, value):
         """
