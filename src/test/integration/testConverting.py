@@ -42,7 +42,6 @@ class TestMainConverter(unittest.TestCase):
         with self.assertRaisesRegex(DateFormatMissingException, "Zum Konvertieren von XML in Excel muss ein Datumsformat angegeben werden."):
             main.main(args)
 
-        testDataPath = os.path.join("../BMEcatConverter", "test_data")
         inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFullDataSeparatorsWrong.xml")
 
         args = ['-i', inputFilePath, '-o', inputFilePath.replace('xml', 'xlsx')]
@@ -95,6 +94,15 @@ class TestMainConverter(unittest.TestCase):
         with self.assertRaises(SystemExit) as cm:
             main.main(args)
         self.assertEqual(cm.exception.code, 2)
+
+    def testRelativePathButFail(self):
+        testDataPath = os.path.join("..", "..", "test_data")
+        inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFullDataSeparatorsWrong.xml")
+
+        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xml', 'xlsx'), '--dateformat="%Y-%m-%d"']
+        with self.assertRaises(SystemExit) as cm:
+            main.main(args)
+        self.assertEqual(cm.exception.code, 5)
 
 # if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

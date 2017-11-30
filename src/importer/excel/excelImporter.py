@@ -220,7 +220,8 @@ class ExcelImporter(object):
                     value = self.__currentSheet.cell(column=colIndex, row=self.__currentRowIndex).value
                     if fieldname in self.__fieldsToTransform:
                         value = self._separatorTransformer.transform(value)
-                    itemsToAddByOrder[order].add(fieldname, value)
+                    if value is not None and len(str(value)) > 0:
+                        itemsToAddByOrder[order].add(fieldname, value)
                 except NumberFormatException as e:
                     raise NumberFormatException("Zeile: {0}/Spalte {1}; '{2}{4}' Fehler: {3}".format(self.__currentRowIndex, colIndex,
                                                                                                      fieldname, str(e), order))
