@@ -6,6 +6,7 @@ Created on 16.07.2017
 import unittest
 
 from datamodel import Mime
+from datamodel.validatingObject import FormulaFoundException
 
 
 class MimeTest(unittest.TestCase):
@@ -60,6 +61,15 @@ class MimeTest(unittest.TestCase):
         mime.mimeType = "image/jpg"
         mime.purpose = "TEST"
         with self.assertRaisesRegex(Exception, "Bildverwendung fehlerhaft. Wert: TEST"):
+            mime.validate(True)
+
+    def testValidateExceptionFormulaFound(self):
+        mime = Mime()
+        mime.source = "=Test"
+        mime.order = 1
+        mime.mimeType = "image/jpg"
+        mime.purpose = "detail"
+        with self.assertRaisesRegex(FormulaFoundException, "Im Objekt vom Typ '.*' wurde im Feld .* ein Formeleintrag gefunden."):
             mime.validate(True)
 
     def testValidate(self):

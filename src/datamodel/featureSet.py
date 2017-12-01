@@ -3,11 +3,19 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
+import logging
+import os
+
 from datamodel.validatingObject import ComparableEqual
 from datamodel.validatingObject import ValidatingXMLObject
+from mapping.blacklist import Blacklist
 
 
 class FeatureSet(ValidatingXMLObject, ComparableEqual):
+
+    __baseDirectory = os.path.join(os.path.dirname(__file__), "..", "..", "documents", "BMEcat", "version")
+    __featureBlacklist = Blacklist(os.path.join(__baseDirectory, "FeatureBlacklist.csv"))
+
     def __init__(self):
         self.referenceSytem = None
         self.referenceGroupName = None
@@ -21,7 +29,10 @@ class FeatureSet(ValidatingXMLObject, ComparableEqual):
             return super().checkListForEquality(self.features, other.features)
 
     def addFeature(self, feature):
-        self.addToListIfValid(feature, self.features, "Das Attribut enthaelt keine validen Werte. Es wird nicht hinzugefuegt. ")
+        if self.__featureBlacklist.contains(feature.name):
+            logging.info("Attribut wird nicht gespeichert, da es auf der Blacklist ist.")
+        else:
+            self.addToListIfValid(feature, self.features, "Das Attribut enthaelt keine validen Werte. Es wird nicht hinzugefuegt. ")
 
     def validate(self, raiseException=False):
         if self.referenceGroupName is not None and self.referenceGroupId is not None:

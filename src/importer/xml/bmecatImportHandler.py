@@ -127,10 +127,6 @@ class BMEcatImportHandler(handler.ContentHandler):
                 "reference_feature_system_name" : ("_addAttributeToCurrentFeatureSet", "referenceSystemName", False),
                 "reference_feature_group_id" : ("_addAttributeToCurrentFeatureSet", "referenceGroupId", False) }
 
-    __baseDirectory = os.path.join(os.path.dirname(__file__), "..", "..", "..", "documents", "BMEcat", "version")
-    __featureSetBlacklist = Blacklist(os.path.join(__baseDirectory, "FeatureSetBlacklist.csv"))
-    __featureBlacklist = Blacklist(os.path.join(__baseDirectory, "FeatureBlacklist.csv"))
-
     __fieldsToTransform = [ "amount", "tax", "factor"]
 
     ''' Handlernamen fuer das XML-Element ermitteln. '''
@@ -341,23 +337,8 @@ class BMEcatImportHandler(handler.ContentHandler):
     def saveFeatureSet(self, attrs=None):
         self._raiseExceptionIfNone(self.__currentArticle,
                                    "Attributset soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        if len(self.__currentFeatureSet) < 1:
-            logging.info("Attributset wird nicht gespeichert, da kein Attribute enthalten sind.")
-        elif self.__featureSetBlacklist.contains(self.__currentFeatureSet.referenceSytem):
-            logging.info("Attributset wird nicht gespeichert, da es auf der Blacklist ist.")
-        else:
-            self.__currentArticle.addFeatureSet(self.__currentFeatureSet)
+        self.__currentArticle.addFeatureSet(self.__currentFeatureSet)
         self.__currentFeatureSet = None
-
-    def addFeatureSetReferenceSystem(self, attrs=None):
-        self._raiseExceptionIfNone(self.__currentFeatureSet,
-                                   "Referenzsystem soll gesetzt werden. Aber es ist kein Attributset vorhanden")
-        self.__currentFeatureSet.referenceSytem = self.__currentContent
-
-    def addFeatureSetReferenceGroupId(self, attrs=None):
-        self._raiseExceptionIfNone(self.__currentFeatureSet,
-                                   "Gruppen ID soll gesetzt werden. Aber es ist kein Attributset vorhanden")
-        self.__currentFeatureSet.referenceGroupId = self.__currentContent
 
     ''' ---------------------------------------------------------------------'''
     def createFeature(self, attrs=None):
@@ -368,10 +349,7 @@ class BMEcatImportHandler(handler.ContentHandler):
 
     def saveFeature(self, attrs=None):
         self._raiseExceptionIfNone(self.__currentFeatureSet, "Attribut soll gespeichert werden. Aber es ist kein Attributset vorhanden")
-        if self.__featureBlacklist.contains(self.__currentFeature.name):
-            logging.info("Attribut wird nicht gespeichert, da es auf der Blacklist ist.")
-        else:
-            self.__currentFeatureSet.addFeature(self.__currentFeature)
+        self.__currentFeatureSet.addFeature(self.__currentFeature)
 
         self.__currentFeature = None
         self.__currentElement = None

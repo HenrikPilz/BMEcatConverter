@@ -150,7 +150,7 @@ class ValidatingObject(object):
 
     def __checkValueForFormulaEntry(self, value, attributeName):
         if str(value).startswith("="):
-            raise FormulaFoundException("Im Objekt vom Typ '{0}' wurde im Feld {1} ein Formeleintrag gefunden.".format(self.__class__.__name, attributeName))
+            raise FormulaFoundException("Im Objekt vom Typ '{0}' wurde im Feld {1} ein Formeleintrag gefunden.".format(self.__class__.__name__, attributeName))
 
 
 class XMLObject(object):

@@ -71,6 +71,13 @@ class FeatureSetTest(unittest.TestCase):
         featureSet.addFeature(feature)
         self.assertEqual(len(featureSet), 0)
 
+        feature = Feature()
+        feature.name = "ItemClass"
+        feature.values = ["AC"]
+        self.assertEqual(len(featureSet), 0)
+        featureSet.addFeature(feature)
+        self.assertEqual(len(featureSet), 0)
+
     def testEqualityOfEmptyAndEqualFeatureSets(self):
         featureSet1 = FeatureSet()
         self.assertNotEqual(featureSet1, None, "FeatureSet not equal to None")

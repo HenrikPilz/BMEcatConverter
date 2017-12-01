@@ -143,6 +143,24 @@ class ProductTest(unittest.TestCase):
         self.assertEqual(len(product.userDefinedExtensions), 0)
         # Aktuell passiert hier noch nichts
 
+    def testAddFeatureSetOnBlacklist(self):
+        # Single Feature, Single Value per Feature
+        product = Product()
+        featureSet = FeatureSet()
+        featureSet.referenceSytem = "PCLASS-6.0"
+        feature = Feature()
+        feature.name = "Name"
+        feature.addValue("Value")
+        featureSet.addFeature(feature)
+        self.assertEqual(len(product.featureSets), 0)
+        product.addFeatureSet(featureSet)
+        self.assertEqual(len(product.featureSets), 0)
+        # Leerer Array ohne Varianten
+        self.assertIsNotNone(product.variants)
+        self.assertEqual(len(product.variants), 0)
+        # Keine Varianten gegeben
+        self.assertFalse(product.hasVariants)
+
     def testAddFeatureSetSingleValueFeature(self):
         # Single Feature, Single Value per Feature
         product = Product()

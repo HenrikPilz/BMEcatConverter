@@ -4,6 +4,7 @@ Created on 05.05.2017
 @author: henrik.pilz
 '''
 import logging
+import os
 
 from lxml.etree import SubElement
 
@@ -11,9 +12,13 @@ from datamodel.orderDetails import OrderDetails
 from datamodel.productDetails import ProductDetails
 from datamodel.validatingObject import ComparableEqual
 from datamodel.validatingObject import ValidatingXMLObject
+from mapping.blacklist import Blacklist
 
 
 class Product(ValidatingXMLObject, ComparableEqual):
+
+    __baseDirectory = os.path.join(os.path.dirname(__file__), "..", "..", "documents", "BMEcat", "version")
+    __featureSetBlacklist = Blacklist(os.path.join(__baseDirectory, "FeatureSetBlacklist.csv"))
 
     def __init__(self):
         self.productId = None
@@ -43,9 +48,6 @@ class Product(ValidatingXMLObject, ComparableEqual):
 
             return productIdEqual and self.details == other.details and self.orderDetails == other.orderDetails and \
                 priceDetailsEqual and mimeInfoEqual and featureSetsEqual
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
 
     def validate(self, raiseException=False):
         super().valueNotNone(self.productId, "Der Artikel hat keine Artikelnummer.", raiseException)
@@ -124,11 +126,16 @@ class Product(ValidatingXMLObject, ComparableEqual):
         self.details.addKeyword(keyword)
 
     def addFeatureSet(self, featureSet):
+        if self.__featureSetBlacklist.contains(featureSet.referenceSytem):
+            logging.info("Attributset wird nicht gespeichert, da es auf der Blacklist ist.")
+            return
+
         message = None
         if self.productId is not None:
             message = "Artikel '{0}' Attributset ist leer und wird nicht gespeichert.".format(self.productId)
         else:
             message = "Das Attributset ist leer und wird nicht gespeichert."
+
         if super().addToListIfValid(featureSet, self.featureSets, message):
             for feature in featureSet.features:
                 if feature.hasVariants():

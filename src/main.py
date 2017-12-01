@@ -87,6 +87,8 @@ def setUpLogging():
     if logger.hasHandlers():
         for handler in logger.handlers:
             logger.removeHandler(handler)
+            handler.flush()
+            handler.close()
 
     # Debug Log File
     fmt = '%(levelname)7s - [%(filename)20s:%(lineno)s - %(funcName)20s()]: %(message)s'
@@ -111,7 +113,7 @@ def main(argv):
 
     logging.debug('Number of arguments:', len(argv), 'arguments.')
     logging.debug('Argument List:', str(argv))
-    print('Argument List:', str(argv))
+
     t1 = time.clock()
 
     try:
