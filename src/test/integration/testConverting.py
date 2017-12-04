@@ -13,9 +13,9 @@ import main
 
 class TestMainConverter(unittest.TestCase):
 
-    def testExcelToXmlWrongSeparators(self):
+    def testConvertExcelToXmlWrongSeparators(self):
         testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
-        inputFilePath = os.path.join(testDataPath, "TestPriceIsNumberAndTaxIsString.xlsx")
+        inputFilePath = os.path.join(testDataPath, "testPriceIsNumberAndTaxIsString.xlsx")
 
         args = ['-i', inputFilePath, '-o', inputFilePath.replace('xlsx', 'xml')]
         with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
@@ -34,15 +34,9 @@ class TestMainConverter(unittest.TestCase):
             main.main(args)
         self.assertEqual(cm.exception.code, 5)
 
-    def testCreateBMEcatFullDataWrongSeparators(self):
+    def testConvertBMEcatMissingOptions(self):
         testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
-        inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFullDataSeparatorsWrong.xml")
-
-        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xml', 'xlsx')]
-        with self.assertRaisesRegex(DateFormatMissingException, "Zum Konvertieren von XML in Excel muss ein Datumsformat angegeben werden."):
-            main.main(args)
-
-        inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFullDataSeparatorsWrong.xml")
+        inputFilePath = os.path.join(testDataPath, "testConvertBMEcatMissingOptions.xml")
 
         args = ['-i', inputFilePath, '-o', inputFilePath.replace('xml', 'xlsx')]
         with self.assertRaisesRegex(DateFormatMissingException, "Zum Konvertieren von XML in Excel muss ein Datumsformat angegeben werden."):
@@ -56,23 +50,6 @@ class TestMainConverter(unittest.TestCase):
         with self.assertRaises(SystemExit) as cm:
             main.main(args)
         self.assertEqual(cm.exception.code, 5)
-
-    def testCreateBMEcatFullData(self):
-        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
-        inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFullData.xml")
-
-        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xml', 'xlsx'), '--dateformat="%Y-%m-%d"']
-        main.main(args)
-
-    def testCreateExcelFullData(self):
-        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
-        inputFilePath = os.path.join(testDataPath, "testCreateExcelFullData.xlsx")
-
-        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xlsx', 'xml'), '--dateformat="%Y-%m-%d"']
-        main.main(args)
-
-    def testHelp(self):
-        main.main(['-h'])
 
     def testConversionModeExceptionThrown(self):
         testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
@@ -104,6 +81,49 @@ class TestMainConverter(unittest.TestCase):
             main.main(args)
         self.assertEqual(cm.exception.code, 5)
 
-# if __name__ == "__main__":
+    '''
+    -------------------------------------
+    --- Ab hier funktioniert's :)
+    -------------------------------------
+    '''
+
+    def testHelp(self):
+        main.main(['-h'])
+
+    '''
+    -------------------------------------
+    --- Ab hier richtige Konvertierungen
+    -------------------------------------
+    '''
+    def testCreateExcelFromBMEcatFullDataNonFiege(self):
+        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
+        inputFilePath = os.path.join(testDataPath, "testCreateExcelFromBMEcatFullDataNonFiege.xml")
+
+        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xml', 'xlsx'), '--dateformat="%Y-%m-%d"', '--merchant=contorion']
+        main.main(args)
+
+    def testCreateExcelFromBMEcatFullDataFiege(self):
+        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
+        inputFilePath = os.path.join(testDataPath, "testCreateExcelFromBMEcatFullDataFiege.xml")
+
+        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xml', 'xlsx'), '--dateformat="%Y-%m-%d"']
+        main.main(args)
+
+    def testCreateBMEcatFromExcelFullDataNonFiege(self):
+        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
+        inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFromExcelFullDataNonFiege.xlsx")
+
+        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xlsx', 'xml'), '--dateformat="%Y-%m-%d"', '--merchant=contorion']
+        main.main(args)
+
+    def testCreateBMEcatFromExcelFullDataFiege(self):
+        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
+        inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFromExcelFullDataFiege.xlsx")
+
+        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xlsx', 'xml'), '--dateformat="%Y-%m-%d"']
+        main.main(args)
+
+
+if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
-    # unittest.main()
+    unittest.main()

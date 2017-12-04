@@ -271,6 +271,11 @@ class ProductTest(unittest.TestCase):
         product.orderDetails.orderUnit = "C62"
         product.orderDetails.contentUnit = "C62"
 
+        product.orderDetails.packingQuantity = 1
+        product.orderDetails.priceQuantity = 1
+        product.orderDetails.quantityInterval = 1
+        product.orderDetails.quantityMin = 1
+
         with self.assertRaisesRegex(Exception, "Der Artikel '[0-9]{5}' hat keine Preisinformationen."):
             product.validate(True)
 
@@ -290,6 +295,10 @@ class ProductTest(unittest.TestCase):
         orderDetails = OrderDetails()
         orderDetails.orderUnit = "C62"
         orderDetails.contentUnit = "C62"
+        orderDetails.packingQuantity = 1
+        orderDetails.priceQuantity = 1
+        orderDetails.quantityInterval = 1
+        orderDetails.quantityMin = 1
 
         product.orderDetails = orderDetails
 

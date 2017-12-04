@@ -7,7 +7,6 @@ from array import array
 from datetime import datetime
 from xml.sax import handler
 import logging
-import os
 
 from datamodel import Feature
 from datamodel import FeatureSet
@@ -19,7 +18,6 @@ from datamodel import Reference
 from datamodel import TreatmentClass
 from datamodel import Variant
 from datamodel.validatingObject import ValidatingObject
-from mapping import Blacklist
 from transformer import SeparatorTransformer
 
 

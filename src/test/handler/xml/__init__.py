@@ -1,1 +1,2 @@
-from .xmlHandlerTest import xmlHandlerTest
+from test.handler.xml.xmlTransformationTest import XmlTransformationNonFiegeTest
+from test.handler.xml.xmlTransformationsForFiegeTest import XmlTransformationForFiegeTest

@@ -10,7 +10,7 @@ from importer.excel import ExcelImporter
 from test.handler.basicHandlerTest import BasicHandlerTest
 
 
-class PyxelHandlerTest(BasicHandlerTest):
+class ExcelHandlerForFiegeTest(BasicHandlerTest):
 
     def testConvertAndReimportFullArticle(self):
         article = Product()
@@ -53,7 +53,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.orderDetails.packingQuantity = 25
         article.orderDetails.priceQuantity = 100
         article.orderDetails.quantityMin = 4
-        article.orderDetails.quantityInterval = 1
+        article.orderDetails.quantityInterval = 4
         # Preise
         priceDetails = PriceDetails()
         price = Price()
@@ -89,6 +89,18 @@ class PyxelHandlerTest(BasicHandlerTest):
         featureSet.addFeature(feature)
         article.addFeatureSet(featureSet)
 
+        with self.assertRaisesRegex(Exception,
+                                    "Der Artikel '.*' hat fehlerhafte Bestellinformationen." +
+                                    " Mindestbestellmenge und PackingQuantity duerfen nicht beide ungleich eins sein."):
+            super().runAndCheck(article, 'testCreateBMEcatFullData.xml')
+
+        article.orderDetails.quantityInterval = 1
+        with self.assertRaisesRegex(Exception,
+                                    "Der Artikel '.*' hat fehlerhafte Bestellinformationen." +
+                                    " Mindestbestellmenge und Bestellintervall sollten gleich sein."):
+            super().runAndCheck(article, 'testCreateBMEcatFullData.xml')
+
+        article.orderDetails.quantityMin = 1
         super().runAndCheck(article, 'testConvertAndReimportFullArticle.xlsx')
 
     def testConvertAndReimportWithManufacturerArticleId(self):
@@ -102,7 +114,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.orderDetails.orderUnit = 'C62'
         article.orderDetails.packingQuantity = 25
         article.orderDetails.priceQuantity = 100
-        article.orderDetails.quantityMin = 4
+        article.orderDetails.quantityMin = 1
         article.orderDetails.quantityInterval = 1
 
         priceDetails = PriceDetails()
@@ -126,7 +138,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.orderDetails.orderUnit = 'C62'
         article.orderDetails.packingQuantity = 25
         article.orderDetails.priceQuantity = 100
-        article.orderDetails.quantityMin = 4
+        article.orderDetails.quantityMin = 1
         article.orderDetails.quantityInterval = 1
 
         priceDetails = PriceDetails()
@@ -144,7 +156,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.orderDetails.orderUnit = 'C62'
         article.orderDetails.packingQuantity = 25
         article.orderDetails.priceQuantity = 100
-        article.orderDetails.quantityMin = 4
+        article.orderDetails.quantityMin = 1
         article.orderDetails.quantityInterval = 1
 
         priceDetails = PriceDetails()
@@ -157,7 +169,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.addPriceDetails(priceDetails)
         super().runAndCheck(article, 'testConvertAndReimportWithoutManufacturerArticleId.xlsx')
 
-    def runTestMethod(self, article, filename):
+    def runTestMethod(self, article, filename, merchant='fiege'):
         articles = { 'new' : [ article ]}
 
         # export as Excel
@@ -209,7 +221,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.orderDetails.orderUnit = 'C62'
         article.orderDetails.packingQuantity = 25
         article.orderDetails.priceQuantity = 100
-        article.orderDetails.quantityMin = 4
+        article.orderDetails.quantityMin = 1
         article.orderDetails.quantityInterval = 1
         # Preise
         priceDetails = PriceDetails()
@@ -277,7 +289,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.orderDetails.orderUnit = 'C62'
         article.orderDetails.packingQuantity = 25
         article.orderDetails.priceQuantity = 100
-        article.orderDetails.quantityMin = 4
+        article.orderDetails.quantityMin = 1
         article.orderDetails.quantityInterval = 1
         # Preise
         priceDetails = PriceDetails()
@@ -344,7 +356,7 @@ class PyxelHandlerTest(BasicHandlerTest):
         article.orderDetails.orderUnit = 'C62'
         article.orderDetails.packingQuantity = 25
         article.orderDetails.priceQuantity = 100
-        article.orderDetails.quantityMin = 4
+        article.orderDetails.quantityMin = 1
         article.orderDetails.quantityInterval = 1
         # Preise
         priceDetails = PriceDetails()

@@ -1,1 +1,1 @@
-from .bmecatImportHandler import BMEcatImportHandler
+from importer.xml.bmecatImportHandler import BMEcatImportHandler

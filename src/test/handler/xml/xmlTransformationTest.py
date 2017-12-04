@@ -12,7 +12,7 @@ from resolver import DTDResolver
 from test.handler.basicHandlerTest import BasicHandlerTest
 
 
-class xmlHandlerTest(BasicHandlerTest):
+class XmlTransformationNonFiegeTest(BasicHandlerTest):
 
     def testCreateBMEcatFullData(self):
         article = Product()
@@ -91,7 +91,7 @@ class xmlHandlerTest(BasicHandlerTest):
         featureSet.addFeature(feature)
         article.addFeatureSet(featureSet)
 
-        self.runAndCheck(article, 'testCreateBMEcatFullData.xml')
+        self.runAndCheck(article, 'testCreateBMEcatFullData.xml', 'contorion')
 
     def testCreateBMEcatMinimumDataPlusKeywords(self):
         article = Product()
@@ -117,7 +117,7 @@ class xmlHandlerTest(BasicHandlerTest):
 
         article.addKeyword("Testkeyword")
 
-        self.runAndCheck(article, 'testCreateBMEcatMinimumDataPlusKeywords.xml')
+        self.runAndCheck(article, 'testCreateBMEcatMinimumDataPlusKeywords.xml', 'contorion')
 
     def testCreateBMEcatMinimumDataFloatDescription(self):
         article = Product()
@@ -141,7 +141,7 @@ class xmlHandlerTest(BasicHandlerTest):
         price.tax = 0.19
         priceDetails.addPrice(price)
         article.addPriceDetails(priceDetails)
-        self.runAndCheck(article, 'testCreateBMEcatMinimumDataFloatDescription.xml')
+        self.runAndCheck(article, 'testCreateBMEcatMinimumDataFloatDescription.xml', 'contorion')
 
     def testCreateBMEcatMinimumData(self):
         article = Product()
@@ -164,12 +164,12 @@ class xmlHandlerTest(BasicHandlerTest):
         price.tax = 0.19
         priceDetails.addPrice(price)
         article.addPriceDetails(priceDetails)
-        self.runAndCheck(article, 'testCreateBMEcatMinimumData.xml')
+        self.runAndCheck(article, 'testCreateBMEcatMinimumData.xml', 'contorion')
 
-    def runTestMethod(self, article, filename):
+    def runTestMethod(self, article, filename, merchant='contorion'):
         articles = { 'new' : [ article ]}
         # export
-        bmecatExporter = BMEcatExporter(articles, filename)
+        bmecatExporter = BMEcatExporter(articles, filename, merchant)
         bmecatExporter.writeBMEcatAsXML()
 
         # import again
@@ -179,6 +179,7 @@ class xmlHandlerTest(BasicHandlerTest):
         parser.setEntityResolver(DTDResolver())
         parser.parse("file:" + filename)
         return importHandler.articles['new']
+
 
 # if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

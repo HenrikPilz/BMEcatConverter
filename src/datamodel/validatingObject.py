@@ -167,7 +167,7 @@ class XMLObject(object):
         Erstellt eiin Child-Element und wirft eine Exception, falls value nicht None
         '''
         if value is None:
-            raise NoValueGivenException("Kein Wert übergeben.")
+            raise NoValueGivenException("'{0}' Kein Wert übergeben.".format(tag))
         subElement = SubElement(parent, tag)
         subElement.text = str(value)
         return subElement

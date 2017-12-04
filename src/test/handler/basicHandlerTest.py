@@ -10,14 +10,14 @@ import unittest
 class BasicHandlerTest(unittest.TestCase):
 
     @abstractmethod
-    def runTestMethod(self):
+    def runTestMethod(self, merchant='fiege'):
         '''
         @return array of articles
         '''
 
-    def runAndCheck(self, article, filename):
-        article.validate(True)
-        article2 = self.runTestMethod(article, filename)[0]
+    def runAndCheck(self, article, filename, merchant='fiege'):
+        article.validate(merchant == 'fiege')
+        article2 = self.runTestMethod(article, filename, merchant)[0]
 
         self.assertEqual(article.productId, article2.productId, "Artikelnummer")
         self.assertEqual(article.details.deliveryTime, int(article2.details.deliveryTime), "deliveryTime")

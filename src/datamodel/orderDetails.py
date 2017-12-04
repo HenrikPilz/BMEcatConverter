@@ -44,9 +44,9 @@ class OrderDetails(ValidatingXMLObject, ComparableEqual):
                                             self.__allowedContentUnits, "Falsche Verpackungseinheit angeben.", raiseException)
 
         if float(self.quantityMin) != float(self.quantityInterval):
-            logging.info("Mindestbestellmenge und Bestellintervall sollten gleich sein.")
+            super().logError("Mindestbestellmenge und Bestellintervall sollten gleich sein.", raiseException)
         if float(self.packingQuantity) > 1 and float(self.quantityMin) > 1:
-            logging.warning("Mindestbestellmenge und PackingQuantity duerfen nicht beide ungleich eins sein.")
+            super().logError("Mindestbestellmenge und PackingQuantity duerfen nicht beide ungleich eins sein.", raiseException)
         if float(self.quantityMin) != float(self.priceQuantity):
             logging.info("PackagingQuantity und PriceQuantity untscheiden sich!")
 
