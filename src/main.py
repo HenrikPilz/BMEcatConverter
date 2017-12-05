@@ -107,6 +107,14 @@ def setUpLogging():
     logger.setLevel(loggingLevel)
 
 
+def printHelpAndExit(message=None, exitCode=None):
+    if message is not None:
+        print(message)
+    printHelp()
+    if exitCode is not None:
+        sys.exit(exitCode)
+
+
 def main(argv):
     # Loging einstgellen: zwei Outputdateien plus Konsole
     setUpLogging()
@@ -129,26 +137,16 @@ def main(argv):
         }
         converter = Converter(config)
         converter.convert()
-    except FileNotFoundError as fnfe:
-        print("Dateiname konnte nicht gefunden werden: ", str(fnfe))
-        sys.exit(5)
-    except URLError as ue:
-        print("Dateiname konnte nicht gefunden werden: ", str(ue))
-        sys.exit(5)
     except HelpCalledException:
-        printHelp()
+        printHelpAndExit()
+    except (FileNotFoundError, URLError) as fnfe:
+        printHelpAndExit("Dateiname konnte nicht gefunden werden: {0}".format(str(fnfe)), 5)
     except ConversionModeException as cme:
-        print("Wrong Conversion Mode: ", str(cme))
-        printHelp()
-        sys.exit(2)
+        printHelpAndExit("Wrong Conversion Mode: {0}".format(str(cme)), 2)
     except MissingArgumentException as mae:
-        print("Missing Arguments: ", str(mae))
-        printHelp()
-        sys.exit(3)
+        printHelpAndExit("Missing Arguments: {0}".format(str(mae)), 3)
     except getopt.GetoptError:
-        print("Error: ")
-        printHelp()
-        sys.exit(4)
+        printHelpAndExit("Error: ", 4)
 
     t2 = time.clock()
     duration = t2 - t1
