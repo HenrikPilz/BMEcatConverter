@@ -13,21 +13,27 @@ import main
 
 class TestMainConverter(unittest.TestCase):
 
+    testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
+    outputPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_output")
+
     def testConvertExcelToXmlWrongSeparators(self):
-        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
-        inputFilePath = os.path.join(testDataPath, "testPriceIsNumberAndTaxIsString.xlsx")
+        inputFilePath = os.path.join(self.testDataPath, "testPriceIsNumberAndTaxIsString.xlsx")
+        outputFilePath = inputFilePath.replace('xlsx', 'xml')
 
-        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xlsx', 'xml')]
+        args = ['-i', inputFilePath, '-o', outputFilePath]
         with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
             main.main(args)
+        self.assertFalse(os.path.exists(outputFilePath))
 
-        args = ['--separators=english', '-i', inputFilePath, '-o', inputFilePath.replace('xlsx', 'xml')]
+        args = ['--separators=english', '-i', inputFilePath, '-o', outputFilePath]
         with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
             main.main(args)
+        self.assertFalse(os.path.exists(outputFilePath))
 
-        args = ['--separators=german', '-i', inputFilePath, '-o', inputFilePath.replace('xlsx', 'xml')]
+        args = ['--separators=german', '-i', inputFilePath, '-o', outputFilePath]
         with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
             main.main(args)
+        self.assertFalse(os.path.exists(outputFilePath))
 
         args = ['-i', 'Test.xlsx', '-o', 'test.xml']
         with self.assertRaises(SystemExit) as cm:
@@ -35,16 +41,18 @@ class TestMainConverter(unittest.TestCase):
         self.assertEqual(cm.exception.code, 5)
 
     def testConvertBMEcatMissingOptions(self):
-        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
-        inputFilePath = os.path.join(testDataPath, "testConvertBMEcatMissingOptions.xml")
+        inputFilePath = os.path.join(self.testDataPath, "testConvertBMEcatMissingOptions.xml")
+        outputFilePath = os.path.join(self.outputPath, "testConvertBMEcatMissingOptions.xlsx")
 
-        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xml', 'xlsx')]
+        args = ['-i', inputFilePath, '-o', outputFilePath]
         with self.assertRaisesRegex(DateFormatMissingException, "Zum Konvertieren von XML in Excel muss ein Datumsformat angegeben werden."):
             main.main(args)
+        self.assertFalse(os.path.exists(outputFilePath))
 
-        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xml', 'xlsx'), '--dateformat="%Y-%m-%d"']
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
         with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
             main.main(args)
+        self.assertFalse(os.path.exists(outputFilePath))
 
         args = ['-i', 'Test.xml', '-o', 'test.xlsx', '--dateformat="%Y-%m-%d"']
         with self.assertRaises(SystemExit) as cm:
@@ -52,34 +60,34 @@ class TestMainConverter(unittest.TestCase):
         self.assertEqual(cm.exception.code, 5)
 
     def testConversionModeExceptionThrown(self):
-        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
-        inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFullData.xlsm")
+        inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatFullData.xlsm")
 
         args = ['--separators=german', '-i', inputFilePath, '-o', inputFilePath.replace('xlsm', 'xml')]
         with self.assertRaises(SystemExit) as cm:
             main.main(args)
         self.assertEqual(cm.exception.code, 2)
 
-        inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFullData.png")
+        inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatFullData.png")
         args = ['--separators=german', '-i', inputFilePath, '-o', inputFilePath.replace('png', 'xml')]
         with self.assertRaises(SystemExit) as cm:
             main.main(args)
         self.assertEqual(cm.exception.code, 2)
 
-        inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFullData.xlsx")
+        inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatFullData.xlsx")
         args = ['--separators=german', '-i', inputFilePath, '-o', inputFilePath.replace('xlsx', 'png')]
         with self.assertRaises(SystemExit) as cm:
             main.main(args)
         self.assertEqual(cm.exception.code, 2)
 
     def testRelativePathButFail(self):
-        testDataPath = os.path.join("..", "..", "test_data")
-        inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFullDataSeparatorsWrong.xml")
+        inputFilePath = os.path.join("../test_data", "testRelativePathButFail.xml")
+        outputFilePath = os.path.join(self.outputPath, "testRelativePathButFail.xlsx")
 
-        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xml', 'xlsx'), '--dateformat="%Y-%m-%d"']
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
         with self.assertRaises(SystemExit) as cm:
             main.main(args)
         self.assertEqual(cm.exception.code, 5)
+        self.assertFalse(os.path.exists(outputFilePath))
 
     '''
     -------------------------------------
@@ -96,34 +104,60 @@ class TestMainConverter(unittest.TestCase):
     -------------------------------------
     '''
     def testCreateExcelFromBMEcatFullDataNonFiege(self):
-        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
-        inputFilePath = os.path.join(testDataPath, "testCreateExcelFromBMEcatFullDataNonFiege.xml")
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFromBMEcatFullDataNonFiege.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelFromBMEcatFullDataNonFiege.xlsx")
 
-        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xml', 'xlsx'), '--dateformat="%Y-%m-%d"', '--merchant=contorion']
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"', '--merchant=contorion']
         main.main(args)
+
+        self.assertTrue(os.path.exists(outputFilePath))
 
     def testCreateExcelFromBMEcatFullDataFiege(self):
-        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
-        inputFilePath = os.path.join(testDataPath, "testCreateExcelFromBMEcatFullDataFiege.xml")
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFromBMEcatFullDataFiege.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelFromBMEcatFullDataFiege.xlsx")
 
-        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xml', 'xlsx'), '--dateformat="%Y-%m-%d"']
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
         main.main(args)
+
+        self.assertTrue(os.path.exists(outputFilePath))
+
+    def testCreateExcelFromBMEcatFullDataDoubleEntries(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFromBMEcatFullDataDoubleEntries.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelFromBMEcatFullDataDoubleEntries.xlsx")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        main.main(args)
+
+        self.assertTrue(os.path.exists(outputFilePath))
 
     def testCreateBMEcatFromExcelFullDataNonFiege(self):
-        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
-        inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFromExcelFullDataNonFiege.xlsx")
+        inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatFromExcelFullDataNonFiege.xlsx")
+        outputFilePath = os.path.join(self.outputPath, "testCreateBMEcatFromExcelFullDataNonFiege.xml")
 
-        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xlsx', 'xml'), '--dateformat="%Y-%m-%d"', '--merchant=contorion']
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"', '--merchant=contorion']
         main.main(args)
+
+        self.assertTrue(os.path.exists(outputFilePath))
 
     def testCreateBMEcatFromExcelFullDataFiege(self):
-        testDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data")
-        inputFilePath = os.path.join(testDataPath, "testCreateBMEcatFromExcelFullDataFiege.xlsx")
+        inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatFromExcelFullDataFiege.xlsx")
+        outputFilePath = os.path.join(self.outputPath, "testCreateBMEcatFromExcelFullDataFiege.xml")
 
-        args = ['-i', inputFilePath, '-o', inputFilePath.replace('xlsx', 'xml'), '--dateformat="%Y-%m-%d"']
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
         main.main(args)
 
+        self.assertTrue(os.path.exists(outputFilePath))
 
-if __name__ == "__main__":
+    def testCreateBMEcatFromExcelFullDataGTINAlsZahl(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatFromExcelFullDataGTINAlsZahl.xlsx")
+        outputFilePath = os.path.join(self.outputPath, "testCreateBMEcatFromExcelFullDataGTINAlsZahl.xml")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        main.main(args)
+
+        self.assertTrue(os.path.exists(outputFilePath))
+
+
+# if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
-    unittest.main()
+    # unittest.main()

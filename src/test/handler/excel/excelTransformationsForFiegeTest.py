@@ -4,6 +4,8 @@ Created on 08.10.2017
 @author: Henrik Pilz
 '''
 
+import os
+
 from datamodel import Product, ProductDetails, TreatmentClass, Mime, Reference, OrderDetails, Feature, Price, PriceDetails, FeatureSet
 from exporter.excel import PyxelExporter
 from importer.excel import ExcelImporter
@@ -387,7 +389,7 @@ class ExcelHandlerForFiegeTest(BasicHandlerTest):
 
     def __runMultipleValuesTestRoutine(self, article, filename):
         article.validate(True)
-        article2 = self.runTestMethod(article, filename)[0]
+        article2 = self.runTestMethod(article, os.path.join(self.outputPath, filename))[0]
 
         self.assertEqual(article.productId, article2.productId, "Artikelnummer")
         self.assertEqual(article.details.deliveryTime, int(article2.details.deliveryTime), "deliveryTime")

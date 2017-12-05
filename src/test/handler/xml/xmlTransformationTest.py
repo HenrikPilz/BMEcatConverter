@@ -4,10 +4,11 @@ Created on 09.10.2017
 @author: Henrik Pilz
 '''
 from xml.sax import make_parser
+import os
 
 from datamodel import Feature, FeatureSet, Mime, OrderDetails, Price, PriceDetails, Product, ProductDetails, Reference, TreatmentClass
-from exporter.xml import BMEcatExporter
-from importer.xml import BMEcatImportHandler
+from exporter.xml.bmecatExporter import BMEcatExporter
+from importer.xml.bmecatImportHandler import BMEcatImportHandler
 from resolver import DTDResolver
 from test.handler.basicHandlerTest import BasicHandlerTest
 
@@ -168,6 +169,7 @@ class XmlTransformationNonFiegeTest(BasicHandlerTest):
 
     def runTestMethod(self, article, filename, merchant='contorion'):
         articles = { 'new' : [ article ]}
+
         # export
         bmecatExporter = BMEcatExporter(articles, filename, merchant)
         bmecatExporter.writeBMEcatAsXML()

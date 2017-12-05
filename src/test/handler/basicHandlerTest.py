@@ -4,10 +4,13 @@ Created on 08.10.2017
 @author: Henrik Pilz
 '''
 from abc import abstractmethod
+import os
 import unittest
 
 
 class BasicHandlerTest(unittest.TestCase):
+
+    outputPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_output")
 
     @abstractmethod
     def runTestMethod(self, merchant='fiege'):
@@ -17,7 +20,7 @@ class BasicHandlerTest(unittest.TestCase):
 
     def runAndCheck(self, article, filename, merchant='fiege'):
         article.validate(merchant == 'fiege')
-        article2 = self.runTestMethod(article, filename, merchant)[0]
+        article2 = self.runTestMethod(article, os.path.join(self.outputPath, filename), merchant)[0]
 
         self.assertEqual(article.productId, article2.productId, "Artikelnummer")
         self.assertEqual(article.details.deliveryTime, int(article2.details.deliveryTime), "deliveryTime")

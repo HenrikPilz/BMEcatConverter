@@ -4,6 +4,8 @@ Created on 08.10.2017
 @author: Henrik Pilz
 '''
 
+import os
+
 from datamodel import Product, ProductDetails, TreatmentClass, Mime, Reference, OrderDetails, Feature, Price, PriceDetails, FeatureSet
 from exporter.excel import PyxelExporter
 from importer.excel import ExcelImporter
@@ -90,6 +92,31 @@ class ExcelHandlerNonFiegeTest(BasicHandlerTest):
         article.addFeatureSet(featureSet)
 
         super().runAndCheck(article, 'testConvertAndReimportFullArticle.xlsx', 'contorion')
+
+    def testConvertAndReimportWithGTINAsNumber(self):
+        article = Product()
+        article.productId = '12345'
+        article.details = ProductDetails()
+        article.details.ean = 123456789
+        article.details.manufacturerArticleId = '09876'
+        article.details.title = 'Test Article'
+        article.orderDetails = OrderDetails()
+        article.orderDetails.contentUnit = 'C62'
+        article.orderDetails.orderUnit = 'C62'
+        article.orderDetails.packingQuantity = 25
+        article.orderDetails.priceQuantity = 100
+        article.orderDetails.quantityMin = 4
+        article.orderDetails.quantityInterval = 1
+
+        priceDetails = PriceDetails()
+        price = Price()
+        price.amount = 10.50
+        price.priceType = 'net_customer'
+        price.lowerBound = 1
+        price.tax = 0.19
+        priceDetails.addPrice(price)
+        article.addPriceDetails(priceDetails)
+        super().runAndCheck(article, 'testConvertAndReimportWithGTINAsNumber.xlsx', 'contorion')
 
     def testConvertAndReimportWithManufacturerArticleId(self):
         article = Product()
@@ -374,7 +401,7 @@ class ExcelHandlerNonFiegeTest(BasicHandlerTest):
 
     def __runMultipleValuesTestRoutine(self, article, filename):
         article.validate(False)
-        article2 = self.runTestMethod(article, filename)[0]
+        article2 = self.runTestMethod(article, os.path.join(super().outputPath, filename))[0]
 
         self.assertEqual(article.productId, article2.productId, "Artikelnummer")
         self.assertEqual(article.details.deliveryTime, int(article2.details.deliveryTime), "deliveryTime")
