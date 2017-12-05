@@ -4,8 +4,8 @@ import unittest
 
 
 def tests():
-    if not os.path.exists("../test_data"):
-        os.makedirs(os.path.join(os.path.dirname(__file__), "../test_data"), exist_ok=True)
+    if not os.path.exists("../test_output"):
+        os.makedirs(os.path.join(os.path.dirname(__file__), "../test_output"), exist_ok=True)
     unittest.main(test)
 
 
