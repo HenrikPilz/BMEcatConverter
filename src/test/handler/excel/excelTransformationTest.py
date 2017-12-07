@@ -12,7 +12,7 @@ from importer.excel import ExcelImporter
 from test.handler.basicHandlerTest import BasicHandlerTest
 
 
-class ExcelHandlerNonFiegeTest(BasicHandlerTest):
+class ExcelTransformationNonFiegeTest(BasicHandlerTest):
 
     def testConvertAndReimportFullArticle(self):
         article = Product()

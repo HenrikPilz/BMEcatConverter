@@ -92,10 +92,10 @@ class XmlTransformationForFiegeTest(BasicHandlerTest):
         featureSet.addFeature(feature)
         article.addFeatureSet(featureSet)
 
-        with self.assertRaisesRegex(Exception,
-                                    "Der Artikel '.*' hat fehlerhafte Bestellinformationen." +
-                                    " Mindestbestellmenge und PackingQuantity duerfen nicht beide ungleich eins sein."):
-            self.runAndCheck(article, 'testCreateBMEcatFullData.xml')
+        # with self.assertRaisesRegex(Exception,
+        #                            "Der Artikel '.*' hat fehlerhafte Bestellinformationen." +
+        #                            " Mindestbestellmenge und PackingQuantity duerfen nicht beide ungleich eins sein."):
+        self.runAndCheck(article, 'testCreateBMEcatFullData.xml')
 
         article.orderDetails.quantityInterval = 1
         with self.assertRaisesRegex(Exception,

@@ -109,7 +109,7 @@ def setUpLogging():
 
 def printHelpAndExit(message=None, exitCode=None):
     if message is not None:
-        print(message)
+        logging.info(message)
     printHelp()
     if exitCode is not None:
         sys.exit(exitCode)
@@ -145,8 +145,11 @@ def main(argv):
         printHelpAndExit("Wrong Conversion Mode: {0}".format(str(cme)), 2)
     except MissingArgumentException as mae:
         printHelpAndExit("Missing Arguments: {0}".format(str(mae)), 3)
-    except getopt.GetoptError:
-        printHelpAndExit("Error: ", 4)
+    except getopt.GetoptError as goe:
+        printHelpAndExit("Options Error: {0}".format(str(goe)), 4)
+    except Exception as e:
+        logging.error("General Exception: {0}".format(str(e)))
+        sys.exit(6)
 
     t2 = time.clock()
     duration = t2 - t1

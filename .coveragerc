@@ -1,6 +1,7 @@
 [run]
 branch = true
 source = src/
+omit = *test*
 
 [paths]
 source = src/

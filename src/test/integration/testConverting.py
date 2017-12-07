@@ -6,8 +6,6 @@ Created on 28.11.2017
 import os
 import unittest
 
-from converter import DateFormatMissingException
-from transformer.separators import NumberFormatException
 import main
 
 
@@ -21,52 +19,62 @@ class TestMainConverter(unittest.TestCase):
         outputFilePath = inputFilePath.replace('xlsx', 'xml')
 
         args = ['-i', inputFilePath, '-o', outputFilePath]
-        with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
+#        with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
+        with self.assertRaises(SystemExit) as cm1:
             main.main(args)
+        self.assertEqual(cm1.exception.code, 6)
         self.assertFalse(os.path.exists(outputFilePath))
 
         args = ['--separators=english', '-i', inputFilePath, '-o', outputFilePath]
-        with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
+#        with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
+        with self.assertRaises(SystemExit) as cm2:
             main.main(args)
+        self.assertEqual(cm2.exception.code, 6)
         self.assertFalse(os.path.exists(outputFilePath))
 
         args = ['--separators=german', '-i', inputFilePath, '-o', outputFilePath]
-        with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
+#        with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
+        with self.assertRaises(SystemExit) as cm3:
             main.main(args)
+        self.assertEqual(cm3.exception.code, 6)
         self.assertFalse(os.path.exists(outputFilePath))
 
         args = ['-i', 'Test.xlsx', '-o', 'test.xml']
-        with self.assertRaises(SystemExit) as cm:
+        with self.assertRaises(SystemExit) as cm4:
             main.main(args)
-        self.assertEqual(cm.exception.code, 5)
+        self.assertEqual(cm4.exception.code, 5)
 
     def testConvertBMEcatMissingOptions(self):
         inputFilePath = os.path.join(self.testDataPath, "testConvertBMEcatMissingOptions.xml")
         outputFilePath = os.path.join(self.outputPath, "testConvertBMEcatMissingOptions.xlsx")
 
         args = ['-i', inputFilePath, '-o', outputFilePath]
-        with self.assertRaisesRegex(DateFormatMissingException, "Zum Konvertieren von XML in Excel muss ein Datumsformat angegeben werden."):
+#        with self.assertRaisesRegex(DateFormatMissingException, "Zum Konvertieren von XML in Excel muss ein Datumsformat angegeben werden."):
+        with self.assertRaises(SystemExit) as cm1:
             main.main(args)
+        self.assertEqual(cm1.exception.code, 6)
         self.assertFalse(os.path.exists(outputFilePath))
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
+#        with self.assertRaisesRegex(NumberFormatException, "Das Format '[0-9]{1,3}.?[0-9]{0,2}' stimmmt nicht mit den gewählten Separatoren überein."):
+        with self.assertRaises(SystemExit) as cm2:
             main.main(args)
+        self.assertEqual(cm2.exception.code, 6)
         self.assertFalse(os.path.exists(outputFilePath))
 
         args = ['-i', 'Test.xml', '-o', 'test.xlsx', '--dateformat="%Y-%m-%d"']
-        with self.assertRaises(SystemExit) as cm:
+        with self.assertRaises(SystemExit) as cm3:
             main.main(args)
-        self.assertEqual(cm.exception.code, 5)
+        self.assertEqual(cm3.exception.code, 5)
 
-    def testConversionModeExceptionThrown(self):
         inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatFullData.xlsm")
 
         args = ['--separators=german', '-i', inputFilePath, '-o', inputFilePath.replace('xlsm', 'xml')]
         with self.assertRaises(SystemExit) as cm:
             main.main(args)
-        self.assertEqual(cm.exception.code, 2)
+        self.assertEqual(cm.exception.code, 5)
 
+    def testConversionModeExceptionThrown(self):
         inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatFullData.png")
         args = ['--separators=german', '-i', inputFilePath, '-o', inputFilePath.replace('png', 'xml')]
         with self.assertRaises(SystemExit) as cm:

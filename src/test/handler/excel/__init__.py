@@ -1,2 +1,2 @@
-from test.handler.excel.excelTransformationTest import ExcelHandlerNonFiegeTest
-from test.handler.excel.excelTransformationsForFiegeTest import ExcelHandlerForFiegeTest
+from test.handler.excel.excelTransformationTest import ExcelTransformationNonFiegeTest
+from test.handler.excel.excelTransformationsForFiegeTest import ExcelTransformationsForFiegeTest

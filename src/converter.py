@@ -33,6 +33,8 @@ class Converter(object):
     classdocs
     '''
 
+    allowedExcelFormats = [".xlsx", ".xlsm", ".xltx", ".xltm"]
+
     def __init__(self, config):
         '''
         Constructor
@@ -110,12 +112,15 @@ class Converter(object):
         print("Fertig.")
 
     def convert(self):
-        if self._inputfile.endswith(".xml") and self._outputfile.endswith(".xlsx"):
+        if self._inputfile.endswith(".xml") and self._isExcel(self._outputfile):
             self.xmlToExcel()
-        elif self._inputfile.endswith(".xlsx") and self._outputfile.endswith(".xml"):
+        elif self._isExcel(self._inputfile) and self._outputfile.endswith(".xml"):
             self.excelToXml()
         else:
             raise ConversionModeException("Mode not supported")
+
+    def _isExcel(self, filename):
+        return str(filename[-5:]) in self.allowedExcelFormats
 
     def computeDuration(self, t1, t2):
         duration = t2 - t1

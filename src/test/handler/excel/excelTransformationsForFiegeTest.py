@@ -12,7 +12,7 @@ from importer.excel import ExcelImporter
 from test.handler.basicHandlerTest import BasicHandlerTest
 
 
-class ExcelHandlerForFiegeTest(BasicHandlerTest):
+class ExcelTransformationsForFiegeTest(BasicHandlerTest):
 
     def testConvertAndReimportFullArticle(self):
         article = Product()
@@ -91,16 +91,16 @@ class ExcelHandlerForFiegeTest(BasicHandlerTest):
         featureSet.addFeature(feature)
         article.addFeatureSet(featureSet)
 
-        with self.assertRaisesRegex(Exception,
-                                    "Der Artikel '.*' hat fehlerhafte Bestellinformationen." +
-                                    " Mindestbestellmenge und PackingQuantity duerfen nicht beide ungleich eins sein."):
-            super().runAndCheck(article, 'testCreateBMEcatFullData.xml')
+        # with self.assertRaisesRegex(Exception,
+        #                            "Der Artikel '.*' hat fehlerhafte Bestellinformationen." +
+        #                            " Mindestbestellmenge und PackingQuantity duerfen nicht beide ungleich eins sein."):
+        super().runAndCheck(article, 'testConvertAndReimportFullArticle.xlsx')
 
         article.orderDetails.quantityInterval = 1
         with self.assertRaisesRegex(Exception,
                                     "Der Artikel '.*' hat fehlerhafte Bestellinformationen." +
                                     " Mindestbestellmenge und Bestellintervall sollten gleich sein."):
-            super().runAndCheck(article, 'testCreateBMEcatFullData.xml')
+            super().runAndCheck(article, 'testConvertAndReimportFullArticle.xlsx')
 
         article.orderDetails.quantityMin = 1
         super().runAndCheck(article, 'testConvertAndReimportFullArticle.xlsx')
