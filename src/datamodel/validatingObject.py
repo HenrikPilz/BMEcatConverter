@@ -169,7 +169,7 @@ class XMLObject(object):
         if value is None:
             raise NoValueGivenException("'{0}' Kein Wert übergeben.".format(tag))
         subElement = SubElement(parent, tag)
-        subElement.text = str(value)
+        subElement.text = str(value).strip()
         return subElement
 
     def addOptionalSubElement(self, parent, tag, value):
