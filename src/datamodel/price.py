@@ -11,8 +11,8 @@ from datamodel.validatingObject import ValidatingXMLObject
 
 class Price(ValidatingXMLObject, ComparableEqual):
 
-    def __init__(self):
-        self.priceType = None
+    def __init__(self, priceType=None):
+        self.priceType = priceType
         self.amount = None
         self.currency = "EUR"
         self.tax = 0.19

@@ -148,7 +148,7 @@ def main(argv):
     except getopt.GetoptError as goe:
         printHelpAndExit("Options Error: {0}".format(str(goe)), 4)
     except Exception as e:
-        logging.error("General Exception: {0}".format(str(e)))
+        logging.exception("General Exception: {0}".format(str(e)))
         sys.exit(6)
 
     t2 = time.clock()

@@ -127,7 +127,7 @@ class Product(ValidatingXMLObject, ComparableEqual):
         self.details.addKeyword(keyword)
 
     def addFeatureSet(self, featureSet):
-        if self.__featureSetBlacklist.contains(featureSet.referenceSytem):
+        if self.__featureSetBlacklist.contains(featureSet.referenceSystem):
             logging.info("Attributset wird nicht gespeichert, da es auf der Blacklist ist.")
             return
 

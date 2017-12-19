@@ -147,7 +147,7 @@ class ProductTest(unittest.TestCase):
         # Single Feature, Single Value per Feature
         product = Product()
         featureSet = FeatureSet()
-        featureSet.referenceSytem = "PCLASS-6.0"
+        featureSet.referenceSystem = "PCLASS-6.0"
         feature = Feature()
         feature.name = "Name"
         feature.addValue("Value")

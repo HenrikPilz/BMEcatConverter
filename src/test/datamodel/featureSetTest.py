@@ -13,7 +13,7 @@ class FeatureSetTest(unittest.TestCase):
     def testInit(self):
         featureSet = FeatureSet()
         # Default: kein Referenzsystem
-        self.assertIsNone(featureSet.referenceSytem)
+        self.assertIsNone(featureSet.referenceSystem)
         # keine Referenzgruppen ID
         self.assertIsNone(featureSet.referenceGroupId)
         # Leerer Array ohne Features

@@ -41,7 +41,8 @@ class BMEcatImportHandler(handler.ContentHandler):
                               "article_reference" : "createReference",
                               "variants" : "createFeatureVariantSet",
                               "variant" : "createFeatureVariant",
-                              "description_long" : "startDescription" }
+                              "description_long" : "_startDescription",
+                              "description" : "_startDescription" }
 
     ''' Moegliche Aliase fuer Varianten der BMEcats '''
     __alias = {
@@ -66,27 +67,36 @@ class BMEcatImportHandler(handler.ContentHandler):
 
     ''' alle registrierten EndElementhandler '''
     __endElementHandler = {
+                "catalog_group_system" : "_resetAll",
                 "feature" : "saveFeature",
                 "article" : "saveProduct",
+                "mime" : "saveMime",
+                "variants" : "saveFeatureVariantSet",
+                "vorder" : "addFeatureVariantSetOrder",
+                "variant" : "addFeatureVariant",
+                "article_features" : "saveFeatureSet",
+                "special_treatment_class" : "saveTreatmentClass",
+                "article_reference" : "saveReference",
+                "price" : "savePrice",
+                "price_details" : "savePriceDetails",
                 "mime_info" : "endMimeInfo",
                 "datetime" : "endDateTime",
-                "mime" : "saveMime",
-                "territory" : "addTerritory",
+                "article_details" : "endProductDetails",
                 "date" : "addDate",
+                # Informationen am CurrentElement
+                "territory" : ("_addAttributeToCurrentElement", "territory", False),
+                "keyword" : ("_addAttributeToCurrentElement", "keywords", False),
                 # Artikelinformationen
                 "supplier_aid" : ("_addAttributeToCurrentArticle", "productId", True),
-                "supplier_alt_aid" : "addSupplierAltId",  # ("_addAttributeToCurrentArticleDetails", "supplierAltId", False),
+                "supplier_alt_aid" : ("_addAttributeToCurrentArticleDetails", "supplierAltId", False),
                 "buyer_aid" : ("_addAttributeToCurrentArticleDetails", "buyerId", False),
                 "manufacturer_aid" : ("_addAttributeToCurrentArticleDetails", "manufacturerArticleId", False),
                 "manufacturer_name" : ("_addAttributeToCurrentArticleDetails", "manufacturerName", False),
                 "ean" : ("_addAttributeToCurrentArticleDetails", "ean", False),
-                "description_long" : "saveDescription",  # Die Beschreibung erhält noch eine Sonderbehandlung
+                "description_long" : ("_addAttributeToCurrentArticleDetails", "description", False),
                 "description_short" : ("_addAttributeToCurrentArticleDetails", "title", False),
                 "delivery_time" : ("_addAttributeToCurrentArticleDetails", "deliveryTime", False),
-                "keyword" : ("_addAttributeToCurrentArticleDetails", "keywords" , False),
                 # Preisinformationen
-                "price" : "savePrice",
-                "price_details" : "savePriceDetails",
                 "price_amount" : ("_addAttributeToCurrentPrice", "amount", False),
                 "tax" : ("_addAttributeToCurrentPrice", "tax", False),
                 "price_currency" : ("_addAttributeToCurrentPrice", "currency", False),
@@ -112,41 +122,16 @@ class BMEcatImportHandler(handler.ContentHandler):
                 "fvalue_details" : ("_addAttributeToCurrentFeature", "valueDetails", False),
                 "funit" : ("_addAttributeToCurrentFeature", "unit", False),
                 "fdesc" : ("_addAttributeToCurrentFeature", "description", False),
-                "variants" : "saveFeatureVariantSet",
-                "vorder" : "addFeatureVariantSetOrder",
-                "variant" : "addFeatureVariant",
-                "article_features" : "saveFeatureSet",
-                "special_treatment_class" : "saveTreatmentClass",
-                "catalog_group_system" : "_resetAll",
-                "article_reference" : "saveReference",
-                "art_id_to" : "addReferenceArticleId",
-                "reference_descr" : "addReferenceDescription",
-                "supplier_aid_supplement" : "addFeatureVariantProductIdSuffix",
-                "reference_feature_system_name" : ("_addAttributeToCurrentFeatureSet", "referenceSystemName", False),
-                "reference_feature_group_id" : ("_addAttributeToCurrentFeatureSet", "referenceGroupId", False) }
+                # Referenzinformationen
+                "art_id_to" : ("_addAttributeToCurrentReference", "supplierArticleId", False),
+                "reference_descr" : ("_addAttributeToCurrentReference", "description", False),
+                # AttributeSetinformationen
+                "supplier_aid_supplement" : ("_addAttributeToCurrentVariant", "productIdSuffix", False),
+                "reference_feature_system_name" : ("_addAttributeToCurrentFeatureSet", "referenceSystem", False),
+                "reference_feature_group_id" : ("_addAttributeToCurrentFeatureSet", "referenceGroupId", False),
+                "reference_feature_group_name" : ("_addAttributeToCurrentFeatureSet", "referenceGroupName", False) }
 
     __fieldsToTransform = [ "amount", "tax", "factor"]
-
-    ''' Handlernamen fuer das XML-Element ermitteln. '''
-    def __determineTagName(self, tag, bOpen):
-        name = tag.lower()
-        if tag.lower() in self.__alias:
-            logging.debug("[" + str(bOpen) + "] '" + tag + "' has an alias")
-            name = self.__alias[tag.lower()]
-        return name
-
-    def __determineTagHandlername(self, tag, bOpen):
-        name = self.__determineTagName(tag, bOpen)
-        if bOpen:
-            return self.__determineHandlername(name, self.__startElementHandler)
-        else:
-            return self.__determineHandlername(name, self.__endElementHandler)
-
-    def __determineHandlername(self, name, handlerByName):
-            try:
-                return handlerByName[name]
-            except KeyError:
-                logging.debug("Call for Tag <" + name + "> FAILED:")
 
     ''' Konstruktor '''
     def __init__(self, dateFormat, separatorTransformer=SeparatorTransformer("detect")):
@@ -173,28 +158,52 @@ class BMEcatImportHandler(handler.ContentHandler):
 
     ''' Starte aktuelles XML Element '''
     def startElement(self, name, attrs):
-        self.__workOnElement(name, attrs, True)
+        self._workOnElement(name, attrs, True)
 
     ''' Schliesse aktuelles XML Element '''
     def endElement(self, name):
-        self.__workOnElement(name, None, False)
+        self._workOnElement(name, None, False)
 
     ''' Handler ermitteln, der die Arbeit macht. '''
-    def __workOnElement(self, name, attrs, bOpen):
+    def _workOnElement(self, name, attrs, bOpen):
         logging.debug("Call for Tag <" + name + ">")
-        elementHandler = None
+        method = None
         try:
-            handlerName = self.__determineTagHandlername(name, bOpen)
-            if handlerName is not None:
-                if isinstance(handlerName, (tuple)):
-                    elementHandler = getattr(self, handlerName[0])
-                    elementHandler(handlerName[1], handlerName[2])
-                else:
-                    elementHandler = getattr(self, handlerName)
-                    elementHandler(attrs)
+            handlerInfo = self._determineTagHandlername(name, bOpen)
+            if handlerInfo is None:
+                self.__currentContent = ""
+                return
+
+            if isinstance(handlerInfo, (tuple)):
+                method = getattr(self, handlerInfo[0])
+                method(handlerInfo[1], handlerInfo[2])
+            else:
+                method = getattr(self, handlerInfo)
+                method(attrs)
             self.__currentContent = ""
         except AttributeError:
-            raise NotImplementedError("Class [" + self.__class__.__name__ + "] does not implement [" + handlerName + "]")
+            raise NotImplementedError("Class [{0}] does not implement [{1}]".format(self.__class__.__name__, method))
+
+    ''' Handlernamen fuer das XML-Element ermitteln. '''
+    def _determineTagName(self, tag, bOpen):
+        name = tag.lower()
+        if tag.lower() in self.__alias:
+            logging.debug("[{0}] '{1}' has an alias".format("start" if bOpen else "end", tag))
+            name = self.__alias[tag.lower()]
+        return name
+
+    def _determineTagHandlername(self, tag, bOpen):
+        name = self._determineTagName(tag, bOpen)
+        if bOpen:
+            return self._determineHandlername(name, self.__startElementHandler)
+        else:
+            return self._determineHandlername(name, self.__endElementHandler)
+
+    def _determineHandlername(self, name, handlerByName):
+            try:
+                return handlerByName[name]
+            except KeyError:
+                logging.debug("Call for Tag <" + name + "> FAILED:")
 
     ''' ---------------------------------------------------------------------'''
     def _resetAll(self, attrs=None):
@@ -208,15 +217,6 @@ class BMEcatImportHandler(handler.ContentHandler):
         self.__currentFeatureSet = None
         self.__currentFeature = None
         self.__currentTreatmentClass = None
-
-    ''' ---------------------------------------------------------------------'''
-    def startMimeInfo(self, attrs=None):
-        self.__currentElement = self.__currentArticle
-        self.__currentMime = None
-
-    def endMimeInfo(self, attrs=None):
-        self.__currentMime = None
-        self.__currentElement = None
 
     ''' ---------------------------------------------------------------------'''
     ''' Anfang Artikel '''
@@ -253,6 +253,10 @@ class BMEcatImportHandler(handler.ContentHandler):
         self._raiseExceptionIfNotNone(self.__currentArticle.details,
                                       "Fehler im BMEcat: Neue Artikeldetails sollen erstellt werden. Es werden schon Artikeldetails verarbeitet.")
         self.__currentArticle.addDetails()
+        self.__currentElement = self.__currentArticle.details
+
+    def endProductDetails(self, attrs=None):
+        self.__currentElement = self.__currentArticle
 
     ''' ---------------------------------------------------------------------'''
     def createOrderDetails(self, attrs):
@@ -277,6 +281,30 @@ class BMEcatImportHandler(handler.ContentHandler):
         self.__currentElement = None
 
     ''' ---------------------------------------------------------------------'''
+    ''' Anfang Preis '''
+    def createPrice(self, attrs):
+        self._raiseExceptionIfNotNone(self.__currentPrice,
+                                      "Fehler im BMEcat: Neuer Preis soll erstellt werden. Es wird schon ein Preis verarbeitet.")
+        self.__currentPrice = Price(attrs.getValue('price_type'))
+        self.__currentElement = self.__currentPrice
+
+    ''' Preis speichern '''
+    def savePrice(self, attrs):
+        self._raiseExceptionIfNone(self.__currentPriceDetails, "Preis soll gespeichert werden. Aber es sind keine Preisdetails  vorhanden")
+        self.__currentPriceDetails.addPrice(self.__currentPrice, raiseException=False)
+        self.__currentPrice = None
+        self.__currentElement = self.__currentPriceDetails
+
+    ''' ---------------------------------------------------------------------'''
+    def startMimeInfo(self, attrs=None):
+        self.__currentElement = self.__currentArticle
+        self.__currentMime = None
+
+    def endMimeInfo(self, attrs=None):
+        self.__currentMime = None
+        self.__currentElement = None
+
+    ''' ---------------------------------------------------------------------'''
     ''' Anfang Bild '''
     def createMime(self, attrs):
         self._raiseExceptionIfNotNone(self.__currentMime,
@@ -292,28 +320,11 @@ class BMEcatImportHandler(handler.ContentHandler):
         self.__currentMime = None
 
     ''' ---------------------------------------------------------------------'''
-    ''' Anfang Preis '''
-    def createPrice(self, attrs):
-        self._raiseExceptionIfNotNone(self.__currentPrice,
-                                      "Fehler im BMEcat: Neuer Preis soll erstellt werden. Es wird schon ein Preis verarbeitet.")
-        self.__currentPrice = Price()
-        self.__currentPrice.priceType = attrs.getValue('price_type')
-        self.__currentElement = self.__currentPrice
-
-    ''' Preis speichern '''
-    def savePrice(self, attrs):
-        self._raiseExceptionIfNone(self.__currentPriceDetails, "Preis soll gespeichert werden. Aber es sind keine Preisdetails  vorhanden")
-        self.__currentPriceDetails.addPrice(self.__currentPrice, raiseException=False)
-        self.__currentPrice = None
-        self.__currentElement = self.__currentPriceDetails
-
-    ''' ---------------------------------------------------------------------'''
     ''' Anfang TreatmentClass '''
     def createTreatmentClass(self, attrs):
         self._raiseExceptionIfNotNone(self.__currentTreatmentClass,
                                       "Fehler im BMEcat: Neue SpecialTreatmentClass soll erstellt werden. Es wird schon ein SpecialTreatmentClass verarbeitet.")
-        self.__currentTreatmentClass = TreatmentClass()
-        self.__currentTreatmentClass.classType = attrs.getValue('type')
+        self.__currentTreatmentClass = TreatmentClass(attrs.getValue('type'))
         self.__currentElement = self.__currentTreatmentClass
 
     ''' TreatmentClass speichern '''
@@ -399,6 +410,8 @@ class BMEcatImportHandler(handler.ContentHandler):
         elementWithAddMethod.add(attrName, self.__currentContent)
         if self.__currentArticle is not None:
             logging.debug("Artikel '{0}': {1} ".format(attrName, self.__currentArticle.productId))
+        if attrName.startswith('description'):
+            self.__lineFeedToHTML = False
 
     def _addAttributeToCurrentArticle(self, attrName, raiseException):
         self._addAttribute(self.__currentArticle, attrName, raiseException)
@@ -424,41 +437,22 @@ class BMEcatImportHandler(handler.ContentHandler):
     def _addAttributeToCurrentFeature(self, attrName, raiseException):
         self._addAttribute(self.__currentFeature, attrName, raiseException)
 
+    def _addAttributeToCurrentElement(self, attrName, raiseException):
+        self._addAttribute(self.__currentElement, attrName, raiseException)
+
+    ''' Attribut fuer Variante speichern '''
+    def _addAttributeToCurrentVariant(self, attrName, raiseException):
+        self._addAttribute(self.__currentVariant, attrName, raiseException)
+
     ''' ---------------------------------------------------------------------'''
     ''' Referenz ID speichern'''
-    def addReferenceArticleId(self, attrs=None):
-        self.__currentReference.addSupplierArticleId(self.__currentContent)
-
     ''' Referenz Beschreibung speichern'''
-    def addReferenceDescription(self, attrs=None):
-        self.__currentReference.description = self.__currentContent
+    def _addAttributeToCurrentReference(self, attrName, raiseException):
+        self._addAttribute(self.__currentReference, attrName, raiseException)
 
     ''' ---------------------------------------------------------------------'''
-    def startDescription(self, attrs=None):
+    def _startDescription(self, attrs=None):
         self.__lineFeedToHTML = True
-
-    def saveDescription(self, attrs=None):
-        self._raiseExceptionIfNone(self.__currentArticle, "Artikelbeschreibung soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        self.__currentArticle.addDescription(self.__currentContent)
-        self.__lineFeedToHTML = False
-
-    def addSupplierAltId(self, attrs=None):
-        self._raiseExceptionIfNone(self.__currentArticle, "Alternative Herstellerartikelnummer soll gespeichert werden. Aber es ist kein Artikel vorhanden")
-        if self.__currentArticle.productId is None:
-            logging.info("Alternative Artikelnummer als Artikelnummer gesetzt!")
-            self.__currentArticle.productId = self.__currentContent
-        if self.__currentArticle.details is None:
-            raise Exception("Alternative Herstellerartikelnummer soll gespeichert werden. Aber es sind keine Artikeldetails vorhanden")
-        else:
-            logging.debug("Alternative Artikelnummer: " + self.__currentContent)
-            self.__currentArticle.details.supplierAltId = self.__currentContent
-
-    ''' ---------------------------------------------------------------------'''
-    def addTerritory(self, attrs=None):
-        if self.__currentElement is None:
-            logging.warning("Territory kann nicht gespeichert werden.")
-        else:
-            self.__currentElement.territory = self.__currentContent
 
     ''' ---------------------------------------------------------------------'''
     def createFeatureVariantSet(self, attrs=None):
@@ -476,11 +470,6 @@ class BMEcatImportHandler(handler.ContentHandler):
                                       "Fehler im BMEcat: FeatureVariant soll erstellt werden, aber es existiert schon eine.")
         self.__currentVariant = Variant()
         self.__currentElement = self.__currentVariant
-
-    def addFeatureVariantProductIdSuffix(self, attrs=None):
-        self._raiseExceptionIfNone(self.__currentVariant,
-                                   "Fehler im BMEcat: FeatureVariantProductIdSuffix soll gesetzt werden, aber es existiert noch keine Variante.")
-        self.__currentVariant.productIdSuffix = self.__currentContent
 
     def saveFeatureVariant(self, attrs=None):
         self.__currentFeature.addVariant(self.__currentVariant)

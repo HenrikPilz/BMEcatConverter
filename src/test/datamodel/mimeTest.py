@@ -16,7 +16,7 @@ class MimeTest(unittest.TestCase):
         self.assertIsNone(mime.source)
         self.assertIsNone(mime.mimeType)
         self.assertIsNone(mime.description)
-        self.assertIsNone(mime.altenativeContent)
+        self.assertIsNone(mime.alternativeContent)
         self.assertIsNone(mime.purpose)
         self.assertIsNone(mime.order)
 
@@ -122,7 +122,7 @@ class MimeTest(unittest.TestCase):
         mime2.source = "image.jpg"
         self.assertEqual(mime1, mime2, "Same source should work")
 
-        mime1.altenativeContent = "detail"
+        mime1.alternativeContent = "detail"
         self.assertEqual(mime1, mime2, "AltenativeContent should not matter")
 
         mime1.description = "detail"

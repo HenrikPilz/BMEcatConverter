@@ -42,7 +42,7 @@ class Reference(ValidatingXMLObject, ComparableEqual):
         if self.supplierArticleId is None:
             super().logError("Es wird keine Artikelnummer referenziert.", raiseException)
         if self.quantity is not None and self.referenceType != "constists_of":
-            logging.warning("Anzahl ist kein Attribute, welches gesetzt werden darf.")
+            logging.warning("Die Anzahl sollte nur gesetzt werden, falls der type 'constists_of' ist.")
             self.quantity = None
         if self.mimeInfo is None or len(self.mimeInfo) == 0:
             logging.info("Es wurden keine Bilder gefunden.")

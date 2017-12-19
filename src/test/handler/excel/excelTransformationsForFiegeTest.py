@@ -414,7 +414,7 @@ class ExcelTransformationsForFiegeTest(BasicHandlerTest):
         self.assertEqual(len(article.featureSets), len(article2.featureSets), "lean(featureSets)")
         # if len(article.featureSets) > 0:
         self.assertEqual(len(article.featureSets[0]), len(article2.featureSets[0]), "len(featureSets[0])")
-        self.assertEqual(article.featureSets[0].referenceSytem, article2.featureSets[0].referenceSytem, "featureSets.referenceSytem")
+        self.assertEqual(article.featureSets[0].referenceSystem, article2.featureSets[0].referenceSystem, "featureSets.referenceSystem")
         #    if len(article.featureSets[0].features) > 0:
         self.assertEqual(article.featureSets[0].features[0].name, article2.featureSets[0].features[0].name, "feature[0].name")
         feature1 = article.featureSets[0].features[0]

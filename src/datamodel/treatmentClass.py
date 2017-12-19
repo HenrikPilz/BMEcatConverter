@@ -14,11 +14,11 @@ class TreatmentClass(ValidatingXMLObject, ComparableEqual):
     classdocs
     '''
 
-    def __init__(self):
+    def __init__(self, classType=None):
         '''
         Constructor
         '''
-        self.classType = None
+        self.classType = classType
         self.value = None
 
     def __eq__(self, other):

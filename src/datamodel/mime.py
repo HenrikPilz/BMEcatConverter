@@ -28,7 +28,7 @@ class Mime(ValidatingXMLObject, ComparableEqual):
         self.source = None
         self.mimeType = None
         self.description = None
-        self.altenativeContent = None
+        self.alternativeContent = None
         self.purpose = None
         self.order = None
 
@@ -53,7 +53,7 @@ class Mime(ValidatingXMLObject, ComparableEqual):
         super().addMandatorySubElement(mimeElement, "MIME_PURPOSE", self.purpose)
         super().addMandatorySubElement(mimeElement, "MIME_ORDER", self.order)
         super().addOptionalSubElement(mimeElement, "MIME_DESCR", self.description)
-        super().addOptionalSubElement(mimeElement, "MIME_ALT", self.altenativeContent)
+        super().addOptionalSubElement(mimeElement, "MIME_ALT", self.alternativeContent)
         return mimeElement
 
     def __convertPathToLowerCase(self):

@@ -17,7 +17,7 @@ class FeatureSet(ValidatingXMLObject, ComparableEqual):
     __featureBlacklist = Blacklist(os.path.join(__baseDirectory, "FeatureBlacklist.csv"))
 
     def __init__(self):
-        self.referenceSytem = None
+        self.referenceSystem = None
         self.referenceGroupName = None
         self.referenceGroupId = None
         self.features = []
@@ -46,7 +46,7 @@ class FeatureSet(ValidatingXMLObject, ComparableEqual):
 
     def toXml(self, raiseExceptionOnValidate=True):
         xmlFeatureSet = super().validateAndCreateBaseElement("ARTICLE_FEATURES", raiseExceptionOnValidate=raiseExceptionOnValidate)
-        super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_SYSTEM_NAME", self.referenceSytem)
+        super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_SYSTEM_NAME", self.referenceSystem)
         super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_GROUP_ID", self.referenceGroupId)
         super().addOptionalSubElement(xmlFeatureSet, "REFERENCE_FEATURE_GROUP_NAME", self.referenceGroupName)
         super().addListOfSubElements(xmlFeatureSet, sorted(self.features, key=lambda feature: feature.order), raiseExceptionOnValidate)
