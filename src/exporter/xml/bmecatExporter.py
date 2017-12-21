@@ -108,12 +108,14 @@ class BMEcatExporter(object):
         initials = self.__determineInitials()
         logging.debug("Initialen: {0}".format(initials))
 
-        dateKz = datetime.now().strftime("%Y%m%d")
+        dateYMD = datetime.now().strftime("%Y%m%d")
+        catalogId = datetime.now().strftime("%Y%m%d%H%M%S")
+
         catalog = Element("CATALOG")
         SubElement(catalog, "LANGUAGE").text = "deu"
-        SubElement(catalog, "CATALOG_ID").text = dateKz + "_" + initials
+        SubElement(catalog, "CATALOG_ID").text = catalogId + "_" + initials
         SubElement(catalog, "CATALOG_VERSION").text = "1.0"
-        SubElement(catalog, "CATALOG_NAME").text = dateKz + "-" + self._merchant.title() + "-Update_" + initials
+        SubElement(catalog, "CATALOG_NAME").text = dateYMD + "-" + self._merchant.title() + "-Update_" + initials
         catalog.append(self.__createGenerationDate())
         SubElement(catalog, "CURRENCY").text = "EUR"
         return catalog
