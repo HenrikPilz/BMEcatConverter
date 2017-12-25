@@ -46,6 +46,11 @@ class Converter(object):
         self._merchant = config['merchant']
         self._separatorTransformer = SeparatorTransformer(config['separatorMode'])
 
+    def _relativePathToAbsolutePath(self, filename):
+        if filename.startswith(".") or filename.startswith(".."):
+            filename = os.path.join(os.getcwd(), filename)
+        return filename
+
     def xmlToExcel(self):
         '''
         convert XML BMEcat to Excel-File
@@ -58,10 +63,7 @@ class Converter(object):
         importer = BMEcatImportHandler(self._dateFormat, self._separatorTransformer)
         parser.setContentHandler(importer)
         parser.setEntityResolver(DTDResolver())
-        if self._inputfile.startswith(".") or self._inputfile.startswith(".."):
-            self._inputfile = os.getcwd() + "//" + self._inputfile
-        if self._outputfile.startswith(".") or self._outputfile.startswith(".."):
-            self._outputfile = os.getcwd() + "//" + self._outputfile
+        
         t1 = time.clock()
         parser.parse("file:" + self._inputfile)
         t2 = time.clock()
@@ -112,6 +114,8 @@ class Converter(object):
         print("Fertig.")
 
     def convert(self):
+        self._inputfile = self._relativePathToAbsolutePath(self._inputfile)
+        self._outputfile = self._relativePathToAbsolutePath(self._outputfile)
         if self._inputfile.endswith(".xml") and self._isExcel(self._outputfile):
             self.xmlToExcel()
         elif self._isExcel(self._inputfile) and self._outputfile.endswith(".xml"):
