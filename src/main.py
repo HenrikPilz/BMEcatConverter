@@ -88,11 +88,10 @@ def setUpLogging():
     '''
     logger = logging.getLogger()
 
-    if logger.hasHandlers():
-        for handler in logger.handlers:
-            logger.removeHandler(handler)
-            handler.flush()
-            handler.close()
+    for handler in logger.handlers:
+        logger.removeHandler(handler)
+        handler.flush()
+        handler.close()
 
     # Debug Log File
     fmt = '%(levelname)7s - [%(filename)20s:%(lineno)s - %(funcName)20s()]: %(message)s'

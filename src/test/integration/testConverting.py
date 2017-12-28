@@ -97,6 +97,25 @@ class TestMainConverter(unittest.TestCase):
         self.assertEqual(cm.exception.code, 5)
         self.assertFalse(os.path.exists(outputFilePath))
 
+    def testMissingArgumentException(self):
+        outputFilePath = os.path.join(self.outputPath, "testMissingArgumentException.xml")
+
+        args = ['-i', '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        with self.assertRaises(SystemExit) as cm:
+            main.main(args)
+        self.assertEqual(cm.exception.code, 3)
+        self.assertFalse(os.path.exists(outputFilePath))
+
+    def testGetoptOptErrorException(self):
+        outputFilePath = os.path.join(self.outputPath, "testMissingArgumentException.xml")
+
+        args = ['-p', '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        with self.assertRaises(SystemExit) as cm:
+            main.main(args)
+        self.assertEqual(cm.exception.code, 4)
+        self.assertFalse(os.path.exists(outputFilePath))
+
+
     '''
     -------------------------------------
     --- Ab hier funktioniert's :)
@@ -164,7 +183,6 @@ class TestMainConverter(unittest.TestCase):
         main.main(args)
 
         self.assertTrue(os.path.exists(outputFilePath))
-
 
 # if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
