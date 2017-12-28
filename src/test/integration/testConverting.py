@@ -4,6 +4,7 @@ Created on 28.11.2017
 @author: henrik.pilz
 '''
 import os
+import threading
 import unittest
 
 import main
@@ -183,6 +184,7 @@ class TestMainConverter(unittest.TestCase):
         main.main(args)
 
         self.assertTrue(os.path.exists(outputFilePath))
+
 
 # if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

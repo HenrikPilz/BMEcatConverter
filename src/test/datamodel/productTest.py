@@ -51,24 +51,24 @@ class ProductTest(unittest.TestCase):
         # Productdetails
         product.addDetails()
 
-        product.addTitle("TestTitel")
+        product.details.title = "TestTitel"
         self.assertEqual(product.details.title, "TestTitel")
         product.addDetails()
         self.assertEqual(product.details.title, "TestTitel")
 
-        product.addDescription("TestBeschreibung")
+        product.details.description = "TestBeschreibung"
         self.assertEqual(product.details.description, "TestBeschreibung")
 
-        product.addManufacturerArticleId("12345")
+        product.details.manufacturerArticleId = "12345"
         self.assertEqual(product.details.manufacturerArticleId, "12345")
 
-        product.addManufacturerName("Test")
+        product.details.manufacturerName = "Test"
         self.assertEqual(product.details.manufacturerName, "Test")
 
-        product.addEAN("1234567890123")
+        product.details.ean = "1234567890123"
         self.assertEqual(product.details.ean, "1234567890123")
 
-        product.addDeliveryTime(2)
+        product.details.deliveryTime = 2
         self.assertEqual(product.details.deliveryTime, 2)
 
         self.assertEqual(len(product.details.keywords), 0)
@@ -253,7 +253,7 @@ class ProductTest(unittest.TestCase):
 
         # Productdetails
         product.addDetails()
-        product.addTitle("TestTitel")
+        product.details.title = "TestTitel"
 
         with self.assertRaisesRegex(Exception, "Der Artikel '[0-9]{5}' hat keine Bestellinformation."):
             product.validate(True)
@@ -265,7 +265,7 @@ class ProductTest(unittest.TestCase):
 
         # Productdetails
         product.details = ProductDetails()
-        product.addTitle("TestTitel")
+        product.details.title = "TestTitel"
 
         product.addOrderDetails()
         product.orderDetails.orderUnit = "C62"
@@ -291,7 +291,7 @@ class ProductTest(unittest.TestCase):
 
         # Productdetails
         product.addDetails()
-        product.addTitle("TestTitel")
+        product.details.title = "TestTitel"
 
         orderDetails = OrderDetails()
         orderDetails.orderUnit = "C62"

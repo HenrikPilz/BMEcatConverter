@@ -88,24 +88,6 @@ class Product(ValidatingXMLObject, ComparableEqual):
         self.addToListIfValid(priceDetails, self.priceDetails,
                               "Die Preisdetails enthalten keine validen Einträge. Sie werden nicht hinzugefuegt.", raiseException)
 
-    def addTitle(self, title):
-        self.details.title = title
-
-    def addDescription(self, description):
-        self.details.description = description
-
-    def addManufacturerArticleId(self, manufacturerArticleId):
-        self.details.manufacturerArticleId = manufacturerArticleId
-
-    def addManufacturerName(self, manufacturerName):
-        self.details.manufacturerName = manufacturerName
-
-    def addEAN(self, ean):
-        self.details.ean = ean
-
-    def addDeliveryTime(self, deliveryTime):
-        self.details.deliveryTime = deliveryTime
-
     def addMime(self, mime, raiseException=True):
         self.addToListIfValid(mime, self.mimeInfo, "Das Bild enthaelt keine validen Einträge. Es wird nicht hinzugefuegt.", raiseException)
 

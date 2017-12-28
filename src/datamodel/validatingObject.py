@@ -83,16 +83,16 @@ class ValidatingObject(object):
         if the attribute is a list and the list is not None or Empty
         every listitem is validated.
         '''
-        if self.valueNotNoneOrEmpty(elementToCheck, noneOrEmptyMessage, False):
-            self.validateList(elementToCheck, validationMessage, raiseException)
+        self.validateIfNotNoneOrEmptyRaiseException(elementToCheck, noneOrEmptyMessage, validationMessage, raiseException, False)
 
-    def validateIfNotNoneOrEmptyRaiseException(self, elementToCheck, noneOrEmptyMessage, validationMessage, raiseException=False):
+    def validateIfNotNoneOrEmptyRaiseException(self, elementToCheck, noneOrEmptyMessage, validationMessage,
+                                               raiseException=False, raiseExceptionIfNoneOrEmpty=True):
         '''
         if the attribute is a list and the list is not None or Empty
         every listitem is validated.
         Raises an Exception if the list is None or Empty
         '''
-        if self.valueNotNoneOrEmpty(elementToCheck, noneOrEmptyMessage, raiseException):
+        if self.valueNotNoneOrEmpty(elementToCheck, noneOrEmptyMessage, raiseExceptionIfNoneOrEmpty):
             self.validateList(elementToCheck, validationMessage, raiseException)
 
     def valueNotNone(self, attribute, message=None, raiseException=False):
