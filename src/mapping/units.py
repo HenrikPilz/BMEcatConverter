@@ -30,26 +30,34 @@ class UnitMapper(object):
         '''
         Constructor
         '''
-        self.filename = filename
+        self._filename = filename
         self._units = {}
-        if self.filename is not None:
-            self.readFile()
+        self._readFileAndAddToMap()
 
-    def readFile(self):
-        if self.filename:
+    def _addEntryToMap(self, key, value=""):
+        self._units[key] = value
+        logging.debug("BMEcat Unit: '{k:s}' mapped to '{v:s}'".format(k=key, v=value))
+
+    def _addRowToMap(self, row):
+        if len(row) == 0:
+            return
+        elif len(row) == 1:
+            self._addEntryToMap(row[0])
+        elif len(row) == 2:
+            self._addEntryToMap(row[0], row[1])
+        else:
+            logging.error("BMEcat Unit Fehler in der Einheitenzuordnung: '{r:s}'".format(r=str(row)))
+
+    def _readRows(self, unitFile):
+        for row in csv.reader(unitFile, dialect=units()):
+            self._addRowToMap(row)
+
+    def _readFileAndAddToMap(self):
+        if self._filename is not None:
             logging.debug(os.getcwd())
-            logging.debug(self.filename)
-            with open(self.filename, newline='\n', encoding='utf-8') as unitFile:
-                unitFileReader = csv.reader(unitFile, dialect=units())
-                for row in unitFileReader:
-                    if len(row) == 0:
-                        continue
-                    elif len(row) == 1:
-                        self._units[row[0]] = ""
-                        logging.debug("BMEcat Unit: '{k:s}' mapped to '{v:s}'".format(k=row[0], v=""))
-                    else:
-                        self._units[row[0]] = row[1]
-                        logging.debug("BMEcat Unit: '{k:s}' mapped to '{v:s}'".format(k=row[0], v=row[1]))
+            logging.debug(self._filename)
+            with open(self._filename, newline='\n', encoding='utf-8') as unitFile:
+                self._readRows(unitFile)
 
     def hasKey(self, bmecatUnit):
         return bmecatUnit in list(self._units.keys())

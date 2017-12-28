@@ -12,8 +12,7 @@ from mapping import Blacklist
 class BlacklistTest(unittest.TestCase):
 
     def testUnitMapperWithoutFile(self):
-        blacklist = Blacklist(None)
-        blacklist.readFile()
+        Blacklist(None)
 
     def testUnitMapperWithTestFile(self):
         baseDirectory = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data", "blacklist.csv")

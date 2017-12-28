@@ -12,8 +12,7 @@ from mapping import UnitMapper
 class UnitsTest(unittest.TestCase):
 
     def testUnitMapperWithoutFile(self):
-        unitMapper = UnitMapper(None)
-        unitMapper.readFile()
+        UnitMapper(None)
 
     def testUnitMapperWithTestFile(self):
         baseDirectory = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_data", "units.csv")
