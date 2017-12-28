@@ -42,6 +42,13 @@ def printHelp():
           " -manufacturer \"Makita\"")
 
 
+def findNextFreeLogfilename(logfilename):
+    for i in range(1, 11):
+        freeLogfilename = "{0}_{1:02n}".format(logfilename, i)
+        if not os.path.exists(freeLogfilename):
+            return freeLogfilename
+
+
 def createFileLoggingHandler(logfilename, logLevel=logging.DEBUG,
                              logFormat='%(levelname)7s: %(message)s'):
     '''
@@ -51,10 +58,7 @@ def createFileLoggingHandler(logfilename, logLevel=logging.DEBUG,
         try:
             os.remove(logfilename)
         except Exception:
-            for i in range(1, 11):
-                if not os.path.exists(logfilename + "_{0:02n}".format(i)):
-                    logfilename += "_{0:02n}".format(i)
-                    break
+            logfilename = findNextFreeLogfilename(logfilename)
 
     logfilename += ".log"
     ''' log File'''
@@ -127,15 +131,7 @@ def main(argv):
     try:
         argumentParser = ArgumentParser()
         argumentParser.parse(argv)
-        config = {
-            'inputfile' : argumentParser.inputfile,
-            'outputfile' : argumentParser.outputfile,
-            'dateFormat' : argumentParser.dateformat,
-            'separatorMode' : argumentParser.separatorMode,
-            'manufacturerName': argumentParser.manufacturer,
-            'merchant' : argumentParser.merchant
-        }
-        converter = Converter(config)
+        converter = Converter(argumentParser.getConfig())
         converter.convert()
     except HelpCalledException:
         printHelpAndExit()
@@ -151,7 +147,10 @@ def main(argv):
         logging.exception("General Exception: {0}".format(str(e)))
         sys.exit(6)
 
-    t2 = time.clock()
+    computeDuration(t1, time.clock())
+
+
+def computeDuration(t1, t2):
     duration = t2 - t1
     if duration < 60:
         print('Duration in seconds: ', (t2 - t1))

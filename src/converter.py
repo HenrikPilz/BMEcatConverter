@@ -63,7 +63,7 @@ class Converter(object):
         importer = BMEcatImportHandler(self._dateFormat, self._separatorTransformer)
         parser.setContentHandler(importer)
         parser.setEntityResolver(DTDResolver())
-        
+
         t1 = time.clock()
         parser.parse("file:" + self._inputfile)
         t2 = time.clock()

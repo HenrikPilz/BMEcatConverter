@@ -49,7 +49,7 @@ class ArgumentParser():
             self._checkAndDetermineArgument(opt, arg)
 
         self._validateArguments()
-        self.logData()
+        self._logData()
 
     def _checkAndDetermineArgument(self, opt, arg):
         if opt == '-h':
@@ -73,10 +73,20 @@ class ArgumentParser():
         if self.outputfile is None:
             raise MissingArgumentException("Outputfile is missing.")
 
-    def logData(self):
+    def _logData(self):
         logging.info("Input file is {0}".format(self.inputfile))
         logging.info("Output file is {0}".format(self.outputfile))
         if self.merchant is not None:
             logging.info("Merchant: {0}".format(self.merchant))
         if self.manufacturer is not None:
             logging.info("Manufacturer: {0}".format(self.manufacturer))
+
+    def getConfig(self):
+        return {
+            'inputfile' : self.inputfile,
+            'outputfile' : self.outputfile,
+            'dateFormat' : self.dateformat,
+            'separatorMode' : self.separatorMode,
+            'manufacturerName': self.manufacturer,
+            'merchant' : self.merchant
+        }
