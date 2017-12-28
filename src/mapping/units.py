@@ -41,7 +41,7 @@ class UnitMapper(object):
     def _addRowToMap(self, row):
         if len(row) == 0:
             return
-        elif len(row) == 1:
+        if len(row) == 1:
             self._addEntryToMap(row[0])
         elif len(row) == 2:
             self._addEntryToMap(row[0], row[1])
