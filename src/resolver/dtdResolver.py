@@ -18,15 +18,16 @@ class DTDResolver(EntityResolver):
         Constructor
         '''
         self.bmecatVersions = {}
-        self.bmecatDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "documents", "BMEcat", "version")
+        bmecatDataPath = os.path.join(os.path.dirname(__file__), "..", "..", "documents", "BMEcat", "version")
 
-        for dirname in os.listdir(self.bmecatDataPath):
-            currentPath = os.path.join(self.bmecatDataPath, dirname)
-            if os.path.isdir(currentPath):
-                for filename in os.listdir(currentPath):
-                    filePath = os.path.join(currentPath, filename)
-                    if os.path.isfile(filePath):
-                        self.bmecatVersions[filename] = os.path.abspath(filePath)
+        self._checkSubDirectories(bmecatDataPath)
+
+    def _checkSubDirectories(self, path):
+        if os.path.isfile(path) and path.endswith('.dtd'):
+            self.bmecatVersions[os.path.basename(path)] = os.path.abspath(path)
+        if os.path.isdir(path):
+            for subelement in os.listdir(path):
+                self._checkSubDirectories(os.path.join(path, subelement))
 
     def resolveEntity(self, publicId, systemId):
         """Resolve the system identifier of an entity and return either
