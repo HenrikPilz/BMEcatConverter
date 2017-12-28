@@ -101,7 +101,8 @@ class FeatureSetTest(unittest.TestCase):
 
         self.assertEqual(featureSet1, featureSet2, "Two NonEmpty FeatureSets should be equal, if they contain the same Features")
         self.assertTrue(featureSet1 == featureSet2, "NonEmpty FeatureSets should be equal to another another via '==', if they contain the same Features")
-        self.assertFalse(featureSet1 != featureSet2, "NonEmpty FeatureSets should not be unequal to another another via '!=', if they contain the same Features")
+        self.assertFalse(featureSet1 != featureSet2,
+                         "NonEmpty FeatureSets should not be unequal to another another via '!=', if they contain the same Features")
 
     def testEqualityOfDifferentFeatures(self):
         featureSet1 = FeatureSet()
