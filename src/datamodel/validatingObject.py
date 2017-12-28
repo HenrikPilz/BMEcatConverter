@@ -78,6 +78,23 @@ class ValidatingObject(object):
     def validate(self, raiseException=False):
         raise NotImplementedError("Please implement 'validate' in your class '{0}".format(__file__))
 
+    def validateIfNotNoneOrEmpty(self, elementToCheck, noneOrEmptyMessage, validationMessage, raiseException=False):
+        '''
+        if the attribute is a list and the list is not None or Empty
+        every listitem is validated.
+        '''
+        if self.valueNotNoneOrEmpty(elementToCheck, noneOrEmptyMessage, False):
+            self.validateList(elementToCheck, validationMessage, raiseException)
+
+    def validateIfNotNoneOrEmptyRaiseException(self, elementToCheck, noneOrEmptyMessage, validationMessage, raiseException=False):
+        '''
+        if the attribute is a list and the list is not None or Empty
+        every listitem is validated.
+        Raises an Exception if the list is None or Empty
+        '''
+        if self.valueNotNoneOrEmpty(elementToCheck, noneOrEmptyMessage, raiseException):
+            self.validateList(elementToCheck, validationMessage, raiseException)
+
     def valueNotNone(self, attribute, message=None, raiseException=False):
         if attribute is None:
             self.logError(message, raiseException)

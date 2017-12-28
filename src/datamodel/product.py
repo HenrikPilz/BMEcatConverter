@@ -60,19 +60,15 @@ class Product(ValidatingXMLObject, ComparableEqual):
         super().valueNotNoneOrEmpty(self.priceDetails, messagePrefix + "keine Preisinformationen.", raiseException)
         super().validateList(self.priceDetails, messagePrefix + "fehlerhafte Preisinformationen.", raiseException)
 
-        self._validateIfNotNoneOrEmpty(self.mimeInfo,
-                                       messagePrefix + "keine Bilder.",
-                                       messagePrefix + "fehlerhafte Bildinformationen.",
-                                       raiseException)
+        super().validateIfNotNoneOrEmpty(self.mimeInfo,
+                                         messagePrefix + "keine Bilder.",
+                                         messagePrefix + "fehlerhafte Bildinformationen.",
+                                         raiseException)
 
-        self._validateIfNotNoneOrEmpty(self.featureSets,
-                                       messagePrefix + "keine Attribute.",
-                                       messagePrefix + "fehlerhafte Attributinformationen.",
-                                       raiseException)
-
-    def _validateIfNotNoneOrEmpty(self, elementToCheck, noneOrEmptyMessage, validationMessage, raiseException=False):
-        if super().valueNotNoneOrEmpty(elementToCheck, noneOrEmptyMessage, False):
-            super().validateList(elementToCheck, validationMessage, raiseException)
+        super().validateIfNotNoneOrEmpty(self.featureSets,
+                                         messagePrefix + "keine Attribute.",
+                                         messagePrefix + "fehlerhafte Attributinformationen.",
+                                         raiseException)
 
     def _tryValidatingSubElement(self, subElement, exceptionMessage, raiseException=True):
         try:

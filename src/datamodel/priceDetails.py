@@ -30,6 +30,27 @@ class PriceDetails(ValidatingXMLObject, ComparableEqual):
     def __len__(self):
         return len(self.prices)
 
+    def _verifyPriceTypes(self, raiseException, pricenames, price):
+        if price.priceType in pricenames:
+            self.logError("Jeder Preistyp darf nur einmal auftreten. Doppelt: '{0}'".format(price.priceType), raiseException)
+        else:
+            pricenames.append(price.priceType)
+
+    def _validatePricesAndCollectAndCheckPricetypes(self, raiseException):
+        pricenames = []
+        for price in self.prices:
+            price.validate(raiseException)
+            self._verifyPriceTypes(raiseException, pricenames, price)
+
+        return pricenames
+
+    def _validatePricesAndVerifyExistenceOfMandatoryPrices(self, raiseException):
+        pricenames = self._validatePricesAndCollectAndCheckPricetypes(raiseException)
+        atLeastOneOfTheMandatoryPricesIsMissing = not set(self.mandatoryPriceTypes).issubset(pricenames)
+        if len(pricenames) == 0 or atLeastOneOfTheMandatoryPricesIsMissing:
+            missingPriceTypes = ",".join(set(self.mandatoryPriceTypes).difference(pricenames))
+            self.logError("Mindestens ein Pflichtpreis ist nicht vorhanden: '{0}'".format(missingPriceTypes), raiseException)
+
     def validate(self, raiseException=False):
         super().valueNotNoneOrEmpty(self.prices, "Keine Preisangaben hinterlegt.", raiseException)
 
@@ -37,18 +58,8 @@ class PriceDetails(ValidatingXMLObject, ComparableEqual):
             logging.warning("Zeitspanne nicht gueltig.")
         if self.dailyPrice:
             super().logError("Tagespreis hinterlegt!", raiseException)
-        pricenames = []
-        for price in self.prices:
-            price.validate(raiseException)
-            if price.priceType in pricenames:
-                self.logError("Jeder Preistyp darf nur einmal auftreten. Doppelt: '{0}'".format(price.priceType), raiseException)
-            else:
-                pricenames.append(price.priceType)
 
-        atLeastOneOfTheMandatoryPricesIsMissing = not set(self.mandatoryPriceTypes).issubset(pricenames)
-        if len(pricenames) == 0 or atLeastOneOfTheMandatoryPricesIsMissing:
-            missingPriceTypes = ",".join(set(self.mandatoryPriceTypes).difference(pricenames))
-            self.logError("Mindestens ein Pflichtpreis ist nicht vorhanden: '{0}'".format(missingPriceTypes), raiseException)
+        self._validatePricesAndVerifyExistenceOfMandatoryPrices(raiseException)
 
     def addPrice(self, price, raiseException=True):
         self.addToListIfValid(price, self.prices, "Der Preis enthaelt keine validen Einträge. Er wird nicht hinzugefuegt.", raiseException=raiseException)

@@ -37,9 +37,10 @@ class FeatureSet(ValidatingXMLObject, ComparableEqual):
     def validate(self, raiseException=False):
         if self.referenceGroupName is not None and self.referenceGroupId is not None:
             super().logError("Es darf nur entweder eine Referenzgruppen ID oder ein Referenzgruppenname angegeben werden.", raiseException)
-        if super().valueNotNoneOrEmpty(self.features, "Keine Attribute fuer diese Attributgruppe vorhanden!", raiseException):
-            for feature in self.features:
-                feature.validate(raiseException)
+        super().validateIfNotNoneOrEmptyRaiseException(self.features,
+                                         "Keine Attribute fuer diese Attributgruppe vorhanden!",
+                                         "Fehlerhafte Attribute fuer diese Attributgruppe gefunden!",
+                                         raiseException)
 
     def __len__(self):
         return len(self.features)

@@ -20,9 +20,10 @@ class VariantSet(ValidatingXMLObject, ComparableEqual):
 
     def validate(self, raiseException=False):
         super().valueNotNone(self.order, "Die Reihenfolge der Suffixe ist nicht definitiert.", raiseException)
-        if super().valueNotNoneOrEmpty(self.variants, "Keine Varianten fuer diesen Artikel vorhanden!", raiseException):
-            for variant in self.variants:
-                variant.validate(raiseException)
+        super().validateIfNotNoneOrEmptyRaiseException(self.variants,
+                                                       "Keine Varianten fuer diesen Artikel vorhanden!",
+                                                       "Fehlerhafte Varianten fuer diesen Artikel vorhanden!",
+                                                       raiseException)
 
     def addVariant(self, variant):
         super().addToListIfValid(variant, self.variants, "Keine Variante hinzugefügt.")

@@ -37,18 +37,16 @@ class Reference(ValidatingXMLObject, ComparableEqual):
             return supplierArticleIdEqual and mimeInfoEqual and self.referenceType == other.referenceType and str(self.quantity) == str(other.quantity)
 
     def validate(self, raiseException=False):
-        if self.referenceType is None:
-            super().logError("Der Referenz wurde kein Typ zugewiesen.", raiseException)
-        if self.supplierArticleId is None:
-            super().logError("Es wird keine Artikelnummer referenziert.", raiseException)
+        self.valueNotNone(self.referenceType, "Der Referenz wurde kein Typ zugewiesen.", raiseException)
+        self.valueNotNone(self.supplierArticleId, "Es wird keine Artikelnummer referenziert.", raiseException)
         if self.quantity is not None and self.referenceType != "constists_of":
             logging.warning("Die Anzahl sollte nur gesetzt werden, falls der type 'constists_of' ist.")
             self.quantity = None
-        if self.mimeInfo is None or len(self.mimeInfo) == 0:
-            logging.info("Es wurden keine Bilder gefunden.")
-        else:
-            for mime in self.mimeInfo:
-                mime.validate(raiseException)
+
+        super().validateIfNotNoneOrEmpty(self.mimeInfo,
+                                         "Es wurden keine für die Referenz Bilder gefunden.",
+                                         "Die Referenz hat fehlerhafte Bildinformationen.",
+                                         raiseException)
 
     def addMime(self, mime):
         super().addToListIfValid(mime, self.mimeInfo, "Bilddaten für Referenz fehlerhaft", False)
