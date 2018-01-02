@@ -39,17 +39,18 @@ class PyxelExporter(object):
 
     __treatmentClassFields = [ "classType", "className" ]
 
+    __headerRowIndex = 1
+
     def __init__(self, articles, filename, defaultManufacturerName=None):
         '''
         Constructor
         '''
-        self._maxNumberOfPrices = None
+        self._filename = filename
+        self._workbook = None
         self._defaultManufacturerName = defaultManufacturerName
-        self._headerRowIndex = 1
+        self._maxNumberOfPrices = None
         self._currentColumnIndex = 0
         self._currentRowIndex = 0
-        self._workbook = None
-        self._filename = filename
         self._articles = copy.deepcopy(articles)
         self._firstPriceColumIndex = -1
         self._firstAttributeColumIndex = -1
@@ -120,7 +121,7 @@ class PyxelExporter(object):
 
     def __createArtikelHeader(self):
         self._currentColumnIndex = 1
-        self._currentRowIndex = self._headerRowIndex
+        self._currentRowIndex = self.__headerRowIndex
 
         for fieldName in self.__baseFields:
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(fieldName)
@@ -135,7 +136,7 @@ class PyxelExporter(object):
             self.__writeOneArticleToRow(articleType, article)
 
     def __writeArticlesToSheet(self):
-        self._currentRowIndex = self._headerRowIndex + 1
+        self._currentRowIndex = self.__headerRowIndex + 1
         for articleType, articles in self._articles.items():
             self.__transferArticleSet(articleType, articles)
 
@@ -252,12 +253,12 @@ class PyxelExporter(object):
 
     def __createAdditionalSheetHeader(self, sheetName, additionalSheetMapping):
         self._currentColumnIndex = 1
-        self._currentRowIndex = self._headerRowIndex
+        self._currentRowIndex = self.__headerRowIndex
         for columnName in additionalSheetMapping:
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(columnName)
 
     def __writeAdditionalDataToSheet(self, dataTransferMethodName):
-        self._currentRowIndex = self._headerRowIndex + 1
+        self._currentRowIndex = self.__headerRowIndex + 1
         for articles in self._articles.values():
             self.__writeAdditionalDataForArticleSet(articles, dataTransferMethodName)
 
