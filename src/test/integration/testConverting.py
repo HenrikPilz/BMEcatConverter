@@ -4,7 +4,6 @@ Created on 28.11.2017
 @author: henrik.pilz
 '''
 import os
-import threading
 import unittest
 
 import main
@@ -116,13 +115,11 @@ class TestMainConverter(unittest.TestCase):
         self.assertEqual(cm.exception.code, 4)
         self.assertFalse(os.path.exists(outputFilePath))
 
-
     '''
     -------------------------------------
     --- Ab hier funktioniert's :)
     -------------------------------------
     '''
-
     def testHelp(self):
         main.main(['-h'])
 
