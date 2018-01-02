@@ -103,22 +103,7 @@ class PyxelExporter(object):
         self.__createArtikelHeader()
         self.__writeArticlesToSheet()
 
-    def __addFieldsetForCurrentCount(self, entryList, i):
-        for fieldName in entryList:
-            self.__writeValueToCurrentCellAndIncreaseColumnIndex(fieldName + str(i))
-
-    def __iterateRangeForMaxCount(self, maxCount, entryList):
-        for i in range(1, maxCount + 1):
-            self.__addFieldsetForCurrentCount(entryList, i)
-
-    def __addArticlePartIfNecessary(self, maxCount, entryList):
-        startingColumnIndex = 0
-        if maxCount > 0:
-            startingColumnIndex = self._currentColumnIndex
-            self.__iterateRangeForMaxCount(maxCount, entryList)
-
-        return startingColumnIndex
-
+    ''' Artikelheader '''
     def __createArtikelHeader(self):
         self._currentColumnIndex = 1
         self._currentRowIndex = self.__headerRowIndex
@@ -131,21 +116,38 @@ class PyxelExporter(object):
         self._firstAttributeColumIndex = self.__addArticlePartIfNecessary(self._maxNumberOfAttributes, self.__attributeFields)
         self._firstSpecialTreatmentColumIndex = self.__addArticlePartIfNecessary(self._maxNumberOfSpecialTreatmentClasses, self.__treatmentClassFields)
 
-    def __transferArticleSet(self, articleType, articles):
-        for article in articles:
-            self.__writeOneArticleToRow(articleType, article)
+    def __addArticlePartIfNecessary(self, maxCount, entryList):
+        startingColumnIndex = 0
+        if maxCount > 0:
+            startingColumnIndex = self._currentColumnIndex
+            self.__iterateRangeForMaxCount(maxCount, entryList)
 
+        return startingColumnIndex
+
+    def __iterateRangeForMaxCount(self, maxCount, entryList):
+        for i in range(1, maxCount + 1):
+            self.__addFieldsetForCurrentCount(entryList, i)
+
+    def __addFieldsetForCurrentCount(self, entryList, i):
+        for fieldName in entryList:
+            self.__writeValueToCurrentCellAndIncreaseColumnIndex(fieldName + str(i))
+
+    ''' Artikeldaten transferieren '''
     def __writeArticlesToSheet(self):
         self._currentRowIndex = self.__headerRowIndex + 1
         for articleType, articles in self._articles.items():
             self.__transferArticleSet(articleType, articles)
+
+    def __transferArticleSet(self, articleType, articles):
+        for article in articles:
+            self.__writeOneArticleToRow(articleType, article)
 
     def __writeOneArticleToRow(self, articleType, article):
         self.__addBaseFieldsToArticle(articleType, article)
         self.__addMimesToArticle(article.mimeInfo)
         self.__addPriceDetailsToArticle(article.priceDetails)
         self.__addAttributesToArticle(article.featureSets)
-        self.addTreatmentClassesToArticle(article.details.specialTreatmentClasses)
+        self.__addTreatmentClassesToArticle(article.details.specialTreatmentClasses)
         self._currentRowIndex += 1
 
     def __addBaseFieldsToArticle(self, articleType, article):
@@ -209,6 +211,19 @@ class PyxelExporter(object):
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(mime.purpose)
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(mime.order)
 
+    def __addAttributesToArticle(self, featureSets, currentVariant=None):
+        if self._firstAttributeColumIndex < 1:
+            logging.info("Keine Attribute zu transferieren.")
+            return
+        self._currentColumnIndex = self._firstAttributeColumIndex
+        for featureSet in featureSets:
+            self.__writeFeatureSetForArticle(featureSet.features)
+
+    def __writeFeatureSetForArticle(self, features):
+        for feature in features:
+            self.__writeValueToCurrentCellAndIncreaseColumnIndex(feature.name)
+            self.__writeValueToCurrentCellAndIncreaseColumnIndex(self.__getValuesFromFeature(feature))
+
     def __getValuesFromFeature(self, feature):
         cellValue = ""
         for value in feature.values:
@@ -222,20 +237,7 @@ class PyxelExporter(object):
             value = "{0} {1}".format(value, unit)
         return str(value)
 
-    def __writeFeatureSetForArticle(self, features):
-        for feature in features:
-            self.__writeValueToCurrentCellAndIncreaseColumnIndex(feature.name)
-            self.__writeValueToCurrentCellAndIncreaseColumnIndex(self.__getValuesFromFeature(feature))
-
-    def __addAttributesToArticle(self, featureSets, currentVariant=None):
-        if self._firstAttributeColumIndex < 1:
-            logging.info("Keine Attribute zu transferieren.")
-            return
-        self._currentColumnIndex = self._firstAttributeColumIndex
-        for featureSet in featureSets:
-            self.__writeFeatureSetForArticle(featureSet.features)
-
-    def addTreatmentClassesToArticle(self, specialTreatmentClasses):
+    def __addTreatmentClassesToArticle(self, specialTreatmentClasses):
         if self._firstSpecialTreatmentColumIndex < 1:
             logging.info("Keine Fälle für Spezialbehandlungen zu transferieren.")
             return
@@ -244,6 +246,7 @@ class PyxelExporter(object):
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(treatmentClass.classType)
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(treatmentClass.value)
 
+    ''' create additional sheets '''
     def __createAdditionalSheets(self):
         for sheetName, index, columnNames, dataTransferMethodName in self.__additionalSheetsMapping:
             logging.info("Übertrage {0}".format(sheetName))
@@ -251,12 +254,14 @@ class PyxelExporter(object):
             self.__createAdditionalSheetHeader(sheetName, columnNames)
             self.__writeAdditionalDataToSheet(dataTransferMethodName)
 
+    ''' create additional sheets - Header '''
     def __createAdditionalSheetHeader(self, sheetName, additionalSheetMapping):
         self._currentColumnIndex = 1
         self._currentRowIndex = self.__headerRowIndex
         for columnName in additionalSheetMapping:
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(columnName)
 
+    ''' create additional sheets - Transferdata '''
     def __writeAdditionalDataToSheet(self, dataTransferMethodName):
         self._currentRowIndex = self.__headerRowIndex + 1
         for articles in self._articles.values():
@@ -267,6 +272,7 @@ class PyxelExporter(object):
             dataTransferMethod = getattr(self, dataTransferMethodName)
             dataTransferMethod(article)
 
+    ''' Datetransfermethods '''
     def _writeReferencesForOneArticle(self, article):
         for reference in article.references:
             self._currentColumnIndex = 1
@@ -282,6 +288,7 @@ class PyxelExporter(object):
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(",".join(['"{0}"'.format(keyword) for keyword in article.details.keywords]))
             self._currentRowIndex += 1
 
+    ''' Basic write to cell '''
     def __writeValueToCurrentCellAndIncreaseColumnIndex(self, valueToWrite):
         self._currentSheet.cell(row=self._currentRowIndex, column=self._currentColumnIndex, value=valueToWrite)
         self._currentColumnIndex += 1
