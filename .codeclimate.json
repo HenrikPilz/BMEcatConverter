@@ -3,13 +3,13 @@
   "plugins": {
     "duplication": {
       "enabled": true
-    }
+    },
     "fixme": {
       "enabled": true
-    }
+    },
     "pep8": {
       "enabled": true
-    }
+    },
     "radon": {
       "enabled": true
     }
@@ -19,12 +19,12 @@
       "config": {
         "threshold": 5
       }
-    }
+    },
     "method-count": {
       "config": {
      	  "threshold": 30
       }
-    }
+    },
     "file-lines": {
       "config": {
      	  "threshold": 300
