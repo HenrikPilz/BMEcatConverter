@@ -36,6 +36,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Unit test / coverage reports
+coverage/
 htmlcov/
 .tox/
 .coverage
@@ -99,3 +100,11 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# LicLipse project settings
+.settings
+.pydevproject
+.project
+
+# testoutput
+test*output/
