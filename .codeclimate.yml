@@ -9,7 +9,11 @@ plugins:
     enabled: true
   radon:
     enabled: true
-
+  sonar-python:
+    enabled: true
+    config:
+      tests_patterns:
+        - src/test/**
 checks:
   argument-count:
     config:
