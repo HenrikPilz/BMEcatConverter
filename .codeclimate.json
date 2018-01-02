@@ -13,7 +13,7 @@
     "radon": {
       "enabled": true
     }
-  } 
+  },
   "checks": {
     "argument-count": {
       "config": {
