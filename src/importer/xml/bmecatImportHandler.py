@@ -489,19 +489,18 @@ class BMEcatImportHandler(handler.ContentHandler):
         self.__currentElement = None
 
     def addDate(self, attrs=None):
-        if self.__dateType is None:
-            logging.warning("Datum kann nicht gespeichert werden.")
-        elif self.__currentElement is None:
+        if self.__currentElement is None:
             logging.warning("Datum [" + self.__dateType + "] kann nicht gespeichert werden, weil kein Element zum Speichern existiert.")
+        elif self.__dateType is None:
+            logging.warning("Kein Datumstyp gesetzt. Datum kann nicht gespeichert werden.")
+        elif self.__dateType == 'valid_start_date':
+            logging.debug("Datum [" + self.__currentContent + "] wird als Startdatum gespeichert.")
+            self.__currentElement.validFrom = datetime.strptime(self.__currentContent, self.__dateFormat)
+        elif self.__dateType == 'valid_end_date':
+            logging.debug("Datum [" + self.__currentContent + "] wird als Enddatum gespeichert.")
+            self.__currentElement.validTo = datetime.strptime(self.__currentContent, self.__dateFormat)
         else:
-            if self.__dateType == 'valid_start_date':
-                logging.debug("Datum [" + self.__currentContent + "] wird als Startdatum gespeichert.")
-                self.__currentElement.validFrom = datetime.strptime(self.__currentContent, self.__dateFormat)
-            elif self.__dateType == 'valid_end_date':
-                logging.debug("Datum [" + self.__currentContent + "] wird als Enddatum gespeichert.")
-                self.__currentElement.validTo = datetime.strptime(self.__currentContent, self.__dateFormat)
-            else:
-                logging.warning("Datum [" + self.__dateType + "] kann nicht gespeichert werden.")
+            logging.warning("Datum [" + self.__dateType + "] kann nicht gespeichert werden.")
 
     ''' ---------------------------------------------------------------------'''
     '''aktuellen Inhalt des XML-Elements ermitteln'''
