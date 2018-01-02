@@ -14,6 +14,14 @@ class PyxelExporter(object):
     classdocs
     '''
 
+    __additionalSheetsMapping = [ ("Artikelbeziehungen", 1,
+                                   [ "supplierArticleId", "referencType", "referencedSupplierArticleId" ],
+                                   "_writeReferencesForOneArticle"),
+                                  ("Artikelsuchbegriffe", 2,
+                                   [ "supplierArticleId", "keywords" ],
+                                   "_writeKeywordsForOneArticle")
+                                  ]
+
     __baseFields = [ "articleType", "articleId", "supplierArticleId",
                      "descriptionShort", "descriptionLong", "ean",
                      "manufacturerArticleId", "manufacturerName",
@@ -40,6 +48,7 @@ class PyxelExporter(object):
         self._headerRowIndex = 1
         self._currentColumnIndex = 0
         self._currentRowIndex = 0
+        self._workbook = None
         self._filename = filename
         self._articles = copy.deepcopy(articles)
         self._firstPriceColumIndex = -1
@@ -55,13 +64,15 @@ class PyxelExporter(object):
 
         for articleSet in self._articles.values():
             self.__countValuesForArticleSet(articleSet)
+        logging.info("Anzahl zu verarbeitender Artikel: " + str(self._numberOfArticlesProcessed))
+        logging.info("Maximale Anzahl Preise: " + str(self._maxNumberOfPrices))
+        logging.info("Maximale Anzahl Bilder: " + str(self._maxNumberOfMimes))
+        logging.info("Maximale Anzahl Attribute: " + str(self._maxNumberOfAttributes))
+        logging.info("Maximale Anzahl Spezialbehandlungsklassen: " + str(self._maxNumberOfSpecialTreatmentClasses))
 
-    def __extractCount(self, entryList):
-        countEntries = 0
-        for entry in entryList:
-            countEntries += len(entry)
-
-        return countEntries
+    def __countValuesForArticleSet(self, articleSet):
+        for article in articleSet:
+            self.__extractNumbersFromArticle(article)
 
     def __extractNumbersFromArticle(self, article):
         self._maxNumberOfPrices = max(self._maxNumberOfPrices, self.__extractCount(article.priceDetails))
@@ -70,29 +81,26 @@ class PyxelExporter(object):
         self._maxNumberOfMimes = max(self._maxNumberOfMimes, len(article.mimeInfo))
         self._maxNumberOfSpecialTreatmentClasses = max(self._maxNumberOfSpecialTreatmentClasses, len(article.details.specialTreatmentClasses))
 
-    def __countValuesForArticleSet(self, articleSet):
-        for article in articleSet:
-            self.__extractNumbersFromArticle(article)
+    def __extractCount(self, entryList):
+        countEntries = 0
+        for entry in entryList:
+            countEntries += len(entry)
 
+        return countEntries
+
+    ''' ExcelMappe erstellen'''
     def createNewWorkbook(self):
-        wb = Workbook()
-        self.createArtikelSheet(wb)
-        wb.save(self._filename)
-        self.createReferencesSheet(wb)
-        wb.save(self._filename)
-        self.createKeywordsSheet(wb)
-        wb.save(self._filename)
+        self._workbook = Workbook()
+        self.__createArtikelSheet()
+        self._workbook.save(self._filename)
+        self.__createAdditionalSheets()
+        self._workbook.save(self._filename)
 
-    def createArtikelSheet(self, wb):
+    def __createArtikelSheet(self):
         logging.info("Übertrage Artikel.")
-        self._currentSheet = wb.create_sheet("Artikel", 0)
+        self._currentSheet = self._workbook.create_sheet("Artikel", 0)
         self.__createArtikelHeader()
         self.__writeArticlesToSheet()
-        logging.info("Anzahl verarbeiteter Artikel: " + str(self._numberOfArticlesProcessed))
-        logging.info("Maximale Anzahl Preise: " + str(self._maxNumberOfPrices))
-        logging.info("Maximale Anzahl Bilder: " + str(self._maxNumberOfMimes))
-        logging.info("Maximale Anzahl Attribute: " + str(self._maxNumberOfAttributes))
-        logging.info("Maximale Anzahl Spezialbehandlungsklassen: " + str(self._maxNumberOfSpecialTreatmentClasses))
 
     def __addFieldsetForCurrentCount(self, entryList, i):
         for fieldName in entryList:
@@ -235,29 +243,30 @@ class PyxelExporter(object):
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(treatmentClass.classType)
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(treatmentClass.value)
 
-    def createReferencesSheet(self, wb):
-        logging.info("Übertrage Artikelbeziehungen.")
-        self._currentSheet = wb.create_sheet("Artikelbeziehungen", 1)
-        self.__createReferencesHeader()
-        self.__writeReferencesToSheet()
+    def __createAdditionalSheets(self):
+        for sheetName, index, columnNames, dataTransferMethodName in self.__additionalSheetsMapping:
+            logging.info("Übertrage {0}".format(sheetName))
+            self._currentSheet = self._workbook.create_sheet(sheetName, index)
+            self.__createAdditionalSheetHeader(sheetName, columnNames)
+            self.__writeAdditionalDataToSheet(dataTransferMethodName)
 
-    def __createReferencesHeader(self):
+    def __createAdditionalSheetHeader(self, sheetName, additionalSheetMapping):
         self._currentColumnIndex = 1
         self._currentRowIndex = self._headerRowIndex
-        self.__writeValueToCurrentCellAndIncreaseColumnIndex("supplierArticleId")
-        self.__writeValueToCurrentCellAndIncreaseColumnIndex("referencType")
-        self.__writeValueToCurrentCellAndIncreaseColumnIndex("referencedSupplierArticleId")
+        for columnName in additionalSheetMapping:
+            self.__writeValueToCurrentCellAndIncreaseColumnIndex(columnName)
 
-    def __writeReferencesForArticleSet(self, articles):
-        for article in articles:
-            self.__writeReferencesForOneArticle(article)
-
-    def __writeReferencesToSheet(self):
+    def __writeAdditionalDataToSheet(self, dataTransferMethodName):
         self._currentRowIndex = self._headerRowIndex + 1
         for articles in self._articles.values():
-            self.__writeReferencesForArticleSet(articles)
+            self.__writeAdditionalDataForArticleSet(articles, dataTransferMethodName)
 
-    def __writeReferencesForOneArticle(self, article):
+    def __writeAdditionalDataForArticleSet(self, articles, dataTransferMethodName):
+        for article in articles:
+            dataTransferMethod = getattr(self, dataTransferMethodName)
+            dataTransferMethod(article)
+
+    def _writeReferencesForOneArticle(self, article):
         for reference in article.references:
             self._currentColumnIndex = 1
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(article.productId)
@@ -265,33 +274,12 @@ class PyxelExporter(object):
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(reference.supplierArticleId)
             self._currentRowIndex += 1
 
-    def createKeywordsSheet(self, wb):
-        logging.info("Übertrage Artikelsuchbegriffe.")
-        self._currentSheet = wb.create_sheet("Artikelsuchbegriffe", 1)
-        self.__createKeywordsHeader()
-        self.__writeKeywordsToSheet()
-
-    def __createKeywordsHeader(self):
+    def _writeKeywordsForOneArticle(self, article):
         self._currentColumnIndex = 1
-        self._currentRowIndex = self._headerRowIndex
-        self.__writeValueToCurrentCellAndIncreaseColumnIndex("supplierArticleId")
-        self.__writeValueToCurrentCellAndIncreaseColumnIndex("keywords")
-
-    def __writeKeywordsToSheet(self):
-        self._currentRowIndex = self._headerRowIndex + 1
-        for articles in self._articles.values():
-            self.__writeKeywordsForArticleSet(articles)
-
-    def __writeKeywordsForArticleSet(self, articles):
-        for article in articles:
-            if len(article.details.keywords) > 0:
-                self.__writeKeywordsForOneArticle(article)
-
-    def __writeKeywordsForOneArticle(self, article):
-        self._currentColumnIndex = 1
-        self.__writeValueToCurrentCellAndIncreaseColumnIndex(article.productId)
-        self.__writeValueToCurrentCellAndIncreaseColumnIndex(",".join(['"{0}"'.format(keyword) for keyword in article.details.keywords]))
-        self._currentRowIndex += 1
+        if len(article.details.keywords) > 0:
+            self.__writeValueToCurrentCellAndIncreaseColumnIndex(article.productId)
+            self.__writeValueToCurrentCellAndIncreaseColumnIndex(",".join(['"{0}"'.format(keyword) for keyword in article.details.keywords]))
+            self._currentRowIndex += 1
 
     def __writeValueToCurrentCellAndIncreaseColumnIndex(self, valueToWrite):
         self._currentSheet.cell(row=self._currentRowIndex, column=self._currentColumnIndex, value=valueToWrite)
