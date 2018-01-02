@@ -53,3 +53,7 @@ exclude_patterns:
   - "**/tests/"
   - "**/vendor/"
   - "**/*.d.ts"
+  - "*.md"
+  - "*.txt"
+  - "*.cmd"
+  - "*.ini"
