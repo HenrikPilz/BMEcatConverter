@@ -62,14 +62,11 @@ class PyxelExporter(object):
         self._maxNumberOfMimes = 0
         self._maxNumberOfSpecialTreatmentClasses = 0
         self._numberOfArticlesProcessed = 0
+        self._numberOfArticlesWithKeywords = 0
+        self._numberOfArticlereferences = 0
 
         for articleSet in self._articles.values():
             self.__countValuesForArticleSet(articleSet)
-        logging.info("Anzahl zu verarbeitender Artikel: " + str(self._numberOfArticlesProcessed))
-        logging.info("Maximale Anzahl Preise: " + str(self._maxNumberOfPrices))
-        logging.info("Maximale Anzahl Bilder: " + str(self._maxNumberOfMimes))
-        logging.info("Maximale Anzahl Attribute: " + str(self._maxNumberOfAttributes))
-        logging.info("Maximale Anzahl Spezialbehandlungsklassen: " + str(self._maxNumberOfSpecialTreatmentClasses))
 
     def __countValuesForArticleSet(self, articleSet):
         for article in articleSet:
@@ -96,6 +93,13 @@ class PyxelExporter(object):
         self._workbook.save(self._filename)
         self.__createAdditionalSheets()
         self._workbook.save(self._filename)
+        logging.info("Anzahl zu verarbeitender Artikel: " + str(self._numberOfArticlesProcessed))
+        logging.info("Maximale Anzahl Preise: " + str(self._maxNumberOfPrices))
+        logging.info("Maximale Anzahl Bilder: " + str(self._maxNumberOfMimes))
+        logging.info("Maximale Anzahl Attribute: " + str(self._maxNumberOfAttributes))
+        logging.info("Maximale Anzahl Spezialbehandlungsklassen: " + str(self._maxNumberOfSpecialTreatmentClasses))
+        logging.info("Anzahl Artikelreferenzen: " + str(self._numberOfArticlereferences))
+        logging.info("Anzahl Artikel mit Suchworteinträgen: " + str(self._numberOfArticlesWithKeywords))
 
     def __createArtikelSheet(self):
         logging.info("Übertrage Artikel.")
@@ -280,6 +284,7 @@ class PyxelExporter(object):
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(reference.referenceType)
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(reference.supplierArticleId)
             self._currentRowIndex += 1
+            self._numberOfArticlereferences += 1
 
     def _writeKeywordsForOneArticle(self, article):
         self._currentColumnIndex = 1
@@ -287,6 +292,7 @@ class PyxelExporter(object):
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(article.productId)
             self.__writeValueToCurrentCellAndIncreaseColumnIndex(",".join(['"{0}"'.format(keyword) for keyword in article.details.keywords]))
             self._currentRowIndex += 1
+            self._numberOfArticlesWithKeywords += 1
 
     ''' Basic write to cell '''
     def __writeValueToCurrentCellAndIncreaseColumnIndex(self, valueToWrite):
