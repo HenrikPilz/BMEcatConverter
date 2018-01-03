@@ -276,7 +276,7 @@ class BMEcatImportHandler(handler.ContentHandler):
     def savePriceDetails(self, attrs):
         self._raiseExceptionIfNone(self.__currentArticle,
                                    "Preisdetails sollen gespeichert werden. Aber es ist kein Artikel vorhanden")
-        self.__currentArticle.addPriceDetails(self.__currentPriceDetails)
+        self.__currentArticle.addPriceDetails(self.__currentPriceDetails, False)
         self.__currentPriceDetails = None
         self.__currentElement = None
 
@@ -291,7 +291,7 @@ class BMEcatImportHandler(handler.ContentHandler):
     ''' Preis speichern '''
     def savePrice(self, attrs):
         self._raiseExceptionIfNone(self.__currentPriceDetails, "Preis soll gespeichert werden. Aber es sind keine Preisdetails  vorhanden")
-        self.__currentPriceDetails.addPrice(self.__currentPrice, raiseException=False)
+        self.__currentPriceDetails.addPrice(self.__currentPrice, False)
         self.__currentPrice = None
         self.__currentElement = self.__currentPriceDetails
 

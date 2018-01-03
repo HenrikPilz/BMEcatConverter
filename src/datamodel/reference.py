@@ -44,7 +44,7 @@ class Reference(ValidatingXMLObject, ComparableEqual):
             self.quantity = None
 
         super().validateIfNotNoneOrEmpty(self.mimeInfo,
-                                         "Es wurden keine für die Referenz Bilder gefunden.",
+                                         None,
                                          "Die Referenz hat fehlerhafte Bildinformationen.",
                                          raiseException)
 

@@ -204,7 +204,7 @@ class PyxelExporter(object):
 
     def __addMimesToArticle(self, mimeInfo):
         if self._firstMimeColumIndex < 1:
-            logging.info("Keine Bilder zu transferieren.")
+            logging.warning("Keine Bilder zu transferieren.")
             return
         self._currentColumnIndex = self._firstMimeColumIndex
         for mime in mimeInfo:
@@ -217,7 +217,7 @@ class PyxelExporter(object):
 
     def __addAttributesToArticle(self, featureSets, currentVariant=None):
         if self._firstAttributeColumIndex < 1:
-            logging.info("Keine Attribute zu transferieren.")
+            logging.warning("Keine Attribute zu transferieren.")
             return
         self._currentColumnIndex = self._firstAttributeColumIndex
         for featureSet in featureSets:
@@ -243,7 +243,7 @@ class PyxelExporter(object):
 
     def __addTreatmentClassesToArticle(self, specialTreatmentClasses):
         if self._firstSpecialTreatmentColumIndex < 1:
-            logging.info("Keine Fälle für Spezialbehandlungen zu transferieren.")
+            logging.debug("Keine Fälle für Spezialbehandlungen zu transferieren.")
             return
         self._currentColumnIndex = self._firstSpecialTreatmentColumIndex
         for treatmentClass in specialTreatmentClasses:
