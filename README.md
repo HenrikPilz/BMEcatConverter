@@ -12,13 +12,13 @@ Build: [![CircleCI](https://circleci.com/gh/HenrikPilz/BMEcatConverter.svg?style
 
 Scrutinizer
 
-[![Code Coverage](https://scrutinizer-ci.com/b/contorion/bmecatconverter/badges/coverage.png?b=master&s=7e4bdd562aebde784b3949294b7fd1c5079e4635)](https://scrutinizer-ci.com/b/contorion/bmecatconverter/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/b/contorion/bmecatconverter/badges/coverage.png?b=master&s=0d1533b61f1242d1681844224c30360bd22bb2c4)](https://scrutinizer-ci.com/b/contorion/bmecatconverter/?branch=master)
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/b/contorion/bmecatconverter/badges/quality-score.png?b=master&s=f632363965a1ae81ebc5462fd7ad4925616cd9de)](https://scrutinizer-ci.com/b/contorion/bmecatconverter/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/b/contorion/bmecatconverter/badges/quality-score.png?b=master&s=753fffe485486cf8661110b5289091f523e2c6fe)](https://scrutinizer-ci.com/b/contorion/bmecatconverter/?branch=master)
 
-[![Build Status](https://scrutinizer-ci.com/b/contorion/bmecatconverter/badges/build.png?b=master&s=2e9bc62f6a2d8cee6fa41bbd77b9bbb5027d23f3)](https://scrutinizer-ci.com/b/contorion/bmecatconverter/build-status/master)
+[![Build Status](https://scrutinizer-ci.com/b/contorion/bmecatconverter/badges/build.png?b=master&s=1ee396307d71cf85d657e3b0e30e75bc240b584f)](https://scrutinizer-ci.com/b/contorion/bmecatconverter/build-status/master)
 
-[![Code Intelligence Status](https://scrutinizer-ci.com/b/contorion/bmecatconverter/badges/code-intelligence.svg?b=master&s=5f876acdb6786e87d38160c62209d4064459fa9e)](https://scrutinizer-ci.com/code-intelligence)
+[![Code Intelligence Status](https://scrutinizer-ci.com/b/contorion/bmecatconverter/badges/code-intelligence.svg?b=master&s=d11f2a9888d211bf8ea23e04fe83535672386a58)](https://scrutinizer-ci.com/code-intelligence)
 
 
 
