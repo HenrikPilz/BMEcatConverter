@@ -57,16 +57,13 @@ class Feature(ValidatingXMLObject, ComparableEqual):
             self.unit = self.__etimUnitMapper.getSIUnit(self.unit)
 
     def validate(self, raiseException=False):
-        errMsg = None
         super().valueNotNoneOrEmpty(self.name, "Der Merkmalsname fehlt.", raiseException)
         hasValues = super().valueNotNoneOrEmpty(self.values)
         hasVariants = super().valueNotNoneOrEmpty(self.variants)
         if not hasValues and not hasVariants:
-            errMsg = "Es wurden weder Attributswerte noch Varianten angegeben."
-            super().logError(errMsg, raiseException)
+            super().logError("Es wurden weder Attributswerte noch Varianten angegeben.", raiseException)
         elif hasValues and hasVariants:
-            errMsg = "Es wurden Values und Varianten angegeben. Die Zuordnung ist mehrdeutig."
-            super().logError(errMsg, raiseException)
+            super().logError("Es wurden Attributswerte und Varianten angegeben. Die Zuordnung ist mehrdeutig.", raiseException)
         else:
             if hasVariants:
                 self.variants.validate(raiseException)

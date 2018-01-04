@@ -121,7 +121,10 @@ class ValidatingObject(object):
          Taking an ErrorMessage, logging it and if wanted throwing an Exception
         '''
         if errMsg is not None:
-            logging.error(errMsg)
+            if raiseException:
+                logging.error(errMsg)
+            else:
+                logging.warning(errMsg)
         if raiseException:
             raise Exception(errMsg)
 

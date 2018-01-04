@@ -28,10 +28,8 @@ class TreatmentClass(ValidatingXMLObject, ComparableEqual):
             return self.classType == other.classType and self.value == other.value
 
     def validate(self, raiseException=False):
-        if self.classType is None:
-            super().logError("Es muss eine Klassifizierung angegeben werden.", raiseException)
-        if self.value is None:
-            logging.info("Es wurde kein Wert zur Klassifizierung angegeben.")
+        super().valueNotNone(self.classType, "Es muss eine Klassifizierung angegeben werden.", raiseException)
+        super().valueNotNone(self.value, "Es wurde kein Wert zur Klassifizierung angegeben.", False)
 
     def toXml(self, raiseExceptionOnValidate=True):
         xmlElement = super().validateAndCreateBaseElement("SPECIAL_TREATMENT_CLASS", { "type" : self.classType }, raiseExceptionOnValidate)

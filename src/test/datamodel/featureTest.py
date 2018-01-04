@@ -101,7 +101,7 @@ class FeatureTest(unittest.TestCase):
         feature.addVariant(variant)
         feature.addVariantOrder(1)
 
-        with self.assertRaisesRegex(Exception, "Es wurden Values und Varianten angegeben. Die Zuordnung ist mehrdeutig."):
+        with self.assertRaisesRegex(Exception, "Es wurden Attributswerte und Varianten angegeben. Die Zuordnung ist mehrdeutig."):
             feature.validate(True)
 
     def testValidateValue(self):

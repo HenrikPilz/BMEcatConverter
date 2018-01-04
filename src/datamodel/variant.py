@@ -26,13 +26,8 @@ class Variant(ValidatingXMLObject, ComparableEqual):
             return str(self.value) == str(other.value) and str(self.productIdSuffix) == str(other.productIdSuffix)
 
     def validate(self, raiseException=False):
-        errMsg = None
-        if self.value is None:
-            errMsg = "Die Variante wurde nicht definiert."
-            super().logError(errMsg, raiseException)
-        if self.productIdSuffix is None:
-            errMsg = "Das Suffix fuer die Variante " + str(self.value) + " wurde nicht definiert."
-            super().logError(errMsg, raiseException)
+        super().valueNotNone(self.value, "Die Variante wurde nicht definiert.", raiseException)
+        super().valueNotNone(self.productIdSuffix, "Das Suffix fuer die Variante '{0}' wurde nicht definiert.".format(str(self.value)), raiseException)
 
     def toXml(self, raiseExceptionOnValidate=True):
         xmlVariant = super().validateAndCreateBaseElement("VARIANT", raiseExceptionOnValidate=raiseExceptionOnValidate)

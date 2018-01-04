@@ -58,7 +58,7 @@ class ProductDetailsTest(unittest.TestCase):
 
     def testValidateExceptionNoArticleTitle(self):
         productdetails = ProductDetails()
-        with self.assertRaisesRegex(Exception, "Ein Artikelname fehlt"):
+        with self.assertRaisesRegex(Exception, "Der Artikelname fehlt."):
             productdetails.validate(True)
 
     def testValidate(self):

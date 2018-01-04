@@ -25,7 +25,7 @@ class VariantTest(unittest.TestCase):
     def testValidateExceptionSuffixForVariantNotDefined(self):
         variant = Variant()
         variant.value = "10"
-        with self.assertRaisesRegex(Exception, "Das Suffix fuer die Variante " + variant.value + " wurde nicht definiert."):
+        with self.assertRaisesRegex(Exception, "Das Suffix fuer die Variante '{0}' wurde nicht definiert.".format(variant.value)):
             variant.validate(True)
 
     def testValidate(self):

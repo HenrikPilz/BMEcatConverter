@@ -243,7 +243,7 @@ class ProductTest(unittest.TestCase):
             product.validate(True)
         # Productdetails
         product.addDetails()
-        with self.assertRaisesRegex(Exception, "Ein Artikelname fehlt"):
+        with self.assertRaisesRegex(Exception, "Der Artikel '[0-9]{5}' hat fehlerhafte Artikeldetails. Der Artikelname fehlt."):
             product.validate(True)
 
     def testValidateExceptionNoOrderDetails(self):
