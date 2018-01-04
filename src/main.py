@@ -135,13 +135,11 @@ def main(argv):
     except HelpCalledException:
         printHelpAndExit()
     except (FileNotFoundError, URLError) as fnfe:
-        printHelpAndExit("Dateiname konnte nicht gefunden werden: {0}".format(str(fnfe)), 5)
+        printHelpAndExit("File not found: {0}".format(str(fnfe)), 5)
     except ConversionModeException as cme:
         printHelpAndExit("Wrong Conversion Mode: {0}".format(str(cme)), 2)
-    except MissingArgumentException as mae:
-        printHelpAndExit("Missing Arguments: {0}".format(str(mae)), 3)
-    except getopt.GetoptError as goe:
-        printHelpAndExit("Options Error: {0}".format(str(goe)), 4)
+    except (MissingArgumentException, getopt.GetoptError) as mae:
+        printHelpAndExit("Missing/Wrong Arguments: {0}".format(str(mae)), 3)
     except Exception as e:
         logging.exception("General Exception: {0}".format(str(e)))
         sys.exit(6)

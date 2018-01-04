@@ -112,7 +112,7 @@ class TestMainConverter(unittest.TestCase):
         args = ['-p', '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
         with self.assertRaises(SystemExit) as cm:
             main.main(args)
-        self.assertEqual(cm.exception.code, 4)
+        self.assertEqual(cm.exception.code, 3)
         self.assertFalse(os.path.exists(outputFilePath))
 
     '''
