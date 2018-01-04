@@ -18,11 +18,11 @@ class ComparableEqual(object):
 
     @classmethod
     def checkListForEquality(self, lhs, rhs):
-        for leftItem in lhs:
-            if leftItem not in rhs:
-                return False
+        return self.__everyElementOfLeftListIsInRightList(lhs, rhs) and self.__everyElementOfLeftListIsInRightList(rhs, lhs)
 
-        for rightItem in rhs:
-            if rightItem not in lhs:
+    @classmethod
+    def __everyElementOfLeftListIsInRightList(self, leftList, rightList):
+        for leftListItem in leftList:
+            if leftListItem not in rightList:
                 return False
         return True
