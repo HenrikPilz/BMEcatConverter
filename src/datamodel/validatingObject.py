@@ -34,8 +34,9 @@ class ValidatingObject(object):
                     if attributeValue not in attributeList:
                         attributeList.append(attributeValue)
         except AttributeError as ae:
-            logging.error("Klassenattribut nicht gefunden: {0}".format(str(ae)))
+            self.logError("Klassenattribut nicht gefunden: {0}".format(str(ae)), True)
 
+    @classmethod
     def validateList(self, listToValidate, additionalMessage, raiseException):
         try:
             for listItem in listToValidate:

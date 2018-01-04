@@ -8,5 +8,6 @@ from test.datamodel.productDetailsTest import ProductDetailsTest
 from test.datamodel.productTest import ProductTest
 from test.datamodel.referenceTest import ReferenceTest
 from test.datamodel.treatmentClassTest import TreatmentClassTest
+from test.datamodel.validatingObjectTest import ValidatingObjectTest
 from test.datamodel.variantSetTest import VariantSetTest
 from test.datamodel.variantTest import VariantTest
