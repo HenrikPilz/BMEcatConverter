@@ -7,7 +7,8 @@ import unittest
 
 from lxml import etree
 
-from datamodel import Mime, Reference
+from datamodel import Mime
+from datamodel import Reference
 
 
 class ReferenceTest(unittest.TestCase):

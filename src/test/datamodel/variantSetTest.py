@@ -7,7 +7,8 @@ import unittest
 
 from lxml import etree
 
-from datamodel import Variant, VariantSet
+from datamodel import Variant
+from datamodel import VariantSet
 
 
 class VariantSetTest(unittest.TestCase):

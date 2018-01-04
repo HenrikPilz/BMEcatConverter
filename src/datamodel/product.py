@@ -8,10 +8,10 @@ import os
 
 from lxml.etree import SubElement
 
+from datamodel.comparableEqual import ComparableEqual
 from datamodel.orderDetails import OrderDetails
 from datamodel.productDetails import ProductDetails
-from datamodel.validatingObject import ComparableEqual
-from datamodel.validatingObject import ValidatingXMLObject
+from datamodel.xmlObject import ValidatingXMLObject
 from mapping.blacklist import Blacklist
 
 

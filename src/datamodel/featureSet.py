@@ -6,8 +6,8 @@ Created on 05.05.2017
 import logging
 import os
 
-from datamodel.validatingObject import ComparableEqual
-from datamodel.validatingObject import ValidatingXMLObject
+from datamodel.comparableEqual import ComparableEqual
+from datamodel.xmlObject import ValidatingXMLObject
 from mapping.blacklist import Blacklist
 
 

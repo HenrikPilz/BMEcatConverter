@@ -3,10 +3,21 @@ Created on 16.07.2017
 
 @author: Henrik Pilz
 '''
+
+
 import unittest
 
-from datamodel import Feature, FeatureSet, Mime, Product, ProductDetails, Reference, Variant, OrderDetails, PriceDetails, Price
-from datamodel.treatmentClass import TreatmentClass
+from datamodel import Feature
+from datamodel import FeatureSet
+from datamodel import Mime
+from datamodel import OrderDetails
+from datamodel import Price
+from datamodel import PriceDetails
+from datamodel import Product
+from datamodel import ProductDetails
+from datamodel import Reference
+from datamodel import TreatmentClass
+from datamodel import Variant
 
 
 class ProductTest(unittest.TestCase):

@@ -5,8 +5,8 @@ Created on 16.07.2017
 '''
 import unittest
 
+from datamodel import FormulaFoundException
 from datamodel import Mime
-from datamodel.validatingObject import FormulaFoundException
 
 
 class MimeTest(unittest.TestCase):

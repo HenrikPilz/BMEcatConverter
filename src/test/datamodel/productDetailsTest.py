@@ -5,7 +5,8 @@ Created on 16.07.2017
 '''
 import unittest
 
-from datamodel import ProductDetails, TreatmentClass
+from datamodel import ProductDetails
+from datamodel import TreatmentClass
 
 
 class ProductDetailsTest(unittest.TestCase):

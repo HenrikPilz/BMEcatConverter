@@ -3,8 +3,8 @@ Created on 17.05.2017
 
 @author: henrik.pilz
 '''
-from datamodel.validatingObject import ComparableEqual
-from datamodel.validatingObject import ValidatingXMLObject
+from datamodel.comparableEqual import ComparableEqual
+from datamodel.xmlObject import ValidatingXMLObject
 
 
 class Variant(ValidatingXMLObject, ComparableEqual):

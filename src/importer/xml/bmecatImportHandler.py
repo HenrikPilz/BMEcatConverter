@@ -16,8 +16,8 @@ from datamodel import PriceDetails
 from datamodel import Product
 from datamodel import Reference
 from datamodel import TreatmentClass
+from datamodel import ValidatingObject
 from datamodel import Variant
-from datamodel.validatingObject import ValidatingObject
 from transformer import SeparatorTransformer
 
 

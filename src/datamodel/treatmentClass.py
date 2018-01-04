@@ -3,10 +3,8 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
-import logging
-
-from datamodel.validatingObject import ComparableEqual
-from datamodel.validatingObject import ValidatingXMLObject
+from datamodel.comparableEqual import ComparableEqual
+from datamodel.xmlObject import ValidatingXMLObject
 
 
 class TreatmentClass(ValidatingXMLObject, ComparableEqual):

@@ -15,8 +15,8 @@ from datamodel import Mime
 from datamodel import Price
 from datamodel import PriceDetails
 from datamodel import Product
+from transformer import NumberFormatException
 from transformer import SeparatorTransformer
-from transformer.separators import NumberFormatException
 
 
 class ExcelImporter(object):

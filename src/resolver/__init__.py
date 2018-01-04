@@ -1,1 +1,1 @@
-from .dtdResolver import DTDResolver
+from resolver.dtdResolver import DTDResolver

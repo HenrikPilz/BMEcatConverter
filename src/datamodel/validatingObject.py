@@ -7,42 +7,11 @@ from abc import abstractmethod
 from array import array
 import logging
 
-from lxml.etree import SubElement, Element
-
-
-class NoValueGivenException(Exception):
-    '''
-    Exception thrown when no Value is given.
-    '''
-
 
 class FormulaFoundException(Exception):
     '''
     Exception thrown if an excel formula entry is found.
     '''
-
-
-class ComparableEqual(object):
-    '''
-    Interface Class for a Class which are comparable
-    '''
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__)
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    @classmethod
-    def checkListForEquality(self, lhs, rhs):
-        for leftItem in lhs:
-            if leftItem not in rhs:
-                return False
-
-        for rightItem in rhs:
-            if rightItem not in lhs:
-                return False
-        return True
 
 
 class ValidatingObject(object):
@@ -171,52 +140,3 @@ class ValidatingObject(object):
     def __checkValueForFormulaEntry(self, value, attributeName):
         if str(value).startswith("="):
             raise FormulaFoundException("Im Objekt vom Typ '{0}' wurde im Feld {1} ein Formeleintrag gefunden.".format(self.__class__.__name__, attributeName))
-
-
-class XMLObject(object):
-    '''
-    Interface Class for a Class which writes its content to XML
-    '''
-
-    @abstractmethod
-    def toXml(self):
-        raise NotImplementedError("Please implement 'toXml' in your class '{0}".format(__file__))
-
-    def addMandatorySubElement(self, parent, tag, value):
-        '''
-        Erstellt eiin Child-Element und wirft eine Exception, falls value nicht None
-        '''
-        if value is None:
-            raise NoValueGivenException("'{0}' Kein Wert übergeben.".format(tag))
-        subElement = SubElement(parent, tag)
-        subElement.text = str(value).strip()
-        return subElement
-
-    def addOptionalSubElement(self, parent, tag, value):
-        '''
-        Erstellt eiin Child-Element, falls value nicht None
-        '''
-        if value is not None and len(str(value)) > 0:
-            return self.addMandatorySubElement(parent, tag, value)
-        return None
-
-    def addListOfSubElements(self, parent, listOfSubElements, raiseExceptionOnValidate=True):
-        for element in listOfSubElements:
-            parent.append(element.toXml(raiseExceptionOnValidate=raiseExceptionOnValidate))
-
-    def addDateTimeSubElement(self, parent, dateType, date):
-        dateTimeSubElement = SubElement(parent, "DATETIME", { "type"  : dateType})
-        dateSubElement = SubElement(dateTimeSubElement, "DATE")
-        dateSubElement.text = date.strftime("%Y-%m-%d")
-        timeSubElement = SubElement(dateTimeSubElement, "TIME")
-        timeSubElement.text = date.strftime("%H:%M:%S")
-
-
-class ValidatingXMLObject(ValidatingObject, XMLObject):
-    '''
-    Interface Class for a Class which validates its content and writes its Content to XML
-    '''
-
-    def validateAndCreateBaseElement(self, tagname, attributes=None, raiseExceptionOnValidate=True):
-        self.validate(raiseExceptionOnValidate)
-        return Element(tagname, attributes)

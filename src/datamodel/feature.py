@@ -5,9 +5,9 @@ Created on 05.05.2017
 '''
 import os
 
-from datamodel.validatingObject import ComparableEqual
-from datamodel.validatingObject import ValidatingXMLObject
+from datamodel.comparableEqual import ComparableEqual
 from datamodel.variantSet import VariantSet
+from datamodel.xmlObject import ValidatingXMLObject
 from mapping import UnitMapper
 
 
