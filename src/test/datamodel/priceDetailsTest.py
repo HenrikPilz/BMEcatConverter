@@ -140,7 +140,7 @@ class PriceDetailsTest(unittest.TestCase):
                          b'<ARTICLE_PRICE_DETAILS>' +
                          b'<DATETIME type="valid_start_date"><DATE>2017-09-22</DATE><TIME>00:00:00</TIME></DATETIME>' +
                          b'<DATETIME type="valid_end_date"><DATE>2018-09-21</DATE><TIME>00:00:00</TIME></DATETIME>' +
-                         b'<ARTICLE_PRICE price_type="net_customer"><PRICE_AMOUNT>1</PRICE_AMOUNT><PRICE_CURRENCY>EUR</PRICE_CURRENCY>' +
+                         b'<ARTICLE_PRICE price_type="net_customer"><PRICE_AMOUNT>1.0</PRICE_AMOUNT><PRICE_CURRENCY>EUR</PRICE_CURRENCY>' +
                          b'<TAX>0.19</TAX><LOWER_BOUND>1</LOWER_BOUND></ARTICLE_PRICE></ARTICLE_PRICE_DETAILS>',
                          "XML Output Kaputt")
 

@@ -53,7 +53,7 @@ class PriceTest(unittest.TestCase):
         self.assertEqual(price.tax, 0.07, "Tax was set but should stay")
         price.tax = "0.07"
         price.validate(True)
-        self.assertEqual(price.tax, "0.07", "Tax was set but should stay")
+        self.assertEqual(price.tax, 0.07, "Tax was set but should stay")
 
     def testEqual(self):
         price1 = Price()

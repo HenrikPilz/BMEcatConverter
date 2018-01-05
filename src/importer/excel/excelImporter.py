@@ -98,7 +98,7 @@ class ExcelImporter(object):
         "mime_order" : "order"
     }
 
-    __fieldsToTransform = [ "amount", "tax", "factor" ]
+    __fieldsToTransform = [ "priceAmount", "price_amount", "amount", "tax", "factor" ]
 
     def __init__(self, separatorTransformer=SeparatorTransformer("detect")):
         '''

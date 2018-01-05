@@ -36,14 +36,18 @@ class Price(ValidatingXMLObject, ComparableEqual):
             return self.priceType == other.priceType and amountEqual and currencyEqual and taxEqual and lowerBoundEqual and factorEqual
 
     def validate(self, raiseException=False):
-        if self.valueNotNone(self.amount, "Kein Preis angegeben!", raiseException) and float(self.amount) < 0:
-            self.amount = 0
-            super().logError("Negativer Preis angegeben!", raiseException)
+        if self.valueNotNone(self.amount, "Kein Preis angegeben!", raiseException):
+            if float(self.amount) < 0:
+                self.amount = 0
+                super().logError("Negativer Preis angegeben!", raiseException)
+            self.amount = round(float(self.amount), 2)
+
         if self.priceType is None:
             logging.warning("Kein Typ fuer den Preis angeben!")
         if float(self.tax) not in [ 0.19, 0.07 ]:
             logging.warning("Ungueltige Steuerangabe: {t:f}. Steuer auf 0.19 gesetzt.".format(t=self.tax))
             self.tax = 0.19
+        self.tax = round(float(self.tax), 2)
         if self.currency != "EUR":
             logging.warning("Waehrung nicht in EURO: " + str(self.currency))
         if float(self.lowerBound) < 1:
