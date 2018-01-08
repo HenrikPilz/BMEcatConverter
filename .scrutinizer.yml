@@ -1,3 +1,5 @@
+# language: python
+# tests: true
 checks:
     python:
         code_rating: true
@@ -21,12 +23,7 @@ build:
             tests:
                 override:
                     - py-scrutinizer-run
-                    -
-                        command: pylint-run
-                        use_website_config: true
-            environment:
-                node:
-                    version: 6.0.0
+                    - pylint-run
         tests: true
 
     tests:
