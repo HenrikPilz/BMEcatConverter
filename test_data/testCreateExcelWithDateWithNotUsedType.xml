@@ -1,0 +1,321 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<BMECAT version="1.2" xmlns="http://www.bmecat.org/bmecat/1.2/bmecat_new_catalog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.bmecat.org/bmecat/1.2/bmecat_new_catalog http://api.nexmart.net/services/BMEcat/bmecat_new_catalog_1_2_nexmart.xsd">
+	<HEADER>
+		<GENERATOR_INFO>nexmart Catalog Engine 8.16.0</GENERATOR_INFO>
+		<CATALOG>
+			<LANGUAGE>deu</LANGUAGE>
+			<CATALOG_VERSION>20.12.2017</CATALOG_VERSION>
+			<DATETIME type="generation_date">
+				<DATE>2018-01-08</DATE>
+				<TIME>15:44:12</TIME>
+				<TIMEZONE>+01:00</TIMEZONE>
+			</DATETIME>
+		</CATALOG>
+		<SUPPLIER>
+			<SUPPLIER_ID type="nexmart">fischerwerke_de</SUPPLIER_ID>
+			<SUPPLIER_NAME>fischerwerke_de</SUPPLIER_NAME>
+			<ADDRESS type="supplier"></ADDRESS>
+		</SUPPLIER>
+		<USER_DEFINED_EXTENSIONS></USER_DEFINED_EXTENSIONS>
+	</HEADER>
+	<T_NEW_CATALOG>
+		<CATALOG_GROUP_SYSTEM>
+			<CATALOG_STRUCTURE type="root">
+				<GROUP_ID>1</GROUP_ID>
+				<GROUP_NAME>(Wurzelkategorie)</GROUP_NAME>
+				<PARENT_ID>0</PARENT_ID>
+				<USER_DEFINED_EXTENSIONS>
+					<UDX.NM.VISIBLE>true</UDX.NM.VISIBLE>
+				</USER_DEFINED_EXTENSIONS>
+			</CATALOG_STRUCTURE>
+			<CATALOG_STRUCTURE type="node">
+				<GROUP_ID>1001344402</GROUP_ID>
+				<GROUP_NAME>Gleitelemente</GROUP_NAME>
+				<PARENT_ID>1001344248</PARENT_ID>
+				<GROUP_ORDER>589</GROUP_ORDER>
+				<MIME_INFO>
+					<MIME>
+						<MIME_TYPE>image/jpeg</MIME_TYPE>
+						<MIME_SOURCE>p_g_sbs-01_f__sall__app__v2.jpg</MIME_SOURCE>
+						<MIME_DESCR>Produktgruppenbild</MIME_DESCR>
+						<MIME_ALT>Produktgruppenbild</MIME_ALT>
+						<MIME_PURPOSE>detail</MIME_PURPOSE>
+					</MIME>
+				</MIME_INFO>
+				<USER_DEFINED_EXTENSIONS>
+					<UDX.NM.VISIBLE>true</UDX.NM.VISIBLE>
+					<UDX.NM.GROUP_FEATURES>
+						<REFERENCE_FEATURE_SYSTEM_NAME>udf_NMCATEGORYDESCSHORT-1.0</REFERENCE_FEATURE_SYSTEM_NAME>
+						<REFERENCE_FEATURE_GROUP_NAME>Kurzbeschreibung</REFERENCE_FEATURE_GROUP_NAME>
+						<FEATURE>
+							<FNAME>-</FNAME>
+							<FVALUE>Gleitelemente</FVALUE>
+						</FEATURE>
+					</UDX.NM.GROUP_FEATURES>
+					<UDX.NM.GROUP_FEATURES>
+						<REFERENCE_FEATURE_SYSTEM_NAME>udf_NMCATEGORYDESCLONG-1.0</REFERENCE_FEATURE_SYSTEM_NAME>
+						<REFERENCE_FEATURE_GROUP_NAME>Langbeschreibung</REFERENCE_FEATURE_GROUP_NAME>
+						<FEATURE>
+							<FNAME>-</FNAME>
+							<FVALUE>fischer Gleitelemente zur Aufnahme von thermischen Rohrausdehnungen, wie bei Heizungs- und Kälteleitungen, ermöglichen die Aufnahme des Ausdehnungsweges in beide Richtungen. Die Gleitelemente sind komplett vormontiert und können mit verschiedenen Ankern oder Schrauben und Bolzen befestigt werden. Die Ausführung mit galvanischer Verzinkung ist für Installationen in Gebäuden geeignet.</FVALUE>
+						</FEATURE>
+					</UDX.NM.GROUP_FEATURES>
+				</USER_DEFINED_EXTENSIONS>
+			</CATALOG_STRUCTURE>
+			<CATALOG_STRUCTURE type="node">
+				<GROUP_ID>1001344248</GROUP_ID>
+				<GROUP_NAME>Installationssysteme</GROUP_NAME>
+				<PARENT_ID>1</PARENT_ID>
+				<GROUP_ORDER>490</GROUP_ORDER>
+				<MIME_INFO>
+					<MIME>
+						<MIME_TYPE>image/jpeg</MIME_TYPE>
+						<MIME_SOURCE>pg_p_samontec_f__sall__app__v1.jpg</MIME_SOURCE>
+						<MIME_DESCR>Produktgruppenbild</MIME_DESCR>
+						<MIME_ALT>Produktgruppenbild</MIME_ALT>
+						<MIME_PURPOSE>normal</MIME_PURPOSE>
+					</MIME>
+				</MIME_INFO>
+				<USER_DEFINED_EXTENSIONS>
+					<UDX.NM.VISIBLE>true</UDX.NM.VISIBLE>
+					<UDX.NM.GROUP_FEATURES>
+						<REFERENCE_FEATURE_SYSTEM_NAME>udf_NMCATEGORYDESCSHORT-1.0</REFERENCE_FEATURE_SYSTEM_NAME>
+						<REFERENCE_FEATURE_GROUP_NAME>Kurzbeschreibung</REFERENCE_FEATURE_GROUP_NAME>
+						<FEATURE>
+							<FNAME>-</FNAME>
+							<FVALUE>Installationssysteme</FVALUE>
+						</FEATURE>
+					</UDX.NM.GROUP_FEATURES>
+					<UDX.NM.GROUP_FEATURES>
+						<REFERENCE_FEATURE_SYSTEM_NAME>udf_NMCATEGORYDESCLONG-1.0</REFERENCE_FEATURE_SYSTEM_NAME>
+						<REFERENCE_FEATURE_GROUP_NAME>Langbeschreibung</REFERENCE_FEATURE_GROUP_NAME>
+						<FEATURE>
+							<FNAME>-</FNAME>
+							<FVALUE>Die technischen Anforderungen an die Gebäudetechnik und damit auch an die Befestigungen steigen. fischer Installationssysteme stehen für sichere und wirtschaftliche Montage- und Befestigungselemente für die vielfältigen Anwendungen in der Gebäudetechnik. Die Befestigungslösungen aus galvanisch verzinktem, feuerverzinktem und nicht rostendem Stahl eignen sich für leichte, mittelschwere und schwere Leitungsanlagen. Das Sortiment besteht aus Montageschienensystemen, Rohrschellen, Festpunkten, Gleitelementen, Lüftungsbefestigungen, Befestigungen an Stahlbauelementen und einem umfangreichen Montagezubehör. Eignungsnachwiese von VdS, FM und UL sowie Brandschutz- und Schallschutzprüfungen garantieren ein Plus an Sicherheit.</FVALUE>
+						</FEATURE>
+					</UDX.NM.GROUP_FEATURES>
+				</USER_DEFINED_EXTENSIONS>
+			</CATALOG_STRUCTURE>
+			<CATALOG_STRUCTURE type="leaf">
+				<GROUP_ID>1001344406</GROUP_ID>
+				<GROUP_NAME>Schiebeschlitten SBS</GROUP_NAME>
+				<PARENT_ID>1001344402</PARENT_ID>
+				<GROUP_ORDER>591</GROUP_ORDER>
+				<MIME_INFO>
+					<MIME>
+						<MIME_TYPE>image/jpeg</MIME_TYPE>
+						<MIME_SOURCE>p_g_sbs-01_f__sall__app__v2.jpg</MIME_SOURCE>
+						<MIME_DESCR>Produktgruppenbild</MIME_DESCR>
+						<MIME_ALT>Produktgruppenbild</MIME_ALT>
+						<MIME_PURPOSE>detail</MIME_PURPOSE>
+					</MIME>
+					<MIME>
+						<MIME_TYPE>image/jpeg</MIME_TYPE>
+						<MIME_SOURCE>a_i_01_518-gleitelement-konsole__sall__app__v1.jpg</MIME_SOURCE>
+						<MIME_DESCR>Anwendungsbild</MIME_DESCR>
+						<MIME_ALT>Anwendungsbild</MIME_ALT>
+						<MIME_PURPOSE>others</MIME_PURPOSE>
+					</MIME>
+					<MIME>
+						<MIME_TYPE>image/jpeg</MIME_TYPE>
+						<MIME_SOURCE>a_i_01_521-gleitelement-schiene__sall__app__v1.jpg</MIME_SOURCE>
+						<MIME_DESCR>Anwendungsbild</MIME_DESCR>
+						<MIME_ALT>Anwendungsbild</MIME_ALT>
+						<MIME_PURPOSE>others</MIME_PURPOSE>
+					</MIME>
+					<MIME>
+						<MIME_TYPE>image/jpeg</MIME_TYPE>
+						<MIME_SOURCE>p_s_01_sbs_f__sall__app__v4.jpg</MIME_SOURCE>
+						<MIME_DESCR>Produktbild Strichzeichnung</MIME_DESCR>
+						<MIME_ALT>Produktbild Strichzeichnung</MIME_ALT>
+						<MIME_PURPOSE>others</MIME_PURPOSE>
+					</MIME>
+					<MIME>
+						<MIME_TYPE>image/jpeg</MIME_TYPE>
+						<MIME_SOURCE>p_s_01_sbs12_f__sall__app__v2.jpg</MIME_SOURCE>
+						<MIME_DESCR>Produktbild Strichzeichnung</MIME_DESCR>
+						<MIME_ALT>Produktbild Strichzeichnung</MIME_ALT>
+						<MIME_PURPOSE>others</MIME_PURPOSE>
+					</MIME>
+					<MIME>
+						<MIME_TYPE>application/pdf</MIME_TYPE>
+						<MIME_SOURCE>lt_01_samo-sbs-n_f__sde__aip__v1.pdf</MIME_SOURCE>
+						<MIME_DESCR>Lastentabelle</MIME_DESCR>
+						<MIME_ALT>Lastentabelle</MIME_ALT>
+						<MIME_PURPOSE>data_sheet</MIME_PURPOSE>
+					</MIME>
+				</MIME_INFO>
+				<USER_DEFINED_EXTENSIONS>
+					<UDX.NM.VISIBLE>true</UDX.NM.VISIBLE>
+					<UDX.NM.GROUP_FEATURES>
+						<REFERENCE_FEATURE_SYSTEM_NAME>udf_NMCATEGORYDESCSHORT-1.0</REFERENCE_FEATURE_SYSTEM_NAME>
+						<REFERENCE_FEATURE_GROUP_NAME>Kurzbeschreibung</REFERENCE_FEATURE_GROUP_NAME>
+						<FEATURE>
+							<FNAME>-</FNAME>
+							<FVALUE>Schiebeschlitten SBS</FVALUE>
+						</FEATURE>
+					</UDX.NM.GROUP_FEATURES>
+					<UDX.NM.GROUP_FEATURES>
+						<REFERENCE_FEATURE_SYSTEM_NAME>udf_NMCATEGORYDESCLONG-1.0</REFERENCE_FEATURE_SYSTEM_NAME>
+						<REFERENCE_FEATURE_GROUP_NAME>Langbeschreibung</REFERENCE_FEATURE_GROUP_NAME>
+						<FEATURE>
+							<FNAME>-</FNAME>
+							<FVALUE>Der fischer Schiebeschlitten SBS eignet sich zur Aufnahme von Rohrausdehnungen. SBS M 8 und M 10 haben einen maximalen Schiebeweg von 55 und 60 mm und eine maximale Lastaufnahme von 1,5 kN. Der SBS M 12/M 16 mit Bauhöhe von 104 mm hat einen maximalen Schiebeweg von 125 mm und eine maximale Lastaufnahme von 7,8 kN. fischer bietet die SBS mit 2 metrischen Anschlussgewinden in 2 Bauhöhen und insgesamt 3 Ausführungen für stehende oder hängende Montagen an. Die Ausführung mit galvanischer Verzinkung ist für Installationen in Gebäuden geeignet. Die Schiebeschlitten SBS M 10 und M12/16 bieten mit dem Brandschutznachweis ein zusätzliches Plus an Sicherheit.</FVALUE>
+						</FEATURE>
+					</UDX.NM.GROUP_FEATURES>
+				</USER_DEFINED_EXTENSIONS>
+			</CATALOG_STRUCTURE>					
+		</CATALOG_GROUP_SYSTEM>
+		<ARTICLE mode="new">
+			<SUPPLIER_AID>079685</SUPPLIER_AID>
+			<ARTICLE_DETAILS>
+				<DESCRIPTION_SHORT>Schiebeschlitten SBS M8</DESCRIPTION_SHORT>
+				<DESCRIPTION_LONG>Der fischer Schiebeschlitten SBS nimmt Rohrausdehnungen auf. Der Schiebeweg beträgt 60 mm. Die zweifache Rohrabstützung verhindert wirksam das Ausgleiten aus der Führung. Platzsparende Montage durch eine geringe Bauhöhe. Anschlussgewinde M8.</DESCRIPTION_LONG>
+				<EAN>4006209796856</EAN>
+				<SUPPLIER_ALT_AID>079685</SUPPLIER_ALT_AID>
+				<MANUFACTURER_AID>079685</MANUFACTURER_AID>
+				<MANUFACTURER_NAME>fischer</MANUFACTURER_NAME>
+				<ERP_GROUP_SUPPLIER>Basic</ERP_GROUP_SUPPLIER>
+				<REMARKS type="udxmetadescription">fischer Schiebeschlitten SBS M 8.</REMARKS>
+				<ARTICLE_STATUS type="core_article"></ARTICLE_STATUS>
+			</ARTICLE_DETAILS>
+			<ARTICLE_FEATURES>
+				<REFERENCE_FEATURE_SYSTEM_NAME>udf_NMTOPFEATURES-1.0</REFERENCE_FEATURE_SYSTEM_NAME>
+				<REFERENCE_FEATURE_GROUP_NAME>Wichtigste Daten</REFERENCE_FEATURE_GROUP_NAME>
+				<FEATURE>
+					<FNAME>-</FNAME>
+					<FVALUE>Brandschutzprüfung F120.</FVALUE>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>-</FNAME>
+					<FVALUE>Muster-Leitungsanlagen-Richtlinien Prüfung MLAR F30.</FVALUE>
+				</FEATURE>
+			</ARTICLE_FEATURES>
+			<ARTICLE_FEATURES>
+				<REFERENCE_FEATURE_SYSTEM_NAME>udf_NMTECHNICALDETAILS-1.0</REFERENCE_FEATURE_SYSTEM_NAME>
+				<REFERENCE_FEATURE_GROUP_NAME>Technische Daten</REFERENCE_FEATURE_GROUP_NAME>
+				<FEATURE>
+					<FNAME>Max. empf. Rohr-Ø</FNAME>
+					<FVALUE>bis DN 80</FVALUE>
+					<FORDER>1</FORDER>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>Anschlussgewinde</FNAME>
+					<FVALUE>M 8</FVALUE>
+					<FORDER>2</FORDER>
+				</FEATURE>
+			</ARTICLE_FEATURES>
+			<ARTICLE_FEATURES>
+				<REFERENCE_FEATURE_SYSTEM_NAME>udf_NMBENEFITS-1.0</REFERENCE_FEATURE_SYSTEM_NAME>
+				<REFERENCE_FEATURE_GROUP_NAME>Vorteile/Nutzen</REFERENCE_FEATURE_GROUP_NAME>
+				<FEATURE>
+					<FNAME>-</FNAME>
+					<FVALUE>Die zweifache Rohrabstützung verhindert wirksam das Ausgleiten aus der Führung.</FVALUE>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>-</FNAME>
+					<FVALUE>Die geringe Bauhöhe des Schiebeschlittens lässt eine platzsparende Montage zu.</FVALUE>
+				</FEATURE>
+			</ARTICLE_FEATURES>
+			<ARTICLE_FEATURES>
+				<REFERENCE_FEATURE_SYSTEM_NAME>udf_NMMARKETINGCLAIM-1.0</REFERENCE_FEATURE_SYSTEM_NAME>
+				<REFERENCE_FEATURE_GROUP_NAME>Zusatzinformationen</REFERENCE_FEATURE_GROUP_NAME>
+				<FEATURE>
+					<FNAME>-</FNAME>
+					<FVALUE>Schiebeschlitten zur Aufnahme von axialen Längenänderungen.</FVALUE>
+				</FEATURE>
+			</ARTICLE_FEATURES>
+			<ARTICLE_FEATURES>
+				<REFERENCE_FEATURE_SYSTEM_NAME>udf_NMTRADINGDETAILS-1.0</REFERENCE_FEATURE_SYSTEM_NAME>
+				<REFERENCE_FEATURE_GROUP_NAME>Kaufmännische Daten</REFERENCE_FEATURE_GROUP_NAME>
+				<FEATURE>
+					<FNAME>Materialzuschlag</FNAME>
+					<FVALUE>6.00</FVALUE>
+					<FUNIT>%</FUNIT>
+				</FEATURE>
+			</ARTICLE_FEATURES>
+			<ARTICLE_FEATURES>
+				<REFERENCE_FEATURE_SYSTEM_NAME>nexMart-1.9</REFERENCE_FEATURE_SYSTEM_NAME>
+				<REFERENCE_FEATURE_GROUP_ID>nexMart Features</REFERENCE_FEATURE_GROUP_ID>
+				<FEATURE>
+					<FNAME>TariffNo</FNAME>
+					<FVALUE>73269060</FVALUE>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>DisGroup</FNAME>
+					<FVALUE>717</FVALUE>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>PackagingLength</FNAME>
+					<FVALUE>0.28</FVALUE>
+					<FUNIT>MTR</FUNIT>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>PackagingLengthUnit</FNAME>
+					<FVALUE>MTR</FVALUE>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>PackagingWidth</FNAME>
+					<FVALUE>0.18</FVALUE>
+					<FUNIT>MTR</FUNIT>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>PackagingWidthUnit</FNAME>
+					<FVALUE>MTR</FVALUE>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>PackagingHeight</FNAME>
+					<FVALUE>0.135</FVALUE>
+					<FUNIT>MTR</FUNIT>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>PackagingHeightUnit</FNAME>
+					<FVALUE>MTR</FVALUE>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>GrossWeight</FNAME>
+					<FVALUE>4.158</FVALUE>
+					<FUNIT>KGM</FUNIT>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>GrossWeightUnit</FNAME>
+					<FVALUE>KGM</FVALUE>
+				</FEATURE>
+				<FEATURE>
+					<FNAME>CountryOfOrigin</FNAME>
+					<FVALUE>DE</FVALUE>
+				</FEATURE>
+			</ARTICLE_FEATURES>
+			<ARTICLE_ORDER_DETAILS>
+				<ORDER_UNIT>C62</ORDER_UNIT>
+				<PRICE_QUANTITY>1</PRICE_QUANTITY>
+				<QUANTITY_MIN>8</QUANTITY_MIN>
+				<QUANTITY_INTERVAL>8</QUANTITY_INTERVAL>
+			</ARTICLE_ORDER_DETAILS>
+			<ARTICLE_PRICE_DETAILS>
+				<DATETIME type="start_date">
+					<DATE>2018-01-08</DATE>
+					<TIME>15:44:12</TIME>
+					<TIMEZONE>+01:00</TIMEZONE>
+				</DATETIME>
+				<DATETIME type="end_date">
+					<DATE>2019-01-08</DATE>
+					<TIME>15:44:11</TIME>
+					<TIMEZONE>+01:00</TIMEZONE>
+				</DATETIME>
+				<ARTICLE_PRICE price_type="net_list">
+					<PRICE_AMOUNT>17.779</PRICE_AMOUNT>
+					<PRICE_CURRENCY>EUR</PRICE_CURRENCY>
+				</ARTICLE_PRICE>
+				<ARTICLE_PRICE price_type="nrp">
+					<PRICE_AMOUNT>21.15701</PRICE_AMOUNT>
+					<PRICE_CURRENCY>EUR</PRICE_CURRENCY>
+				</ARTICLE_PRICE>
+			</ARTICLE_PRICE_DETAILS>
+		</ARTICLE>
+		<ARTICLE_TO_CATALOGGROUP_MAP>
+			<ART_ID>079685</ART_ID>
+			<CATALOG_GROUP_ID>1001344406</CATALOG_GROUP_ID>
+		</ARTICLE_TO_CATALOGGROUP_MAP>
+	</T_NEW_CATALOG>
+</BMECAT>

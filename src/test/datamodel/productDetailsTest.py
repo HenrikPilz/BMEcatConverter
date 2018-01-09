@@ -65,7 +65,11 @@ class ProductDetailsTest(unittest.TestCase):
     def testValidate(self):
         productdetails = ProductDetails()
         productdetails.title = "Test"
+        productdetails.manufacturerArticleId = " 01239 \n"
+        productdetails.description = " \t asdfkjahsdlfas \r\n"
         productdetails.validate(True)
+        self.assertEqual(productdetails.manufacturerArticleId, "01239", "Leerzeichen in der Herstellerartikelnummer.")
+        self.assertEqual(productdetails.description, "asdfkjahsdlfas", "Leerzeichen in der Beschreibung.")
 
     def testEqual(self):
         productdetails1 = ProductDetails()

@@ -115,6 +115,36 @@ class TestMainConverter(unittest.TestCase):
         self.assertEqual(cm.exception.code, 3)
         self.assertFalse(os.path.exists(outputFilePath))
 
+    def testCreateExcelFullDataDTDNotFoundException(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFullDataWithCategoryTreeAndDTDNotExistent.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelFullDataWithCategoryTreeAndDTDNotExistent.xlsx")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        with self.assertRaises(SystemExit) as cm:
+            main.main(args)
+        self.assertEqual(cm.exception.code, 5)
+        self.assertFalse(os.path.exists(outputFilePath))
+
+    def testCreateExcelNestedArticleDetailsException(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelNestedArticleDetailsException.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelNestedArticleDetailsException.xlsx")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        with self.assertRaises(SystemExit) as cm:
+            main.main(args)
+        self.assertEqual(cm.exception.code, 6)
+        self.assertFalse(os.path.exists(outputFilePath))
+
+    def testCreateExcelArticleDetailsOutOfArticleException(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelArticleDetailsOutOfArticleException.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelArticleDetailsOutOfArticleException.xlsx")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        with self.assertRaises(SystemExit) as cm:
+            main.main(args)
+        self.assertEqual(cm.exception.code, 6)
+        self.assertFalse(os.path.exists(outputFilePath))
+
     '''
     -------------------------------------
     --- Ab hier funktioniert's :)
@@ -178,6 +208,69 @@ class TestMainConverter(unittest.TestCase):
         outputFilePath = os.path.join(self.outputPath, "testCreateBMEcatFromExcelFullDataGTINAlsZahl.xml")
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        main.main(args)
+
+        self.assertTrue(os.path.exists(outputFilePath))
+
+    def testCreateExcelFullDataWithCategoryTreeAndDTD(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFullDataWithCategoryTreeAndDTD.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelFullDataWithCategoryTreeAndDTD.xlsx")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        main.main(args)
+
+        self.assertTrue(os.path.exists(outputFilePath))
+
+    def testCreateExcelFullDataWithReferenceWithoutType(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFullDataWithReferenceWithoutType.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelFullDataWithReferenceWithoutType.xlsx")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        main.main(args)
+
+        self.assertTrue(os.path.exists(outputFilePath))
+
+    def testCreateExcelUserDefinedExtensionHaveFeatures(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelUserDefinedExtensionHaveFeatures.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelUserDefinedExtensionHaveFeatures.xlsx")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        main.main(args)
+
+        self.assertTrue(os.path.exists(outputFilePath))
+
+    def testDateWithoutType(self):
+        inputFilePath = os.path.join(self.testDataPath, "testDateWithoutType.xml")
+        outputFilePath = os.path.join(self.outputPath, "testDateWithoutType.xlsx")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        main.main(args)
+
+        self.assertTrue(os.path.exists(outputFilePath))
+
+    def testCreateExcelWithPriceValidity(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelWithPriceValidity.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelWithPriceValidity.xlsx")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat=%Y-%m-%d']
+        main.main(args)
+
+        self.assertTrue(os.path.exists(outputFilePath))
+
+    def testCreateExcelWithDateWithNotUsedType(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelWithDateWithNotUsedType.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelWithDateWithNotUsedType.xlsx")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat=%Y-%m-%d']
+        main.main(args)
+
+        self.assertTrue(os.path.exists(outputFilePath))
+
+    def testCreateExcelWithoutProductId(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelWithoutProductId.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelWithoutProductId.xlsx")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat=%Y-%m-%d']
         main.main(args)
 
         self.assertTrue(os.path.exists(outputFilePath))

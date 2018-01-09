@@ -297,8 +297,8 @@ class ProductTest(unittest.TestCase):
     def testValidate(self):
         product = Product()
         # setzen der Product ID
-        product.productId = "12345 "
-        self.assertEqual(product.productId, "12345 ")
+        product.productId = " 12345 \n"
+        self.assertEqual(product.productId, " 12345 \n")
 
         # Productdetails
         product.addDetails()
@@ -321,7 +321,7 @@ class ProductTest(unittest.TestCase):
         priceDetails.addPrice(price, True)
         product.addPriceDetails(priceDetails)
         product.validate(True)
-        self.assertEqual(product.productId, "12345")
+        self.assertEqual(product.productId, "12345", "Leerzeichen in der Artikelnummer.")
         product.addOrderDetails()
         product.validate(True)
 

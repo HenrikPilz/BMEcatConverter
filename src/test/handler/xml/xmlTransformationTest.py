@@ -25,6 +25,7 @@ class XmlTransformationNonFiegeTest(BasicHandlerTest):
         article.details.keywords = [ 'Keyword 1', 'Keyword 2']
         article.details.manufacturerArticleId = '09876'
         article.details.manufacturerName = 'Manufacturer'
+        article.details.articleStatus = "Bla"
         tc = TreatmentClass()
         tc.classType = 'TestClass'
         tc.value = '12345'
