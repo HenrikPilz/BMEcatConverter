@@ -145,6 +145,26 @@ class TestMainConverter(unittest.TestCase):
         self.assertEqual(cm.exception.code, 6)
         self.assertFalse(os.path.exists(outputFilePath))
 
+    def testCreateBMEcatNoPossibleSheet(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatNoPossibleSheet.xlsx")
+        outputFilePath = os.path.join(self.outputPath, "testCreateBMEcatNoPossibleSheet.xml")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        with self.assertRaises(SystemExit) as cm:
+            main.main(args)
+        self.assertEqual(cm.exception.code, 6)
+        self.assertFalse(os.path.exists(outputFilePath))
+
+    def testCreateBMEcatTwoPossibleSheets(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatTwoPossibleSheets.xlsx")
+        outputFilePath = os.path.join(self.outputPath, "testCreateBMEcatTwoPossibleSheets.xml")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        with self.assertRaises(SystemExit) as cm:
+            main.main(args)
+        self.assertEqual(cm.exception.code, 6)
+        self.assertFalse(os.path.exists(outputFilePath))
+
     '''
     -------------------------------------
     --- Ab hier funktioniert's :)
