@@ -54,11 +54,13 @@ class ProductDetails(ValidatingXMLObject, ComparableEqual):
                 manufacturerArticleIdEqual and self.manufacturerName == other.manufacturerName and deliveryTimeEqual
 
     def validate(self, raiseException=False):
-        super().valueNotNoneOrEmpty(self.title, "Der Artikelname fehlt.", raiseException)
-        self.title = self.title.replace("\n", " ").strip()
+        if super().valueNotNoneOrEmpty(self.title, "Der Artikelname fehlt.", raiseException):
+            self.title = self.title.replace("\n", " ").strip()
         if super().valueNotNoneOrEmpty(self.description, "Die Artikelbeschreibung fehlt.", False):
-            self.description = str(self.description).replace("\n", "<br>")
+            self.description = str(self._trimIfString(self.description)).replace("\n", "<br>")
         super().valueNotNoneOrEmpty(self.ean, "Keine EAN vorhanden.", False)
+        self.manufacturerArticleId = self._trimIfString(self.manufacturerArticleId)
+        self.description = self._trimIfString(self.description)
 
     def addSpecialTreatmentClass(self, treatmentclass):
         super().addToListIfValid(treatmentclass, self.specialTreatmentClasses, "Keine Treatmentclass übergeben")

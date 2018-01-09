@@ -82,6 +82,7 @@ class BMEcatExporter(object):
             return "BC_TEMP"
 
         logging.debug("Username: {0}".format(userName))
+
         usplit = []
         if len(userName.split(" ")) > 1:
             usplit = userName.split(" ")
@@ -105,7 +106,12 @@ class BMEcatExporter(object):
         return dateTime
 
     def __createCatalogInfo(self):
-        initials = self.__determineInitials()
+        initials = "NotSet"
+        try:
+            initials = self.__determineInitials()
+        except Exception:
+            logging.warning("Initialen konnten nicht ermittelt werden.")
+
         logging.debug("Initialen: {0}".format(initials))
 
         dateYMD = datetime.now().strftime("%Y%m%d")

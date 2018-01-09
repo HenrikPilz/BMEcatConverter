@@ -51,7 +51,7 @@ class Product(ValidatingXMLObject, ComparableEqual):
 
     def validate(self, raiseException=False):
         super().valueNotNone(self.productId, "Der Artikel hat keine Artikelnummer.", raiseException)
-        self.productId = str(self.productId).strip()
+        self.productId = self._trimIfString(str(self.productId))
         messagePrefix = "Der Artikel '{0}' hat ".format(self.productId)
         super().valueNotNone(self.details, messagePrefix + "keine Artikeldetails.", raiseException)
         self._tryValidatingSubElement(self.details, messagePrefix + "fehlerhafte Artikeldetails.", raiseException)

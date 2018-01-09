@@ -82,6 +82,7 @@ class BMEcatImportHandler(handler.ContentHandler):
                 "mime_info" : "endMimeInfo",
                 "datetime" : "endDateTime",
                 "article_details" : "endProductDetails",
+                "order_details" : "endOrderDetails",
                 "date" : "addDate",
                 # Informationen am CurrentElement
                 "territory" : ("_addAttributeToCurrentElement", "territory", False),
@@ -96,6 +97,7 @@ class BMEcatImportHandler(handler.ContentHandler):
                 "description_long" : ("_addAttributeToCurrentArticleDetails", "description", False),
                 "description_short" : ("_addAttributeToCurrentArticleDetails", "title", False),
                 "delivery_time" : ("_addAttributeToCurrentArticleDetails", "deliveryTime", False),
+                "article_status" : ("_addAttributeToCurrentArticleDetails", "articleStatus", False),
                 # Preisinformationen
                 "price_amount" : ("_addAttributeToCurrentPrice", "amount", False),
                 "tax" : ("_addAttributeToCurrentPrice", "tax", False),
@@ -143,6 +145,8 @@ class BMEcatImportHandler(handler.ContentHandler):
         self.__currentArticle = None
         self.__currentPrice = None
         self.__currentMime = None
+        self.__currentArticleDetails = None
+        self.__currentOrderDetails = None
         self.__currentPriceDetails = None
         self.__currentElement = None
         self.__currentContent = ""
@@ -222,7 +226,9 @@ class BMEcatImportHandler(handler.ContentHandler):
     ''' Anfang Artikel '''
     def createProduct(self, attrs):
         logging.debug("Anfang Produkt " + ", ".join(attrs.getNames()))
-        self._raiseExceptionIfNotNone(self.__currentArticle, "Fehler im BMEcat: Neuer Artikel soll erstellt werden. Es wird schon ein Artikel verarbeitet.")
+        self._objectIsNotNone(self.__currentArticle,
+                              "Fehler im BMEcat: Neuer Artikel soll erstellt werden. Es wird schon ein Artikel verarbeitet.",
+                              True)
         self.__currentArticle = Product()
         self.__currentContent = ""
         self.__currentElement = self.__currentArticle
@@ -234,48 +240,53 @@ class BMEcatImportHandler(handler.ContentHandler):
 
     ''' Artikel speichern '''
     def saveProduct(self, attr=None):
-        if self.__currentArticle.productId is None:
-            '''self.articles["failed"].append(self.__currentArticle)'''
-            logging.error("Produkt konnte nicht gespeichert werden. Fehlerhafte Daten: Keine Artikelnummer.")
-        else:
-            logging.info("Produkt validieren: " + self.__currentArticle.productId)
-            self._raiseExceptionIfNone(self.__currentArticle , "Es wurde kein aktuell zu bearbeitender Artikel gefunden.")
-            self.__currentArticle.validate(False)
-            logging.debug("Neues Produkt erstellt. Modus: " + self.__currentArticleMode)
-            self.articles[self.__currentArticleMode].append(self.__currentArticle)
+        logging.info("Produkt validieren: " + self.__currentArticle.productId)
+        self._objectIsNone(self.__currentArticle , "Es wurde kein aktuell zu bearbeitender Artikel gefunden.", True)
+        self.__currentArticle.validate(False)
+        logging.debug("Neues Produkt erstellt. Modus: " + self.__currentArticleMode)
+        self.articles[self.__currentArticleMode].append(self.__currentArticle)
         logging.debug("Produktende")
         self._resetAll()
 
     ''' ---------------------------------------------------------------------'''
     def createProductDetails(self, attrs):
-        self._raiseExceptionIfNone(self.__currentArticle,
-                                   "Artikeldetails sollen erstellt werden. Aber es ist kein Artikel vorhanden")
-        self._raiseExceptionIfNotNone(self.__currentArticle.details,
-                                      "Fehler im BMEcat: Neue Artikeldetails sollen erstellt werden. Es werden schon Artikeldetails verarbeitet.")
+        self._objectIsNone(self.__currentArticle,
+                           "Artikeldetails sollen erstellt werden. Aber es ist kein Artikel vorhanden", True)
+        self._objectIsNotNone(self.__currentArticle.details,
+                              "Fehler im BMEcat: Neue Artikeldetails sollen erstellt werden. Es werden schon Artikeldetails verarbeitet.", True)
         self.__currentArticle.addDetails()
+        self.__currentArticleDetails = self.__currentArticle.details
         self.__currentElement = self.__currentArticle.details
 
     def endProductDetails(self, attrs=None):
+        self.__currentArticleDetails = None
         self.__currentElement = self.__currentArticle
 
     ''' ---------------------------------------------------------------------'''
-    def createOrderDetails(self, attrs):
-        self._raiseExceptionIfNone(self.__currentArticle,
-                                   "Bestelldetails sollen erstellt werden. Aber es ist kein Artikel vorhanden")
-        self._raiseExceptionIfNotNone(self.__currentArticle.orderDetails,
-                                      "Fehler im BMEcat: Neue Bestelldetails sollen erstellt werden. Es werden schon Bestelldetails verarbeitet.")
+    def createOrderDetails(self, attrs=None):
+        self._objectIsNone(self.__currentArticle,
+                           "Bestelldetails sollen erstellt werden. Aber es ist kein Artikel vorhanden", True)
+        self._objectIsNotNone(self.__currentOrderDetails,
+                              "Fehler im BMEcat: Neue Bestelldetails sollen erstellt werden. Es werden schon Bestelldetails verarbeitet.", True)
         self.__currentArticle.addOrderDetails()
+        self.__currentOrderDetails = self.__currentArticle.orderDetails
+
+    def endOrderDetails(self, attrs=None):
+        self._objectIsNone(self.__currentArticle,
+                           "Bestelldetails sollen gespeichert werden. Aber es ist kein Artikel vorhanden", True)
+        self.__currentOrderDetails = None
+        self.__currentElement = self.__currentArticle
 
     ''' ---------------------------------------------------------------------'''
     def createPriceDetails(self, attrs):
-        self._raiseExceptionIfNotNone(self.__currentPriceDetails,
-                                      "Fehler im BMEcat: Neue Preisdetails sollen erstellt werden. Es werden schon Preisdetails verarbeitet.")
+        self._objectIsNotNone(self.__currentPriceDetails,
+                              "Fehler im BMEcat: Neue Preisdetails sollen erstellt werden. Es werden schon Preisdetails verarbeitet.", True)
         self.__currentPriceDetails = PriceDetails()
         self.__currentElement = self.__currentPriceDetails
 
     def savePriceDetails(self, attrs):
-        self._raiseExceptionIfNone(self.__currentArticle,
-                                   "Preisdetails sollen gespeichert werden. Aber es ist kein Artikel vorhanden")
+        self._objectIsNone(self.__currentArticle,
+                           "Preisdetails sollen gespeichert werden. Aber es ist kein Artikel vorhanden", True)
         self.__currentArticle.addPriceDetails(self.__currentPriceDetails, False)
         self.__currentPriceDetails = None
         self.__currentElement = None
@@ -283,14 +294,14 @@ class BMEcatImportHandler(handler.ContentHandler):
     ''' ---------------------------------------------------------------------'''
     ''' Anfang Preis '''
     def createPrice(self, attrs):
-        self._raiseExceptionIfNotNone(self.__currentPrice,
-                                      "Fehler im BMEcat: Neuer Preis soll erstellt werden. Es wird schon ein Preis verarbeitet.")
+        self._objectIsNotNone(self.__currentPrice,
+                              "Fehler im BMEcat: Neuer Preis soll erstellt werden. Es wird schon ein Preis verarbeitet.", True)
         self.__currentPrice = Price(attrs.getValue('price_type'))
         self.__currentElement = self.__currentPrice
 
     ''' Preis speichern '''
     def savePrice(self, attrs):
-        self._raiseExceptionIfNone(self.__currentPriceDetails, "Preis soll gespeichert werden. Aber es sind keine Preisdetails  vorhanden")
+        self._objectIsNone(self.__currentPriceDetails, "Preis soll gespeichert werden. Aber es sind keine Preisdetails  vorhanden", True)
         self.__currentPriceDetails.addPrice(self.__currentPrice, False)
         self.__currentPrice = None
         self.__currentElement = self.__currentPriceDetails
@@ -307,30 +318,31 @@ class BMEcatImportHandler(handler.ContentHandler):
     ''' ---------------------------------------------------------------------'''
     ''' Anfang Bild '''
     def createMime(self, attrs):
-        self._raiseExceptionIfNotNone(self.__currentMime,
-                                      "Fehler im BMEcat: Neues Bild soll erstellt werden. Es wird schon ein Bild verarbeitet.")
+        self._objectIsNotNone(self.__currentMime,
+                              "Fehler im BMEcat: Neues Bild soll erstellt werden. Es wird schon ein Bild verarbeitet.",
+                              True)
         self.__currentMime = Mime()
 
     ''' Bild speichern '''
     def saveMime(self, attrs):
-        if self.__currentElement is None:
-            logging.warning("Bild konnte nicht gespeichert werden.")
-        else:
+        if self._objectIsNotNone(self.__currentElement, "Bild konnte nicht gespeichert werden.", False):
             self.__currentElement.addMime(self.__currentMime, raiseException=False)
         self.__currentMime = None
 
     ''' ---------------------------------------------------------------------'''
     ''' Anfang TreatmentClass '''
     def createTreatmentClass(self, attrs):
-        self._raiseExceptionIfNotNone(self.__currentTreatmentClass,
-                                      "Fehler im BMEcat: Neue SpecialTreatmentClass soll erstellt werden. Es wird schon ein SpecialTreatmentClass verarbeitet.")
+        self._objectIsNotNone(self.__currentTreatmentClass,
+                              "Fehler im BMEcat: Neue SpecialTreatmentClass soll erstellt werden. Es wird schon ein SpecialTreatmentClass verarbeitet.",
+                              True)
         self.__currentTreatmentClass = TreatmentClass(attrs.getValue('type'))
         self.__currentElement = self.__currentTreatmentClass
 
     ''' TreatmentClass speichern '''
     def saveTreatmentClass(self, attrs):
-        self._raiseExceptionIfNone(self.__currentArticle,
-                                   "SpecialTreatmentClass soll gespeichert werden. Aber es ist kein Artikel vorhanden")
+        self._objectIsNone(self.__currentArticle,
+                           "SpecialTreatmentClass soll gespeichert werden. Aber es ist kein Artikel vorhanden",
+                           True)
         self.__currentTreatmentClass.value = self.__currentContent
         self.__currentArticle.addSpecialTreatmentClass(self.__currentTreatmentClass)
         self.__currentTreatmentClass = None
@@ -338,27 +350,28 @@ class BMEcatImportHandler(handler.ContentHandler):
 
     ''' ---------------------------------------------------------------------'''
     def createFeatureSet(self, attrs=None):
-        self._raiseExceptionIfNotNone(self.__currentFeature,
-                                      "Fehler im BMEcat: Neues Attributset soll erstellt werden. Es wird schon ein Attributset verarbeitet.")
+        self._objectIsNotNone(self.__currentFeature,
+                              "Fehler im BMEcat: Neues Attributset soll erstellt werden. Es wird schon ein Attributset verarbeitet.",
+                              True)
         self.__currentFeatureSet = FeatureSet()
         self.__currentContent = ""
 
     def saveFeatureSet(self, attrs=None):
-        self._raiseExceptionIfNone(self.__currentArticle,
-                                   "Attributset soll gespeichert werden. Aber es ist kein Artikel vorhanden")
+        self._objectIsNone(self.__currentArticle,
+                           "Attributset soll gespeichert werden. Aber es ist kein Artikel vorhanden", True)
         self.__currentArticle.addFeatureSet(self.__currentFeatureSet)
         self.__currentFeatureSet = None
 
     ''' ---------------------------------------------------------------------'''
     def createFeature(self, attrs=None):
-        self._raiseExceptionIfNotNone(self.__currentFeature, "Fehler im BMEcat: Neues Attribut soll erstellt werden. Es wird schon ein Attribut verarbeitet.")
+        self._objectIsNotNone(self.__currentFeature, "Fehler im BMEcat: Neues Attribut soll erstellt werden. Es wird schon ein Attribut verarbeitet.", True)
         self.__currentFeature = Feature()
         self.__currentElement = self.__currentFeature
         self.__currentContent = ""
 
     def saveFeature(self, attrs=None):
-        self._raiseExceptionIfNone(self.__currentFeatureSet, "Attribut soll gespeichert werden. Aber es ist kein Attributset vorhanden")
-        self.__currentFeatureSet.addFeature(self.__currentFeature)
+        if not self._objectIsNone(self.__currentFeatureSet, "Attribut soll gespeichert werden. Aber es ist kein Attributset vorhanden", False):
+            self.__currentFeatureSet.addFeature(self.__currentFeature)
 
         self.__currentFeature = None
         self.__currentElement = None
@@ -366,8 +379,9 @@ class BMEcatImportHandler(handler.ContentHandler):
     ''' ---------------------------------------------------------------------'''
     ''' Referenz erstellen'''
     def createReference(self, attrs=None):
-        self._raiseExceptionIfNotNone(self.__currentReference,
-                                      "Fehler im BMEcat: Neue Referenz soll erstellt werden. Es wird schon eine Referenz verarbeitet.")
+        self._objectIsNotNone(self.__currentReference,
+                              "Fehler im BMEcat: Neue Referenz soll erstellt werden. Es wird schon eine Referenz verarbeitet.",
+                              True)
         if 'type' not in attrs.getNames():
             logging.warning("Referenz auf Artikel konnte nicht verarbeitet werdern, da kein Typ angegeben wurde.")
         else:
@@ -387,8 +401,8 @@ class BMEcatImportHandler(handler.ContentHandler):
     ''' ---------------------------------------------------------------------'''
     ''' Erstellen '''
     def create(self, typeToCreate, referenceToSet, setCurrentElement=False):
-        self._raiseExceptionIfNotNone(referenceToSet,
-                                      "Fehler im BMEcat: Neues Bild soll erstellt werden. Es wird schon ein Bild verarbeitet.")
+        self._objectIsNotNone(referenceToSet,
+                              "Fehler im BMEcat: Neues Bild soll erstellt werden. Es wird schon ein Bild verarbeitet.", True)
         referenceToSet = typeToCreate()
         if setCurrentElement:
             self.__currentElement = referenceToSet
@@ -402,11 +416,12 @@ class BMEcatImportHandler(handler.ContentHandler):
 
     ''' ---------------------------------------------------------------------'''
     def _addAttribute(self, elementWithAddMethod, attrName, raiseException):
-        if not isinstance(elementWithAddMethod, ValidatingObject):
-            raise Exception("Could not execute addMethod. No ValidatingObject")
-        if raiseException:
-            self._raiseExceptionIfNone(elementWithAddMethod,
-                                       "{0} soll gespeichert werden. Aber es ist kein {1} vorhanden.".format(attrName, elementWithAddMethod.__class__.__name__))
+        if self._objectIsNone(elementWithAddMethod,
+                              "{0} soll gespeichert werden. Aber es ist kein {1} vorhanden.".format(attrName, elementWithAddMethod.__class__.__name__),
+                              raiseException) or self._noValidatingObject(elementWithAddMethod,
+                                                                          "Could not execute addMethod. No ValidatingObject",
+                                                                          raiseException):
+            return
         elementWithAddMethod.add(attrName, self.__currentContent)
         if self.__currentArticle is not None:
             logging.debug("Artikel '{0}': {1} ".format(attrName, self.__currentArticle.productId))
@@ -418,10 +433,10 @@ class BMEcatImportHandler(handler.ContentHandler):
 
     def _addAttributeToCurrentArticleDetails(self, attrName, raiseException):
         self.__currentArticle.addDetails()
-        self._addAttribute(self.__currentArticle.details, attrName, raiseException)
+        self._addAttribute(self.__currentArticleDetails, attrName, raiseException)
 
     def _addAttributeToCurrentArticleOrderDetails(self, attrName, raiseException):
-        self._addAttribute(self.__currentArticle.orderDetails, attrName, raiseException)
+        self._addAttribute(self.__currentOrderDetails, attrName, raiseException)
 
     def _addAttributeToCurrentPrice(self, attrName, raiseException):
         if attrName in self.__fieldsToTransform:
@@ -456,18 +471,19 @@ class BMEcatImportHandler(handler.ContentHandler):
 
     ''' ---------------------------------------------------------------------'''
     def createFeatureVariantSet(self, attrs=None):
-        self._raiseExceptionIfNotNoneOrNotEmpty(self.__currentFeature.values ,
-                                                "Fehler im BMEcat: FeatureVariants sollen hinzugefuegt werden, es existieren aber schon FeatureValues.")
-        self._raiseExceptionIfNotNone(self.__currentFeature.variants,
-                                      "Fehler im BMEcat: FeatureVariants sollen hinzugefuegt werden, es existieren aber schon FeatureVariants.")
+        self._objectIsNotNoneAndNotEmpty(self.__currentFeature.values ,
+                                         "Fehler im BMEcat: FeatureVariants sollen hinzugefuegt werden, es existieren aber schon FeatureValues.",
+                                         True)
+        self._objectIsNotNone(self.__currentFeature.variants,
+                              "Fehler im BMEcat: FeatureVariants sollen hinzugefuegt werden, es existieren aber schon FeatureVariants.")
         self.__currentFeature.addVariantSet()
 
     def addFeatureVariantSetOrder(self, attrs=None):
         self.__currentFeature.addVariantOrder(int(self.__currentContent))
 
     def createFeatureVariant(self, attrs=None):
-        self._raiseExceptionIfNotNone(self.__currentVariant,
-                                      "Fehler im BMEcat: FeatureVariant soll erstellt werden, aber es existiert schon eine.")
+        self._objectIsNotNone(self.__currentVariant,
+                              "Fehler im BMEcat: FeatureVariant soll erstellt werden, aber es existiert schon eine.")
         self.__currentVariant = Variant()
         self.__currentElement = self.__currentVariant
 
@@ -514,15 +530,39 @@ class BMEcatImportHandler(handler.ContentHandler):
             self.__currentContent += content.strip()
         logging.debug("Saved input: '{0}'".format(self.__currentContent))
 
-    def _raiseExceptionIfNone(self, objectToCheck, msg):
+    def _noValidatingObject(self, elementToCheck, msg, raiseException):
+        if not isinstance(elementToCheck, ValidatingObject):
+            if raiseException:
+                raise Exception(msg)
+            else:
+                logging.warning(msg)
+                return True
+        return False
+
+    def _objectIsNone(self, objectToCheck, msg, raiseException):
         if objectToCheck is None:
-            raise Exception(msg)
+            if raiseException:
+                raise Exception(msg)
+            else:
+                logging.warning(msg)
+                return True
+        return False
 
-    def _raiseExceptionIfNotNone(self, objectToCheck, msg):
+    def _objectIsNotNone(self, objectToCheck, msg, raiseException):
         if objectToCheck is not None:
-            raise Exception(msg)
+            if raiseException:
+                raise Exception(msg)
+            else:
+                logging.warning(msg)
+                return True
+        return False
 
-    def _raiseExceptionIfNotNoneOrNotEmpty(self, objectToCheck, msg):
-        self._raiseExceptionIfNotNone(objectToCheck, msg)
+    def _objectIsNotNoneAndNotEmpty(self, objectToCheck, msg, raiseException):
+        self._objectIsNotNone(objectToCheck, msg)
         if isinstance(objectToCheck, (list, array)) and len(objectToCheck) > 0:
-            raise Exception(msg)
+            if raiseException:
+                raise Exception(msg)
+            else:
+                logging.warning(msg)
+                return True
+        return False

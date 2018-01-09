@@ -22,7 +22,7 @@ class PyxelExporter(object):
                                    "_writeKeywordsForOneArticle")
                                   ]
 
-    __baseFields = [ "articleType", "articleId", "supplierArticleId",
+    __baseFields = [ "articleType", "articleStatus", "articleId", "supplierArticleId",
                      "descriptionShort", "descriptionLong", "ean",
                      "manufacturerArticleId", "manufacturerName",
                      "deliveryTime", "orderUnit",
@@ -157,6 +157,7 @@ class PyxelExporter(object):
     def __addBaseFieldsToArticle(self, articleType, article):
         self._currentColumnIndex = 1
         self.__writeValueToCurrentCellAndIncreaseColumnIndex(articleType)
+        self.__writeValueToCurrentCellAndIncreaseColumnIndex(article.details.articleStatus)
         self.__writeValueToCurrentCellAndIncreaseColumnIndex("")
         self.__writeValueToCurrentCellAndIncreaseColumnIndex(article.productId.strip())
         self.__writeValueToCurrentCellAndIncreaseColumnIndex(article.details.title)
