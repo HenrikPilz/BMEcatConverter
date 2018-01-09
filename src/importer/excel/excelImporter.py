@@ -43,7 +43,8 @@ class ExcelImporter(object):
         "buyerId" : "buyerId",
         "manufacturerArticleId" : "manufacturerArticleId",
         "manufacturerName" : "manufacturerName",
-        "deliveryTime" : "deliveryTime"
+        "deliveryTime" : "deliveryTime",
+        "delivery_time" : "deliveryTime"
     }
 
     # Bestelldetails
@@ -98,7 +99,7 @@ class ExcelImporter(object):
         "mime_order" : "order"
     }
 
-    __fieldsToTransform = [ "priceAmount", "price_amount", "amount", "tax", "factor" ]
+    __fieldsToTransform = [ "priceAmount", "price_amount", "amount", "tax", "factor", "delivery_time", "deliveryTime" ]
 
     def __init__(self, separatorTransformer=SeparatorTransformer("detect")):
         '''
@@ -213,27 +214,33 @@ class ExcelImporter(object):
         """
         itemsToAddByOrder = {}
         for fieldname in mapping.keys():
-            for order, colIndex in mapping[fieldname].items():
-                try:
-                    if order not in itemsToAddByOrder.keys():
-                        itemsToAddByOrder[order] = typeOfMultiples()
-                    value = self.__currentSheet.cell(column=colIndex, row=self.__currentRowIndex).value
-                    if fieldname in self.__fieldsToTransform:
-                        value = self._separatorTransformer.transform(value)
-                    if value is not None and len(str(value)) > 0:
-                        itemsToAddByOrder[order].add(fieldname, value)
-                except NumberFormatException as e:
-                    raise NumberFormatException("Zeile: {0}/Spalte {1}; '{2}{4}' Fehler: {3}".format(self.__currentRowIndex, colIndex,
-                                                                                                     fieldname, str(e), order))
-                except Exception as e:
-                    raise Exception("Zeile: {0}/Spalte {1}; '{2}{4}' Fehler: {3}".format(self.__currentRowIndex, colIndex, fieldname, str(e), order))
+            self.__setValueForFieldNameAndTransformDecimalsIfNeeded(mapping, typeOfMultiples, itemsToAddByOrder, fieldname)
 
+        self.__sortAndAddMultipleOrderedObjects(objectContainer, typeOfMultiples, itemsToAddByOrder)
+
+    def __setValueForFieldNameAndTransformDecimalsIfNeeded(self, mapping, typeOfMultiples, itemsToAddByOrder, fieldname):
+        for order, colIndex in mapping[fieldname].items():
+            try:
+                if order not in itemsToAddByOrder.keys():
+                    itemsToAddByOrder[order] = typeOfMultiples()
+                value = self.__currentSheet.cell(column=colIndex, row=self.__currentRowIndex).value
+                if fieldname in self.__fieldsToTransform:
+                    value = self._separatorTransformer.transform(value)
+                if value is not None and len(str(value)) > 0:
+                    itemsToAddByOrder[order].add(fieldname, value)
+            except NumberFormatException as e:
+                raise NumberFormatException("Zeile: {0}/Spalte {1}; '{2}{4}' Fehler: {3}".format(self.__currentRowIndex, colIndex,
+                                                                                                 fieldname, str(e), order))
+            except Exception as e:
+                raise Exception("Zeile: {0}/Spalte {1}; '{2}{4}' Fehler: {3}".format(self.__currentRowIndex, colIndex, fieldname, str(e), order))
+
+    def __sortAndAddMultipleOrderedObjects(self, objectContainer, typeOfMultiples, itemsToAddByOrder):
         for key in sorted(itemsToAddByOrder.keys()):
             try:
                 if getattr(itemsToAddByOrder[key], "order") is None:
                     setattr(itemsToAddByOrder[key], "order", int(key))
             except AttributeError:
-                pass
+                logging.debug("Order Attribute could be set: {0}".format(itemsToAddByOrder[key].__class__.__name__))
             self.__exectueAddMethod(objectContainer, "add" + str(typeOfMultiples.__name__), itemsToAddByOrder[key])
 
     def __transferInformationForMapping(self, mapping, objectForValue):
