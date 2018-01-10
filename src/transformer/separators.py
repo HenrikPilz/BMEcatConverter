@@ -100,24 +100,24 @@ class SeparatorTransformer(object):
             return float(value)
 
     def _autodetectSeparators(self, value):
-            stringValue = str(value)
+        stringValue = str(value)
 
-            if stringValue.count(self._comma) == 0 and stringValue.count(self._dot) == 0:
-                return
-            elif stringValue.count(self._comma) == 1 and stringValue.count(self._dot) == 0:
-                self._setSeparators("german")
-            elif stringValue.count(self._comma) == 0 and stringValue.count(self._dot) == 1:
+        if stringValue.count(self._comma) == 0 and stringValue.count(self._dot) == 0:
+            return
+        elif stringValue.count(self._comma) == 1 and stringValue.count(self._dot) == 0:
+            self._setSeparators("german")
+        elif stringValue.count(self._comma) == 0 and stringValue.count(self._dot) == 1:
+            self._setSeparators("english")
+        else:
+            try:
                 self._setSeparators("english")
-            else:
+                self._checkOccurenceOfSeparators(stringValue)
+            except (NumberFormatException, SeparatorNotDetectableException):
                 try:
-                    self._setSeparators("english")
+                    self._setSeparators("german")
                     self._checkOccurenceOfSeparators(stringValue)
-                except (NumberFormatException, SeparatorNotDetectableException):
-                    try:
-                        self._setSeparators("german")
-                        self._checkOccurenceOfSeparators(stringValue)
-                    except NumberFormatException:
-                        raise SeparatorNotDetectableException("Could not detect Separators for value '{0}'.".format(stringValue))
+                except NumberFormatException:
+                    raise SeparatorNotDetectableException("Could not detect Separators for value '{0}'.".format(stringValue))
 
     def _checkOccurenceOfSeparators(self, stringValue):
         decimalGroups = stringValue.split(self._decimalSeparator)
