@@ -47,17 +47,17 @@ class SeparatorTransformer(object):
 
     _destinationEncoding = "english"
 
-    def _setSeparators(self, sourceEncoding):
-        self._decimalSeparator = self._separators[sourceEncoding]["decimalSeparator"]
-        self._thousandSeparator = self._separators[sourceEncoding]["thousandSeparator"]
-
     def __init__(self, sourceEncoding="detect"):
         '''
         Constructor
         @param mode Welchen Input haben wir?
         '''
+        self._setSeparators(sourceEncoding)
+
+    def _setSeparators(self, sourceEncoding):
         if sourceEncoding in self._separators.keys():
-            self._setSeparators(sourceEncoding)
+            self._decimalSeparator = self._separators[sourceEncoding]["decimalSeparator"]
+            self._thousandSeparator = self._separators[sourceEncoding]["thousandSeparator"]
         else:
             logging.warning("Das Erkennen des Dezimaltrennzeichens und des Tausendertrennzeichens wurde nicht übergeben und wird automatisch ermittelt." +
                             " Dies kann zu Problemen führen.")
@@ -68,80 +68,78 @@ class SeparatorTransformer(object):
         if value is None:
             return None
 
-        convertedString = str(value).strip()
+        convertedToString = str(value).strip(" \t\n\r")
+
+        if len(convertedToString) == 0:
+            return None
 
         '''
         transformiert vom gegebenen Ausgangsmodus in die englische Dezimalversion.
         '''
         if self._decimalSeparator is None:
-            self._autodetectSeparators(convertedString)
+            self._autodetectSeparators(convertedToString)
 
+        # Warum hier kein else? Es kann sein, dass die Trennzeichen nicht erkannt wurden.
         if self._decimalSeparator is not None:
-            self._checkOccurenceOfSeparatorsForSelectedMode(convertedString)
-            convertedString = convertedString.replace(self._decimalSeparator, ";")
-            convertedString = convertedString.replace(self._thousandSeparator, "")
-            convertedString = convertedString.replace(";", self._separators[self._destinationEncoding]["decimalSeparator"], 1)
-            logging.debug("'{0}'".format(convertedString))
+            self._checkOccurenceOfSeparators(convertedToString)
+            convertedToString = self._convertSeparators(convertedToString)
 
-        if len(convertedString) > 0 :
-            return float(convertedString)
-        else:
-            return None
+        return self._returnCorrectNumberType(convertedToString)
 
-    def _checkOccurenceOfSeparatorsForSelectedMode(self, stringValue):
-        countDecimal = stringValue.count(self._decimalSeparator)
-        firstIndexThousand = stringValue.find(self._thousandSeparator)
-        firstIndexDecimal = stringValue.find(self._decimalSeparator)
-        lastIndexThousand = stringValue.rfind(self._thousandSeparator)
-        lastIndexDecimal = stringValue.rfind(self._decimalSeparator)
+    def _convertSeparators(self, value):
+        value = value.replace(self._decimalSeparator, ";")
+        value = value.replace(self._thousandSeparator, "")
+        value = value.replace(";", self._separators[self._destinationEncoding]["decimalSeparator"], 1)
+        logging.debug("'{0}'".format(value))
+        return value
 
-        if firstIndexDecimal < lastIndexThousand or countDecimal > 1 or \
-           firstIndexThousand > firstIndexDecimal or \
-           lastIndexThousand > -1 and (lastIndexDecimal - lastIndexThousand) % 4 != 0 or \
-           firstIndexDecimal == -1 and firstIndexThousand > -1 and (lastIndexThousand != len(stringValue) - 4):
-            # wenn einer der obigen Gruende erfuellt ist, dann ist das ein Fehler.
-            raise NumberFormatException("Das Format '{0}' stimmmt nicht mit den gewählten Separatoren überein.".format(stringValue))
-
-    def _checkOccurenceOfSeparatorsForAutoDetect(self, stringValue, countComma, countDot):
-        firstIndexDot = stringValue.find(self._dot)
-        firstIndexComma = stringValue.find(self._comma)
-        lastIndexDot = stringValue.rfind(self._dot)
-        lastIndexComma = stringValue.rfind(self._comma)
-
-        if (firstIndexComma < firstIndexDot and firstIndexDot < lastIndexComma) or \
-           (firstIndexDot < firstIndexComma and firstIndexComma < lastIndexDot):
-            raise SeparatorNotDetectableException("Could not detect Separators.")
-
-        distanceCountMin = abs(firstIndexComma - firstIndexDot)
-        distanceCountMax = abs(firstIndexComma - lastIndexDot)
-
-        if countComma > 0 and countDot > 0 and (distanceCountMin % 4 != 0 or distanceCountMax % 4 != 0):
-            raise SeparatorNotDetectableException("Could not detect Separators.")
-
-        return lastIndexDot, lastIndexComma
+    def _returnCorrectNumberType(self, value):
+        try:
+            return int(value)
+        except ValueError:
+            return float(value)
 
     def _autodetectSeparators(self, value):
             stringValue = str(value)
-            countDot = stringValue.count(self._dot)
-            countComma = stringValue.count(self._comma)
 
-            if (countDot > 1 and countComma == 0) or (countDot == 0 and countComma > 1) or (countDot > 1 and countComma > 1):
-                message = "'{0}' and '{1}' occur multiple times each in the value '{2}'.".format(self._dot, self._comma, value)
-            else:
-                message = "Could not detect Separators."
-
-            lastIndexDot, lastIndexComma = self._checkOccurenceOfSeparatorsForAutoDetect(stringValue, countComma, countDot)
-
-            if countDot == 1 and countComma != 1:
-                self._setSeparators("english")
-            elif countComma == 1 and countDot != 1:
+            if stringValue.count(self._comma) == 0 and stringValue.count(self._dot) == 0:
+                return
+            elif stringValue.count(self._comma) == 1 and stringValue.count(self._dot) == 0:
                 self._setSeparators("german")
-            elif countComma == 1 and countDot == 1:
-                if lastIndexComma > lastIndexDot:
-                    self._setSeparators("german")
-                else:
-                    self._setSeparators("english")
-            elif countDot == 0 and countComma == 0:
-                pass
+            elif stringValue.count(self._comma) == 0 and stringValue.count(self._dot) == 1:
+                self._setSeparators("english")
             else:
-                raise SeparatorNotDetectableException(message)
+                try:
+                    self._setSeparators("english")
+                    self._checkOccurenceOfSeparators(stringValue)
+                except (NumberFormatException, SeparatorNotDetectableException):
+                    try:
+                        self._setSeparators("german")
+                        self._checkOccurenceOfSeparators(stringValue)
+                    except NumberFormatException:
+                        raise SeparatorNotDetectableException("Could not detect Separators for value '{0}'.".format(stringValue))
+
+    def _checkOccurenceOfSeparators(self, stringValue):
+        decimalGroups = stringValue.split(self._decimalSeparator)
+        self._checkDecimalSeparator(stringValue, decimalGroups)
+
+        thousandGroups = decimalGroups[0].split(self._thousandSeparator)
+
+        if len(thousandGroups[0]) not in [1, 2, 3] and len(thousandGroups) > 1:
+            raise NumberFormatException("Thousandseparator '{0}' is set wrongly: '{1}'".format(self._thousandSeparator, stringValue))
+
+        try:
+            self._checkThousandSeparator(thousandGroups[1:])
+        except NumberFormatException as nfe:
+            raise NumberFormatException(str(nfe) + " for value '{0}'.".format(stringValue))
+
+    def _checkDecimalSeparator(self, stringValue, decimalGroups):
+        if len(decimalGroups) > 1 and len(decimalGroups[1].split(self._thousandSeparator)) > 1:
+            raise NumberFormatException("Decimalseparator '{0}' found in wrong position for value '{1}'.".format(self._decimalSeparator, stringValue))
+        if len(decimalGroups) > 2:
+            raise NumberFormatException("Decimalseparator '{0}' occurs more than once: '{1}'".format(self._decimalSeparator, stringValue))
+
+    def _checkThousandSeparator(self, groups):
+        for group in groups:
+            if len(group) != 3:
+                raise NumberFormatException("Thousandseparator '{0}' found in wrong position".format(self._thousandSeparator))

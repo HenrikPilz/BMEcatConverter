@@ -12,28 +12,46 @@ from transformer import SeparatorTransformer
 
 class SeparatorTransformerTest(unittest.TestCase):
 
+    def testSeparatorAutoDetectExceptionAtThirdValueFirstNotDetectable(self):
+        for firstInputValue, firstvalidationValue, secondInputValue, secondValidationValue, thirdInputValue, exceptionMessage in [
+                                (180, 180, "180.", 180, "180,", "Thousandseparator ',' found in wrong position for value '180,'."),
+                                (180, 180, "180,", 180, "180.", "Thousandseparator '.' found in wrong position for value '180.'."),
+                                (180, 180, "180.01", 180.01, "180,12312,221", "Thousandseparator '.' found in wrong position for value '180,12312,221'."),
+                                (180, 180, "180.01", 180.01, "180,00.01", "Thousandseparator ',' found in wrong position for value '180,00.01'."),
+                                (180, 180, "180.01", 180.01, "18.00,01", "Decimalseparator '.' found in wrong position for value '18.00,01'."),
+                                (180, 180, "180.01", 180.01, "19,180,00.01", "Thousandseparator ',' found in wrong position for value '19,180,00.01'."),
+                                (180, 180, "180.01", 180.01, "19.018.00,01", "Decimalseparator '.' occurs more than once: '19.018.00,01'"),
+                                (180, 180, "180.01", 180.01, "19.180,00.01", "Decimalseparator '.' found in wrong position for value '19.180,00.01'."),
+                                (180, 180, "180.01", 180.01, "19,180.00.01", "Decimalseparator '.' occurs more than once: '19,180.00.01'")]:
+            separatorTransformer = SeparatorTransformer()
+            self.assertEqual(firstvalidationValue, separatorTransformer.transform(firstInputValue),
+                             "1 Aus '{0} sollte {1} werden.".format(firstInputValue, firstvalidationValue))
+            self.assertEqual(secondValidationValue, separatorTransformer.transform(secondInputValue),
+                             "2 Aus '{0} sollte {1} werden.".format(firstInputValue, secondValidationValue))
+            with self.assertRaisesRegex(NumberFormatException, exceptionMessage):
+                separatorTransformer.transform(thirdInputValue)
+
     def testSeparatorAutoDetectExceptionAtSecondValue(self):
-        for firstInputValue, validationValue, secondInputValue in [
-                                ("180.", 180, "180,"),
-                                ("180,", 180, "180."),
-                                ("180.01", 180.01, "180,12312,221"),
-                                ("180.01", 180.01, "180,00.01"),
-                                ("180.01", 180.01, "18.00,01"),
-                                ("180.01", 180.01, "19,180,00.01"),
-                                ("180.01", 180.01, "19.018.00,01"),
-                                ("180.01", 180.01, "19.180,00.01"),
-                                ("180.01", 180.01, "19,180.00.01")]:
+        for firstInputValue, validationValue, secondInputValue, exceptionMessage in [
+                                ("180.", 180, "180,", "Thousandseparator ',' found in wrong position for value '180,'."),
+                                ("180,", 180, "180.", "Thousandseparator '.' found in wrong position for value '180.'."),
+                                ("180.01", 180.01, "180,12312,221", "Thousandseparator '.' found in wrong position for value '180,12312,221'."),
+                                ("180.01", 180.01, "180,00.01", "Thousandseparator ',' found in wrong position for value '180,00.01'."),
+                                ("180.01", 180.01, "18.00,01", "Decimalseparator '.' found in wrong position for value '18.00,01'."),
+                                ("180.01", 180.01, "19,180,00.01", "Thousandseparator ',' found in wrong position for value '19,180,00.01'."),
+                                ("180.01", 180.01, "19.018.00,01", "Decimalseparator '.' occurs more than once: '19.018.00,01'"),
+                                ("180.01", 180.01, "19.180,00.01", "Decimalseparator '.' found in wrong position for value '19.180,00.01'."),
+                                ("180.01", 180.01, "19,180.00.01", "Decimalseparator '.' occurs more than once: '19,180.00.01'")]:
             separatorTransformer = SeparatorTransformer()
             self.assertEqual(validationValue, separatorTransformer.transform(firstInputValue),
                              "Aus '{0} sollte {1} werden.".format(firstInputValue, validationValue))
-            exceptionMessage = "Das Format '{0}' stimmmt nicht mit den gewählten Separatoren überein.".format(str(secondInputValue).strip())
             with self.assertRaisesRegex(NumberFormatException, exceptionMessage):
                 separatorTransformer.transform(secondInputValue)
 
     def testSeparatorAutoDetectException(self):
         for inputValue, exceptionMessage in [
-                                ("180.12312.221", "occur multiple times each in the value"),
-                                ("180,12312,221", "occur multiple times each in the value"),
+                                ("180.12312.221", "Could not detect Separators for value '180.12312.221'."),
+                                ("180,12312,221", "Could not detect Separators for value '180,12312,221'."),
                                 ("180,00.01", "Could not detect Separators."),
                                 ("18.00,01", "Could not detect Separators."),
                                 ("19,180,00.01", "Could not detect Separators."),
@@ -44,41 +62,44 @@ class SeparatorTransformerTest(unittest.TestCase):
             self._transformRaiseException(inputValue, SeparatorNotDetectableException, exceptionMessage)
 
     def testSeparatorEnglishException(self):
-        for inputValue in [ " 180, ",
-                            "180,0001",
-                            "18.000,01",
-                            "1.918.000,01",
-                            "180.12312.221",
-                            "180,12312,221",
-                            "180,00.01",
-                            "18.00,01",
-                            "19,180,00.01",
-                            "19.018.00,01",
-                            "19.180,00.01",
-                            "19,180.00.01"]:
-            exceptionMessage = "Das Format '{0}' stimmmt nicht mit den gewählten Separatoren überein.".format(str(inputValue).strip())
+        for inputValue, exceptionMessage in [ (" , ", "Thousandseparator ',' is set wrongly: ','"),
+                                              (" 180, ", "Thousandseparator ',' found in wrong position."),
+                                              ("180,0001", "Thousandseparator ',' found in wrong position."),
+                                              ("18.000,01", "Decimalseparator '.' found in wrong position."),
+                                              ("18.00,01", "Decimalseparator '.' found in wrong position for value '18.00,01'."),
+                                              ("180,00.01", "Thousandseparator ',' found in wrong position for value '180,00.01'."),
+                                              ("180.12312.221", "Decimalseparator '.' occurs more than once: '180.12312.221'"),
+                                              ("180,12312,221", "Thousandseparator ',' found in wrong position for value '180,12312,221'."),
+                                              ("1.918.000,01", "Decimalseparator '.' occurs more than once: '1.918.000,01'"),
+                                              ("19,180,00.01", "Thousandseparator ',' found in wrong position for value '19,180,00.01'."),
+                                              ("19.018.00,01", "Decimalseparator '.' occurs more than once: '19.018.00,01'"),
+                                              ("19.180,00.01", "Decimalseparator '.' found in wrong position for value '19.180,00.01'."),
+                                              ("19,180.00.01", "Decimalseparator '.' occurs more than once: '19,180.00.01'")
+                                              ]:
             self._transformRaiseException(inputValue, NumberFormatException, exceptionMessage, "english")
 
     def testSeparatorGermanException(self):
-        for inputValue in [ " 180. ",
-                            "180.0001",
-                            "18,000.01",
-                            "1,918,000.01",
-                            "180.12312.221",
-                            "180,12312,221",
-                            "180,00.01",
-                            "18.00,01",
-                            "19,180,00.01",
-                            "19.018.00,01",
-                            "19.180,00.01",
-                            "19,180.00.01"]:
-            exceptionMessage = "Das Format '{0}' stimmmt nicht mit den gewählten Separatoren überein.".format(str(inputValue).strip())
+        for inputValue, exceptionMessage in [ (" . ", "Thousandseparator '.' is set wrongly: '.'"),
+                                              (" 180. ", "Thousandseparator '.' found in wrong position."),
+                                              ("180.0001", "Thousandseparator '.' found in wrong position for value '180.0001'."),
+                                              ("180,00.01", "Decimalseparator ',' found in wrong position for value '180,00.01'."),
+                                              ("18,000.01", "Decimalseparator ',' found in wrong position for value '18,000.01'."),
+                                              ("18.00,01", "Thousandseparator '.' found in wrong position for value '18.00,01'."),
+                                              ("180.12312.221", "Thousandseparator '.' found in wrong position for value '180.12312.221'."),
+                                              ("180,12312,221", "Decimalseparator ',' occurs more than once: '180,12312,221'"),
+                                              ("1,918,000.01", "Decimalseparator ',' occurs more than once: '1,918,000.01'"),
+                                              ("19,180.00.01", "Decimalseparator ',' found in wrong position for value '19,180.00.01'."),
+                                              ("19.180,00.01", "Decimalseparator ',' found in wrong position for value '19.180,00.01'."),
+                                              ("19.018.00,01", "Thousandseparator '.' found in wrong position for value '19.018.00,01'."),
+                                              ("19,180,00.01", "Decimalseparator ',' occurs more than once: '19,180,00.01'")
+                                              ]:
             self._transformRaiseException(inputValue, NumberFormatException, exceptionMessage, "german")
 
     def testSeparatorEnglishValid(self):
         for inputValue, validationValue in [
                                 (None, None),
                                 ("", None),
+                                ("  ", None),
                                 (180, 180),
                                 ("180", 180), (" 180", 180), ("180 ", 180), (" 180 ", 180),
                                 (" 180. ", 180.0),
@@ -90,6 +111,7 @@ class SeparatorTransformerTest(unittest.TestCase):
     def testSeparatorGermanValid(self):
         for inputValue, validationValue in [
                                 (None, None),
+                                ("  ", None),
                                 ("", None),
                                 (180, 180),
                                 ("180", 180), (" 180", 180), ("180 ", 180), (" 180 ", 180),
