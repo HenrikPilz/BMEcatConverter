@@ -101,23 +101,31 @@ class SeparatorTransformer(object):
 
     def _autodetectSeparators(self, value):
         stringValue = str(value)
+        countComma = stringValue.count(self._comma)
+        countDot = stringValue.count(self._dot)
 
-        if stringValue.count(self._comma) == 0 and stringValue.count(self._dot) == 0:
+        if countComma == 0 and countDot == 0:
             return
-        elif stringValue.count(self._comma) == 1 and stringValue.count(self._dot) == 0:
+        elif countComma == 1 and countDot == 0:
             self._setSeparators("german")
-        elif stringValue.count(self._comma) == 0 and stringValue.count(self._dot) == 1:
+        elif countComma == 0 and countDot == 1:
             self._setSeparators("english")
         else:
+            self.__tryVariants(stringValue)
+
+    def __tryVariants(self, value):
+        failed = True
+        for variant in self._separators.keys():
             try:
-                self._setSeparators("english")
-                self._checkOccurenceOfSeparators(stringValue)
+                self._setSeparators(variant)
+                self._checkOccurenceOfSeparators(value)
             except (NumberFormatException, SeparatorNotDetectableException):
-                try:
-                    self._setSeparators("german")
-                    self._checkOccurenceOfSeparators(stringValue)
-                except NumberFormatException:
-                    raise SeparatorNotDetectableException("Could not detect Separators for value '{0}'.".format(stringValue))
+                continue
+            failed = False
+            break
+
+        if failed:
+            raise SeparatorNotDetectableException("Could not detect Separators for value '{0}'.".format(value))
 
     def _checkOccurenceOfSeparators(self, stringValue):
         decimalGroups = stringValue.split(self._decimalSeparator)
