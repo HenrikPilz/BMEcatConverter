@@ -16,6 +16,7 @@ class SeparatorTransformerTest(unittest.TestCase):
         for firstInputValue, firstvalidationValue, secondInputValue, secondValidationValue, thirdInputValue, exceptionMessage in [
                                 (180, 180, "180.", 180, "180,", "Thousandseparator ',' found in wrong position for value '180,'."),
                                 (180, 180, "180,", 180, "180.", "Thousandseparator '.' found in wrong position for value '180.'."),
+                                (180, 180, "180.01", 180.01, "180,01", "Thousandseparator '.' found in wrong position for value '180,01'."),
                                 (180, 180, "180.01", 180.01, "180,12312,221", "Thousandseparator '.' found in wrong position for value '180,12312,221'."),
                                 (180, 180, "180.01", 180.01, "180,00.01", "Thousandseparator ',' found in wrong position for value '180,00.01'."),
                                 (180, 180, "180.01", 180.01, "18.00,01", "Decimalseparator '.' found in wrong position for value '18.00,01'."),

@@ -147,18 +147,24 @@ class ExcelImporter(object):
     def __detectEntities(self, currentFieldname, colIndex):
         # gib ihn aus
         logging.debug(currentFieldname)
+
         # ist er in den basefieldKeys (Grunddatenfelder des Artikels)
-        if currentFieldname in self.__basefieldMapping.keys():
-            self.__indexForProduct[self.__basefieldMapping[currentFieldname]] = colIndex
+        added = self.__addIndexForMappingIfFieldInMapping(currentFieldname, colIndex, self.__basefieldMapping, self.__indexForProduct)
         # ist er product detail relevant
-        elif currentFieldname in self.__productDetailMapping.keys():
-            self.__indexForProductDetails[self.__productDetailMapping[currentFieldname]] = colIndex
+        added = added or self.__addIndexForMappingIfFieldInMapping(currentFieldname, colIndex, self.__productDetailMapping, self.__indexForProductDetails)
         # bestelldetails
-        elif currentFieldname in self.__orderDetailMapping.keys():
-            self.__indexForOrderDetails[self.__orderDetailMapping[currentFieldname]] = colIndex
+        added = added or self.__addIndexForMappingIfFieldInMapping(currentFieldname, colIndex, self.__orderDetailMapping, self.__indexForOrderDetails)
+
         # andere Daten?
-        else:
+        if not added:
             self.__detectMultiColumnEntities(currentFieldname, colIndex)
+
+    def __addIndexForMappingIfFieldInMapping(self, currentFieldname, colIndex, mappingDictionary, indexDictionary):
+        # ist er in den basefieldKeys (Grunddatenfelder des Artikels)
+        if currentFieldname in mappingDictionary.keys():
+            indexDictionary[mappingDictionary[currentFieldname]] = colIndex
+            return True
+        return False
 
     def __detectMultiColumnEntities(self, currentFieldname, colIndex):
         # dann muessen wir splitten, da der Zahlenanteil
@@ -170,15 +176,24 @@ class ExcelImporter(object):
 
         logging.debug("'{0}' : '{1}'".format(fieldName, fieldCount))
 
-        # sind es preisdetails ?
-        if fieldName in self.__priceMapping.keys():
-            self.__setColumnIndexForMapping(self.__indexTuplesForPrices, self.__priceMapping[fieldName], fieldCount, colIndex)
-        elif fieldName in self.__mimeMapping.keys():
-            self.__setColumnIndexForMapping(self.__indexTuplesForMimes, self.__mimeMapping[fieldName], fieldCount, colIndex)
-        elif fieldName in self.__featureMapping.keys():
-            self.__setColumnIndexForMapping(self.__indexPairsForFeatures, self.__featureMapping[fieldName], fieldCount, colIndex)
-        else:
+        # sind es Preise ?
+        added = self.__addIndexForFieldCountMappingIfFieldInMapping(fieldName, colIndex, fieldCount,
+                                                                    self.__priceMapping, self.__indexTuplesForPrices)
+        # sind es Bilder ?
+        added = added or self.__addIndexForFieldCountMappingIfFieldInMapping(fieldName, colIndex, fieldCount,
+                                                                             self.__mimeMapping, self.__indexTuplesForMimes)
+        # sind es Attribute
+        added = added or self.__addIndexForFieldCountMappingIfFieldInMapping(fieldName, colIndex, fieldCount,
+                                                                             self.__featureMapping, self.__indexPairsForFeatures)
+
+        if not added:
             logging.debug("'{0}' : '{1}'".format(fieldName, fieldCount))
+
+    def __addIndexForFieldCountMappingIfFieldInMapping(self, currentFieldname, colIndex, fieldCount, mappingDictionary, indexDictionary):
+        if currentFieldname in mappingDictionary.keys():
+            self.__setColumnIndexForMapping(indexDictionary, mappingDictionary[currentFieldname], fieldCount, colIndex)
+            return True
+        return False
 
     def __setColumnIndexForMapping(self, indexForClassFieldName, classFieldName, fieldCount, colIndex):
         if classFieldName not in indexForClassFieldName.keys():
@@ -208,6 +223,17 @@ class ExcelImporter(object):
         currentProduct.validate(raiseException=False)
         return currentProduct
 
+    def __transferInformationForMapping(self, mapping, objectForValue):
+        """
+        Überträgt die Informationen vom Objekt über das angegebene Mapping für das Produkt in der Zeile.
+        """
+        for fieldname, colIndex in mapping.items():
+            try:
+                self.__determineAndAddValue(colIndex, objectForValue, fieldname)
+            except NumberFormatException as e:
+                raise NumberFormatException("Zeile: {0}/Spalte {1}; '{2}' Fehler: {3}".format(self.__currentRowIndex, colIndex,
+                                                                                              fieldname, str(e)))
+
     def __addMultipleOrderedObjects(self, mapping, objectContainer, typeOfMultiples):
         """
         Fügt mehrere Objekte zum Objektcontainer hinzu
@@ -223,43 +249,38 @@ class ExcelImporter(object):
             try:
                 if order not in itemsToAddByOrder.keys():
                     itemsToAddByOrder[order] = typeOfMultiples()
-                value = self.__currentSheet.cell(column=colIndex, row=self.__currentRowIndex).value
-                if fieldname in self.__fieldsToTransform:
-                    value = self._separatorTransformer.transform(value)
-                if value is not None and len(str(value)) > 0:
-                    itemsToAddByOrder[order].add(fieldname, value)
+                self.__determineAndAddValue(colIndex, itemsToAddByOrder[order], fieldname)
             except NumberFormatException as e:
                 raise NumberFormatException("Zeile: {0}/Spalte {1}; '{2}{4}' Fehler: {3}".format(self.__currentRowIndex, colIndex,
                                                                                                  fieldname, str(e), order))
-            except Exception as e:
-                raise Exception("Zeile: {0}/Spalte {1}; '{2}{4}' Fehler: {3}".format(self.__currentRowIndex, colIndex, fieldname, str(e), order))
+
+    def __determineAndAddValue(self, colIndex, objectForValue, fieldname):
+        value = self.__currentSheet.cell(column=colIndex, row=self.__currentRowIndex).value
+        value = self.__transformValueIfSupposedTo(fieldname, value)
+        if value is not None and len(str(value)) > 0:
+            objectForValue.add(fieldname, value)
+
+    def __transformValueIfSupposedTo(self, fieldname, value):
+        if fieldname in self.__fieldsToTransform:
+            return self._separatorTransformer.transform(value)
+        return value
 
     def __sortAndAddMultipleOrderedObjects(self, objectContainer, typeOfMultiples, itemsToAddByOrder):
         for key in sorted(itemsToAddByOrder.keys()):
-            try:
-                if getattr(itemsToAddByOrder[key], "order") is None:
-                    setattr(itemsToAddByOrder[key], "order", int(key))
-            except AttributeError:
-                logging.debug("Order Attribute could be set: {0}".format(itemsToAddByOrder[key].__class__.__name__))
-            self.__exectueAddMethod(objectContainer, "add" + str(typeOfMultiples.__name__), itemsToAddByOrder[key])
+            item = itemsToAddByOrder[key]
+            self.__setOrderIfNotSet(item, key)
+            self.__exectueAddMethod(objectContainer, "add" + str(typeOfMultiples.__name__), item)
 
-    def __transferInformationForMapping(self, mapping, objectForValue):
-        """
-        Überträgt die Informationen vom Objekt über das angegebene Mapping für das Produkt in der Zeile.
-        """
-        for fieldname in mapping.keys():
-            value = self.__currentSheet.cell(column=mapping[fieldname], row=self.__currentRowIndex).value
-            if fieldname in self.__fieldsToTransform:
-                value = self._separatorTransformer.transform(value)
-            if value is not None and len(str(value).strip()) > 0:
-                setattr(objectForValue, fieldname, value)
+    def __setOrderIfNotSet(self, objectWithOrder, order):
+        try:
+            if getattr(objectWithOrder, "order") is None:
+                setattr(objectWithOrder, "order", int(order))
+        except AttributeError:
+            logging.debug("Order Attribute could not be set for '{0}'.".format(objectWithOrder.__class__.__name__))
 
     def __exectueAddMethod(self, objectWithAddMethod , addMethodName, arg):
-        elementHandler = None
         try:
-            if addMethodName is not None:
-                elementHandler = getattr(objectWithAddMethod, addMethodName)
-                elementHandler(arg)
-            self.__currentContent = ""
+            elementHandler = getattr(objectWithAddMethod, addMethodName)
+            elementHandler(arg)
         except AttributeError:
             raise NotImplementedError("Class [" + objectWithAddMethod.__class__.__name__ + "] does not implement [" + addMethodName + "]")

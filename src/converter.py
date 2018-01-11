@@ -117,11 +117,19 @@ class Converter(object):
         self._inputfile = self._relativePathToAbsolutePath(self._inputfile)
         self._outputfile = self._relativePathToAbsolutePath(self._outputfile)
         if self._inputfile.endswith(".xml") and self._isExcel(self._outputfile):
-            self.xmlToExcel()
+            self.__runConverterMethod(self.xmlToExcel)
         elif self._isExcel(self._inputfile) and self._outputfile.endswith(".xml"):
-            self.excelToXml()
+            self.__runConverterMethod(self.excelToXml)
         else:
             raise ConversionModeException("Mode not supported")
+
+    def __runConverterMethod(self, method):
+        try:
+            method()
+        except Exception as e:
+            if os.path.exists(self._outputfile):
+                os.remove(self._outputfile)
+            raise e
 
     def _isExcel(self, filename):
         return str(filename[-5:]) in self.allowedExcelFormats
