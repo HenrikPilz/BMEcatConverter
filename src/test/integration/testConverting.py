@@ -30,6 +30,13 @@ class TestMainConverter(unittest.TestCase):
         args = ['-i', 'Test.xlsx', '-o', 'test.xml']
         self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 5)
 
+    def testConvertExcelToXmlWrongSeparatorsInDeliveryTime(self):
+        inputFilePath = os.path.join(self.testDataPath, "testConvertExcelToXmlWrongSeparatorsInDeliveryTime.xlsx")
+        outputFilePath = os.path.join(self.outputPath, "testConvertExcelToXmlWrongSeparatorsInDeliveryTime.xml")
+
+        args = ['--separators=english', '-i', inputFilePath, '-o', outputFilePath]
+        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+
     def testConvertBMEcatMissingOptions(self):
         inputFilePath = os.path.join(self.testDataPath, "testConvertBMEcatMissingOptions.xml")
         outputFilePath = os.path.join(self.outputPath, "testConvertBMEcatMissingOptions.xlsx")
