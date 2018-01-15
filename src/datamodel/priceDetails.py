@@ -62,7 +62,7 @@ class PriceDetails(ValidatingXMLObject, ComparableEqual):
         self._validatePricesAndVerifyExistenceOfMandatoryPrices(raiseException)
 
     def addPrice(self, price, raiseException=True):
-        self.addToListIfValid(price, self.prices, "Der Preis enthaelt keine validen Einträge. Er wird nicht hinzugefuegt.", raiseException=raiseException)
+        self.addToListIfValid(price, self.prices, "Der Preis enthaelt keine validen Einträge. Er wird nicht hinzugefuegt.", raiseException)
 
     def toXml(self, raiseExceptionOnValidate=True):
         priceDetailsXmlElement = super().validateAndCreateBaseElement("ARTICLE_PRICE_DETAILS", raiseExceptionOnValidate=raiseExceptionOnValidate)
