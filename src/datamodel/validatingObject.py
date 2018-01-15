@@ -20,6 +20,14 @@ class ValidatingObject(object):
     '''
 
     def add(self, attributeName, attributeValue):
+        '''
+        Validating, if the given Value is empty and if not adds it to the attribute given by the attrirbuteName.
+        @param attributeName: Name of the attribute to add the value to. Can be of any basic type (int, str, float, ...)
+                              or array or list.
+        @param attributeValue: the value which should be added.
+        @return: None
+        @raise Exception: if the Attribute is not found
+        '''
         if attributeValue is None:
             return
         try:
