@@ -65,7 +65,7 @@ class FeatureTest(unittest.TestCase):
 
     def testValidateExceptionFeatureNameMissing(self):
         feature = Feature()
-        with self.assertRaisesRegex(Exception, "Der Merkmalsname fehlt."):
+        with self.assertRaisesRegex(Exception, "Attibutename is missing."):
             feature.validate(True)
 
     def testValidateExceptionNoValueOrVariants(self):

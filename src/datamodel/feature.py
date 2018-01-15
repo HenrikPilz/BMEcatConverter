@@ -57,7 +57,7 @@ class Feature(ValidatingXMLObject, ComparableEqual):
             self.unit = self.__etimUnitMapper.getSIUnit(self.unit)
 
     def validate(self, raiseException=False):
-        super().valueNotNoneOrEmpty(self.name, "Der Merkmalsname fehlt.", raiseException)
+        super().valueNotNoneOrEmpty(self.name, "Attibutename is missing.", raiseException)
         hasValues = super().valueNotNoneOrEmpty(self.values)
         hasVariants = super().valueNotNoneOrEmpty(self.variants)
         if not hasValues and not hasVariants:
@@ -71,9 +71,6 @@ class Feature(ValidatingXMLObject, ComparableEqual):
         self.checkAttributesForFormulas(['name', 'order', 'unit', 'values'])
 
     def addValue(self, value):
-        """
-        Validiert, ob der übergebene Wert nicht leer ist und fügt ihn zur Liste der Values hinzu, falls das der Fall ist.
-        """
         self.add("values", value)
 
     def addVariantSet(self):
