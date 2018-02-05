@@ -15,6 +15,7 @@ from datamodel import Mime
 from datamodel import Price
 from datamodel import PriceDetails
 from datamodel import Product
+from datamodel.validatingObject import FormulaFoundException
 from transformer import NumberFormatException
 from transformer import SeparatorTransformer
 
@@ -210,17 +211,20 @@ class ExcelImporter(object):
         currentProduct = Product()
         self.__transferInformationForMapping(self.__indexForProduct, currentProduct)
         currentProduct.addDetails()
-        self.__transferInformationForMapping(self.__indexForProductDetails, currentProduct.details)
-        currentProduct.addOrderDetails()
-        self.__transferInformationForMapping(self.__indexForOrderDetails, currentProduct.orderDetails)
-        self.__addMultipleOrderedObjects(self.__indexTuplesForMimes, currentProduct, Mime)
-        priceDetails = PriceDetails()
-        self.__addMultipleOrderedObjects(self.__indexTuplesForPrices, priceDetails, Price)
-        currentProduct.addPriceDetails(priceDetails, raiseException=False)
-        featureSet = FeatureSet()
-        self.__addMultipleOrderedObjects(self.__indexPairsForFeatures, featureSet, Feature)
-        currentProduct.addFeatureSet(featureSet)
-        currentProduct.validate(raiseException=False)
+        try:
+            self.__transferInformationForMapping(self.__indexForProductDetails, currentProduct.details)
+            currentProduct.addOrderDetails()
+            self.__transferInformationForMapping(self.__indexForOrderDetails, currentProduct.orderDetails)
+            self.__addMultipleOrderedObjects(self.__indexTuplesForMimes, currentProduct, Mime)
+            priceDetails = PriceDetails()
+            self.__addMultipleOrderedObjects(self.__indexTuplesForPrices, priceDetails, Price)
+            currentProduct.addPriceDetails(priceDetails, raiseException=False)
+            featureSet = FeatureSet()
+            self.__addMultipleOrderedObjects(self.__indexPairsForFeatures, featureSet, Feature)
+            currentProduct.addFeatureSet(featureSet)
+            currentProduct.validate(raiseException=False)
+        except FormulaFoundException as ffe:
+            raise FormulaFoundException("{0}: {1}".format(currentProduct.productId, str(ffe)))
         return currentProduct
 
     def __transferInformationForMapping(self, mapping, objectForValue):

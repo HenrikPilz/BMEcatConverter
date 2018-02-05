@@ -115,6 +115,8 @@ class ValidatingObject(object):
             if item not in listToAddTo:
                 listToAddTo.append(item)
                 return True
+        except FormulaFoundException as ffe:
+            raise ffe
         except Exception as ve:
             logging.warning(errorMessage + "{0}".format(str(ve)))
         return False

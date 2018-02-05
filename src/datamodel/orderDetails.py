@@ -11,8 +11,8 @@ from datamodel.xmlObject import ValidatingXMLObject
 
 
 class OrderDetails(ValidatingXMLObject, ComparableEqual):
-    __allowedOrderUnits = [ "C62", "MTR", "SET", "BX", "CT", "PF", "BG", "PK", "TN", "DR", "CA", "CS", "RO" ]
-    __allowedContentUnits = [ "C62", "MTR", "SET", "RO", "DR", "CS", "PR", "RO" ]
+    __allowedOrderUnits = [ "C62", "MTR", "SET", "BX", "CT", "PF", "BG", "PK", "TN", "DR", "CA", "CS", "RO", "KGM" ]
+    __allowedContentUnits = [ "C62", "MTR", "SET", "RO", "DR", "CS", "PR", "RO", "KGM" ]
     __allowedCombinations = {}
 
     def __init__(self):

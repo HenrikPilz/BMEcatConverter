@@ -17,10 +17,10 @@ class Mime(ValidatingXMLObject, ComparableEqual):
                        "image/tiff",
                        "text/html",
                        "text/plain",
-                       "image/eps",
                        "image/png",
                        "image/gif"
                        ]
+    __allowedImageFileTypes = [ "jpg", "jpeg", "tif", "tiff", "png", "gif" ]
     __allowedPurposes = [ "thumbnail", "normal", "detail", "data_sheet", "logo", "others" ]
     __allowedCombinations = {}
 
@@ -55,6 +55,11 @@ class Mime(ValidatingXMLObject, ComparableEqual):
         super().addOptionalSubElement(mimeElement, "MIME_DESCR", self.description)
         super().addOptionalSubElement(mimeElement, "MIME_ALT", self.alternativeContent)
         return mimeElement
+
+    def __checkAllowedFileTypes(self):
+        for extension in self.__allowedImageFileTypes:
+            if self.mimeType.lower().startswith("image") and not self.source.lower().endswith(extension):
+                raise Exception("Bildpfad '{0}' enthält eine nicht erlaubte Endung ({1}).".format(self.source, extension))
 
     def __convertPathToLowerCase(self):
         '''

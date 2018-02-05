@@ -6,6 +6,7 @@ Created on 05.05.2017
 import os
 
 from datamodel.comparableEqual import ComparableEqual
+from datamodel.validatingObject import FormulaFoundException
 from datamodel.variantSet import VariantSet
 from datamodel.xmlObject import ValidatingXMLObject
 from mapping import UnitMapper
@@ -68,7 +69,10 @@ class Feature(ValidatingXMLObject, ComparableEqual):
             if hasVariants:
                 self.variants.validate(raiseException)
         self._mapUnitIfNecessary()
-        self.checkAttributesForFormulas(['name', 'order', 'unit', 'values'])
+        try:
+            self.checkAttributesForFormulas(['name', 'order', 'unit', 'values'])
+        except FormulaFoundException as ffe:
+            raise FormulaFoundException("{0}: {1}".format(self.name, str(ffe)))
 
     def addValue(self, value):
         self.add("values", value)

@@ -123,6 +123,13 @@ class TestMainConverter(unittest.TestCase):
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
         self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
 
+    def testConvertExcelToBMEcatExceptionFormulaFound(self):
+        inputFilePath = os.path.join(self.testDataPath, "testConvertExcelToBMEcatExceptionFormulaFound.xlsx")
+        outputFilePath = os.path.join(self.outputPath, "testConvertExcelToBMEcatExceptionFormulaFound.xml")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+
     def __runAndAssertSystemExitAndNotOutputfile(self, args, outputFilePath, exitcode):
         with self.assertRaises(SystemExit) as cm:
             main.main(args)
