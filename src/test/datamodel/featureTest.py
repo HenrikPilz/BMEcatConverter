@@ -9,6 +9,7 @@ from lxml import etree
 
 from datamodel import Feature
 from datamodel import Variant
+from datamodel.validatingObject import FormulaFoundException
 
 
 class FeatureTest(unittest.TestCase):
@@ -102,6 +103,14 @@ class FeatureTest(unittest.TestCase):
         feature.addVariantOrder(1)
 
         with self.assertRaisesRegex(Exception, "Es wurden Attributswerte und Varianten angegeben. Die Zuordnung ist mehrdeutig."):
+            feature.validate(True)
+
+    def testValidateExceptionFormulaFound(self):
+        feature = Feature()
+        feature.name = "TestFeature"
+        feature.addValue("=SE10")
+
+        with self.assertRaisesRegex(FormulaFoundException, "TestFeature: Im Objekt vom Typ 'Feature' wurde im Feld values ein Formeleintrag gefunden."):
             feature.validate(True)
 
     def testValidateValue(self):

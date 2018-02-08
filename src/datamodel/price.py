@@ -3,6 +3,7 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
+from math import floor, ceil
 import logging
 
 from datamodel.comparableEqual import ComparableEqual
@@ -40,8 +41,7 @@ class Price(ValidatingXMLObject, ComparableEqual):
             if float(self.amount) < 0:
                 self.amount = 0
                 super().logError("Negativer Preis angegeben!", raiseException)
-            self.amount = round(float(self.amount), 2)
-
+            self.amount = super().round(self.amount)
         if self.priceType is None:
             logging.warning("Kein Typ fuer den Preis angeben!")
         if float(self.tax) not in [ 0.19, 0.07 ]:

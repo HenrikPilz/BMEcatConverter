@@ -42,9 +42,11 @@ class Mime(ValidatingXMLObject, ComparableEqual):
         super().valueNotNone(self.source, "Kein Bildpfad angegeben.", raiseException)
         self.__convertPathToLowerCase()
         super().valueNotNone(self.order, "Bildreihenfolge fehlerhaft: " + str(self.order), raiseException)
+        self.__convertToLowerCase("mimeType")
         super().valueNotEmptyOrNoneAndNotIn(self.mimeType, "Bildtyp nicht gesetzt.", self.__allowedTypes, "Bildtyp fehlerhaft.", raiseException)
         super().valueNotEmptyOrNoneAndNotIn(self.purpose, "Bildverwendung nicht gesetzt.", self.__allowedPurposes, "Bildverwendung fehlerhaft.", raiseException)
         self.checkAttributesForFormulas(['source', 'order', 'mimeType', 'purpose', 'description'])
+        self.__checkAllowedFileTypes()
 
     def toXml(self, raiseExceptionOnValidate=True):
         mimeElement = super().validateAndCreateBaseElement("MIME", raiseExceptionOnValidate=raiseExceptionOnValidate)
@@ -57,9 +59,19 @@ class Mime(ValidatingXMLObject, ComparableEqual):
         return mimeElement
 
     def __checkAllowedFileTypes(self):
+        if not self.mimeType.lower().startswith("image"):
+            return
+        wrongFileExtension = True
         for extension in self.__allowedImageFileTypes:
-            if self.mimeType.lower().startswith("image") and not self.source.lower().endswith(extension):
-                raise Exception("Bildpfad '{0}' enthält eine nicht erlaubte Endung ({1}).".format(self.source, extension))
+            if self.source.lower().endswith(extension):
+                wrongFileExtension = False
+
+        if wrongFileExtension:
+            raise Exception("Bildpfad '{0}' enthält eine nicht erlaubte Endung ({1}).".format(self.source, self.source[-3:]))
+
+    def __convertToLowerCase(self, attributeName):
+        if getattr(self, attributeName, None) is not None:
+            setattr(self, attributeName, str(getattr(self, attributeName)).lower())
 
     def __convertPathToLowerCase(self):
         '''

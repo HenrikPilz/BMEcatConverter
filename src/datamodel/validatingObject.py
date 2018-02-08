@@ -5,6 +5,7 @@ Created on 07.10.2017
 '''
 from abc import abstractmethod
 from array import array
+from email import _header_value_parser
 import logging
 
 
@@ -18,6 +19,12 @@ class ValidatingObject(object):
     '''
     Interface Class for a Class which validates its content
     '''
+
+    def round(self, value, decimalPlaces=2):
+        if int(str(int(value * pow(10, int(decimalPlaces) + 1)))[-1]) < 5:
+            return float(int(value * pow(10, int(decimalPlaces)))) / pow(10, int(decimalPlaces))
+        else:
+            return float(int(value * pow(10, int(decimalPlaces))) + 1) / pow(10, int(decimalPlaces))
 
     def add(self, attributeName, attributeValue):
         '''

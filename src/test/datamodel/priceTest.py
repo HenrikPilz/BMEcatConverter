@@ -55,6 +55,22 @@ class PriceTest(unittest.TestCase):
         price.validate(True)
         self.assertEqual(price.tax, 0.07, "Tax was set but should stay")
 
+    def testCeil(self):
+        price = Price()
+        price.amount = 1.335
+        price.lowerBound = 1
+        price.currency = "EUR"
+        price.validate(True)
+        self.assertEqual(price.amount, 1.34, "Ceil failed '{0}'".format(price.amount))
+
+    def testFloor(self):
+        price = Price()
+        price.amount = 1.333
+        price.lowerBound = 1
+        price.currency = "EUR"
+        price.validate(True)
+        self.assertEqual(price.amount, 1.33, "Floor failed '{0}'".format(price.amount))
+
     def testEqual(self):
         price1 = Price()
         self.assertNotEqual(price1, "", "Prices should not be equal to str")

@@ -254,9 +254,12 @@ class ExcelImporter(object):
                 if order not in itemsToAddByOrder.keys():
                     itemsToAddByOrder[order] = typeOfMultiples()
                 self.__determineAndAddValue(colIndex, itemsToAddByOrder[order], fieldname)
-            except NumberFormatException as e:
+            except NumberFormatException as nfe:
                 raise NumberFormatException("Zeile: {0}/Spalte {1}; '{2}{4}' Fehler: {3}".format(self.__currentRowIndex, colIndex,
-                                                                                                 fieldname, str(e), order))
+                                                                                                 fieldname, str(nfe), order))
+            except Exception as e:
+                raise Exception("Zeile: {0}/Spalte {1}; '{2}{4}' Fehler: {3}".format(self.__currentRowIndex, colIndex,
+                                                                                     fieldname, str(e), order))
 
     def __determineAndAddValue(self, colIndex, objectForValue, fieldname):
         value = self.__currentSheet.cell(column=colIndex, row=self.__currentRowIndex).value
