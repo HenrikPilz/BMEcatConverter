@@ -16,6 +16,7 @@ class Feature(ValidatingXMLObject, ComparableEqual):
     __baseDirectory = os.path.join(os.path.dirname(__file__), "..", "..", "documents", "BMEcat", "version")
     __bmecatUnitMapper = UnitMapper(os.path.join(__baseDirectory, "BMEcatUnitMapping.csv"))
     __etimUnitMapper = UnitMapper(os.path.join(__baseDirectory, "ETIMUnitMapping.csv"))
+    __featureValueBlacklist = " -\n\t\r_\\/"
 
     def __init__(self):
         self.name = None
@@ -75,7 +76,8 @@ class Feature(ValidatingXMLObject, ComparableEqual):
             raise FormulaFoundException("{0}: {1}".format(self.name, str(ffe)))
 
     def addValue(self, value):
-        self.add("values", value)
+        if value is not None and len(str(value).strip(self.__featureValueBlacklist)) > 0:
+            self.add("values", value)
 
     def addVariantSet(self):
         if self.variants is None:

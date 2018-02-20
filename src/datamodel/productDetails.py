@@ -57,10 +57,15 @@ class ProductDetails(ValidatingXMLObject, ComparableEqual):
         if super().valueNotNoneOrEmpty(self.title, "Der Artikelname fehlt.", raiseException):
             self.title = self.title.replace("\n", " ").strip()
         if super().valueNotNoneOrEmpty(self.description, "Die Artikelbeschreibung fehlt.", False):
-            self.description = str(self._trimIfString(self.description)).replace("\n", "<br>")
+            self.__checkAndCorrectDescription()
         super().valueNotNoneOrEmpty(self.ean, "Keine EAN vorhanden.", False)
         self.manufacturerArticleId = self._trimIfString(self.manufacturerArticleId)
         self.description = self._trimIfString(self.description)
+
+    def __checkAndCorrectDescription(self):
+        self.description = str(self._trimIfString(self.description)).replace("\n", "<br>").replace("\r", "")
+        if self.description.find("\"\"") > -1 or self.description.endswith("\""):
+            super().logError("Die Artikelbeschreibung darf nicht mit Anführungsstrichen enden oder doppelte Anführungsstriche enthalten!", True)
 
     def addSpecialTreatmentClass(self, treatmentclass):
         super().addToListIfValid(treatmentclass, self.specialTreatmentClasses, "Keine Treatmentclass übergeben")
