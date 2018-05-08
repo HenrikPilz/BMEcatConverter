@@ -57,15 +57,19 @@ class ProductDetails(ValidatingXMLObject, ComparableEqual):
         if super().valueNotNoneOrEmpty(self.title, "Der Artikelname fehlt.", raiseException):
             self.title = self.title.replace("\n", " ").strip()
         if super().valueNotNoneOrEmpty(self.description, "Die Artikelbeschreibung fehlt.", False):
-            self.__checkAndCorrectDescription()
+            self.__checkAndCorrectDescription(raiseException)
         super().valueNotNoneOrEmpty(self.ean, "Keine EAN vorhanden.", False)
         self.manufacturerArticleId = self._trimIfString(self.manufacturerArticleId)
         self.description = self._trimIfString(self.description)
 
-    def __checkAndCorrectDescription(self):
+    def __checkAndCorrectDescription(self, raiseException=False):
         self.description = str(self._trimIfString(self.description)).replace("\n", "<br>").replace("\r", "")
-        if self.description.find("\"\"") > -1 or self.description.endswith("\""):
-            super().logError("Die Artikelbeschreibung darf nicht mit Anführungsstrichen enden oder doppelte Anführungsstriche enthalten!", True)
+        if (self.description.find("www.contorion.de") > -1 or self.description.find("www.contorion.at") > -1) and self.description.find("profistore") == -1:
+            super().logError("Die Artikelbeschreibung darf keine (Contorion-Shop) länderspezifischen URLs enthalten!", True)
+        if self.description.find("\"\"") > -1:
+            super().logError("Die Artikelbeschreibung darf keine doppelten Anführungsstriche enthalten!", True)
+        if self.description.endswith("\""):
+            super().logError("Die Artikelbeschreibung sollte nicht mit Anführungsstrichen enden.", raiseException)
 
     def addSpecialTreatmentClass(self, treatmentclass):
         super().addToListIfValid(treatmentclass, self.specialTreatmentClasses, "Keine Treatmentclass übergeben")

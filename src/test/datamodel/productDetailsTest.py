@@ -62,20 +62,27 @@ class ProductDetailsTest(unittest.TestCase):
         with self.assertRaisesRegex(Exception, "Der Artikelname fehlt."):
             productdetails.validate(True)
 
+    def testValidateExceptionDescriptionWrongEndDoubleQuoteForFiege(self):
+        productdetails = ProductDetails()
+        productdetails.title = "Test"
+        productdetails.manufacturerArticleId = " 01239 \n"
+        productdetails.description = " \t asdfkjah sdlfas \r\n\""
+        with self.assertRaisesRegex(Exception, "Die Artikelbeschreibung sollte nicht mit Anführungsstrichen enden."):
+            productdetails.validate(True)
+
     def testValidateExceptionDescriptionWrongEndDoubleQuote(self):
         productdetails = ProductDetails()
         productdetails.title = "Test"
         productdetails.manufacturerArticleId = " 01239 \n"
         productdetails.description = " \t asdfkjah sdlfas \r\n\""
-        with self.assertRaisesRegex(Exception, "Die Artikelbeschreibung darf nicht mit Anführungsstrichen enden oder doppelte Anführungsstriche enthalten!"):
-            productdetails.validate(True)
+        productdetails.validate(False)
 
     def testValidateExceptionDescriptionWrongContainsDoubleDoubleQuote(self):
         productdetails = ProductDetails()
         productdetails.title = "Test"
         productdetails.manufacturerArticleId = " 01239"
         productdetails.description = ' asd ""fkjah sdlfas '
-        with self.assertRaisesRegex(Exception, "Die Artikelbeschreibung darf nicht mit Anführungsstrichen enden oder doppelte Anführungsstriche enthalten!"):
+        with self.assertRaisesRegex(Exception, "Die Artikelbeschreibung darf keine doppelten Anführungsstriche enthalten!"):
             productdetails.validate(True)
 
     def testValidateNoExceptionNoArticleTitle(self):
