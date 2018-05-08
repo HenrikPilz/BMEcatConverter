@@ -1,7 +1,6 @@
 python src\main.py -h
 
 rem Beispiel:
-
-python src\main.py -i %Pfad_und_Dateiname_Input%  -o %Pfad_und_Dateiname_Output% --dateformat="%Y-%m-%d" --merchant=Hoffmann
+rem python src\main.py -i %Pfad_und_Dateiname_Input%  -o %Pfad_und_Dateiname_Output% --dateformat="%Y-%m-%d" --merchant=Hoffmann
 
 pause
