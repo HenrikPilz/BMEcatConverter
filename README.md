@@ -1,6 +1,6 @@
 # BMEcatConverter
 
-## Build and Analysis Stat&#x016b;s
+## Build and Analysis Stat<span style="text-decoration: overline;">u</span>s
 Overview about build and besting status as well as status of compliance of coding principles.
 
 ### CodeClimate
@@ -29,29 +29,29 @@ Build: [![CircleCI](https://circleci.com/gh/HenrikPilz/BMEcatConverter.svg?style
 The BMEcatConverter is a tool to convert BMEcats into a special Excel-Workbook (Mappiong-Master) and vice versa.
 
 The first case, converting from BMEcat into Excel  covers the following aspects:
-* The first Sheet is called 'Artikel'. It contains the following fields:
-	- Article/Product
-		- suplierArticleID
-	- Article/ProductDetails
-		- title(descriptionShort)
-		- description(descriptionLong)
-		- manufacturerArticleID
-		- manufactuerName
-		- GTIN
-		- deliverytime
-	- orderDetails
-		- OrderUnit
-		- ContentUnit
-		- No_CU_per_OU
-		- quantityMin
-		- quantityInterval
-		- priceQuantity
-	- PriceDetails
-		- Prices
-	- MimeInfo
-		- Mime
-	- FeatureSets
-		- Feature
+*	The first Sheet is called 'Artikel'. It contains the following fields:
+	-	Article/Product
+		-	suplierArticleID
+	-	Article/ProductDetails
+		-	title(descriptionShort)
+		-	description(descriptionLong)
+		-	manufacturerArticleID
+		-	manufactuerName
+		-	GTIN
+		-	deliverytime
+	-	orderDetails
+		-	OrderUnit
+		-	ContentUnit
+		-	No_CU_per_OU
+		-	quantityMin
+		-	quantityInterval
+		-	priceQuantity
+	-	PriceDetails
+		-	Prices
+	-	MimeInfo
+		-	Mime
+	-	FeatureSets
+		-	Feature
 
 
 
