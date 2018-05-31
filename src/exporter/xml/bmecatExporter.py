@@ -12,6 +12,12 @@ from lxml.etree import Element
 from lxml.etree import SubElement
 
 
+class DataErrorException(Exception):
+    '''
+    Exception if the validation of an article fails.
+    '''
+
+
 class BMEcatExporter(object):
 
     def __init__(self, articles, filename, merchant='fiege'):
@@ -27,9 +33,17 @@ class BMEcatExporter(object):
 
     def __createArticleElementsForSet(self, articles, articleType='new'):
         articleElements = []
+        exceptions = []
         for article in articles:
-            articleElement = article.toXml(articleType, self._merchant.lower() == 'fiege')
-            articleElements.append(articleElement)
+            try:
+                articleElement = article.toXml(articleType, self._merchant.lower() == 'fiege')
+                articleElements.append(articleElement)
+            except Exception as e:
+                exceptions.append(e)
+        if len(exceptions) > 0:
+            for entry in exceptions:
+                logging.error(str(entry))
+            raise DataErrorException("BMEcat not complete. Found {0} errors.".format(len(exceptions)))
         return articleElements
 
     def writeBMEcatAsXML(self):

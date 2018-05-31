@@ -12,34 +12,35 @@ from argumentParser import HelpCalledException
 from argumentParser import MissingArgumentException
 from converter import ConversionModeException
 from converter import Converter
+from exporter.xml import DataErrorException
 
 
 def printHelp():
     """
     Hilfe ausgeben
     """
-    print("python main.py -i <inputfile> -o <outputfile>" +
-          " --dateformat \"%Y-%m-%d\" --separators english")
-    print("\n")
-    print("There are two modes in which the converter can be used:")
-    print("\t1.\tInput XML and Output xlsx: " +
-          "This means converting from any BMEcat format to ")
-    print("\t--dateformat <dateformat>")
-    print("\t\te.g. '%Y-%m-%d' or '%d.%m.%Y' or anything else with Y as Year" +
-          ", d as day and m as month ")
-    print("\t--separators <english|german|detect>")
-    print("\t\te.g. -separators german leads to numbers" +
-          " beeing expected like 10.000,00")
-    print("\t\t     -separators english leads to numbers" +
-          " beeing expected like 10,000.00")
-    print("\t\t     -separators detect tries to detect" +
-          " what could be there (unsafe).")
-    print("Optionally:")
-    print("\t--merchant <Merchantname>")
-    print("\t--manufacturer <Manufacturername>")
-    print("\ti.e. python main.py -i makita_bmecat.xml" +
-          " -o makita_excelfilname.xlsx -merchant \"Contorion\"" +
-          " -manufacturer \"Makita\"")
+    logging.info("---  Help  ---\n\t  python main.py -i <inputfile> -o <outputfile>" +
+                 " --dateformat \"%Y-%m-%d\" --separators english" +
+                 "\n"
+                 "\t  There are two modes in which the converter can be used:\n" +
+                 "\t\t  1.\tInput XML and Output xlsx:\n" +
+                 "\t  This means converting from any BMEcat format to Excel\n" +
+                 "\t\t  --dateformat <dateformat>\n" +
+                 "\t\t\t  e.g. '%Y-%m-%d' or '%d.%m.%Y' or anything else with Y as Year" +
+                 ", d as day and m as month\n" +
+                 "\t\t  --separators <english|german|detect>\n" +
+                 "\t\t\t  e.g. -separators german leads to numbers" +
+                 " beeing expected like 10.000,00\n" +
+                 "\t\t\t       -separators english leads to numbers" +
+                 " beeing expected like 10,000.00\n" +
+                 "\t\t\t       -separators detect tries to detect" +
+                 " what could be there (unsafe).\n" +
+                 "\t  Optionally:\n" +
+                 "\t\t  --merchant <Merchantname>\n" +
+                 "\t\t  --manufacturer <Manufacturername>\n" +
+                 "\t\t  i.e. python main.py -i makita_bmecat.xml" +
+                 " -o makita_excelfilname.xlsx -merchant \"Contorion\"" +
+                 " -manufacturer \"Makita\"\n")
 
 
 def findNextFreeLogfilename(logfilename):
@@ -110,10 +111,10 @@ def setUpLogging():
     logger.setLevel(loggingLevel)
 
 
-def printHelpAndExit(message=None, exitCode=None):
-    if message is not None:
-        logging.info(message)
+def printHelpAndExit(errorMessage=None, exitCode=None):
     printHelp()
+    if errorMessage is not None:
+        logging.error(errorMessage)
     if exitCode is not None:
         sys.exit(exitCode)
 
@@ -140,6 +141,9 @@ def main(argv):
         printHelpAndExit("Wrong Conversion Mode: {0}".format(str(cme)), 2)
     except (MissingArgumentException, getopt.GetoptError) as mae:
         printHelpAndExit("Missing/Wrong Arguments: {0}".format(str(mae)), 3)
+    except DataErrorException as dee:
+        logging.error("{0}".format(str(dee)))
+        sys.exit(7)
     except Exception as e:
         logging.exception("General Exception: {0}".format(str(e)))
         sys.exit(6)
