@@ -296,7 +296,12 @@ class BMEcatImportHandler(handler.ContentHandler):
     def createPrice(self, attrs):
         self._objectIsNone(self.__currentPrice,
                            "Fehler im BMEcat: Neuer Preis soll erstellt werden. Es wird schon ein Preis verarbeitet.", True)
-        self.__currentPrice = Price(attrs.getValue('price_type'))
+        priceType = "other"
+        try:
+            priceType = attrs.getValue('price_type')
+        except KeyError as ke:
+            logging.warning(str(ke))
+        self.__currentPrice = Price(priceType)
         self.__currentElement = self.__currentPrice
 
     ''' Preis speichern '''
