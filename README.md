@@ -26,7 +26,7 @@ Build: [![CircleCI](https://circleci.com/gh/HenrikPilz/BMEcatConverter.svg?style
 
 
 ## Introduction
-The BMEcatConverter is a tool to convert BMEcats into a special Excel-Workbook and vice versa.
+The BMEcatConverter is a tool to convert BMEcats into a special Excel-Workbook (Mappiong-Master) and vice versa.
 
 The first case, converting from BMEcat into Excel  covers the following aspects:
 * The first Sheet is called 'Artikel'. It contains the following fields:
@@ -42,11 +42,16 @@ The first case, converting from BMEcat into Excel  covers the following aspects:
 	- orderDetails
 		- OrderUnit
 		- ContentUnit
-		- 
+		- No_CU_per_OU
+		- quantityMin
+		- quantityInterval
+		- priceQuantity
 	- PriceDetails
-	- FeatureSets
-		- Feature
+		- Prices
 	- MimeInfo
 		- Mime
+	- FeatureSets
+		- Feature
+
 
 
