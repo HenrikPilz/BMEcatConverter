@@ -42,22 +42,24 @@ The BMEcatConverter is a tool to convert BMEcats into a special Excel-Workbook (
 ## Usage
 ## Default behavior
 The BMEcat-Converter has to be used with the following arguments:
+
 *	-i "%path_to_inputfile%"
 	this can be a relative or absolute path, it has to be either an Excelfile \(\*.xlsm or \*.xlsx\) or a BMEcat-file \(\*.xml\).
 *	-o "%path_to_outputfile%"
 	this can be a relative or absolute path, it has to be either an Excelfile \(\*.xlsm or \*.xlsx\) or a BMEcat-file \(\*.xml\).
-*	--dateformat="%Y-%m-%d"
+*	\-\-dateformat="%Y-%m-%d"
 	the dateformat has to be provided, if you convert from XML to Excel \(Case one\). You can usually derive the dateformat from the generation date of the BMEcat.	If you use a _*cmd*_-file for running the converter you should escape the percentage sign by double-typing, i.e., "%%Y-%%m-%%d".
 
 Thus with calling _*python src/main.py -i "%path_to_inputfile%" -o "%path_to_outputfile%"*_ will work if you convert from an Excelfile to a BMEcat.
 
 The following options are set to default values:
-*	--dateformat
-*	--merchant="fiege"
+
+*	-	dateformat
+*	\-\-merchant="fiege"
 	Default merchant dissolves to _*fiege*_, this means if an validation fails, an exception is raised and the conversion fails.
-*	--manufacturer=None
+*	\-\-manufacturer=None
 	Default Manufacturer if no manufacturername is provided in the BMEcat.
-*	--separators=autodetect
+*	\-\-separators=autodetect
 	Default is _*autodetect*_, which tries to resolve the thousands- and decimalseparator
 	three states are possible
 	-	autodetect:
@@ -66,13 +68,14 @@ The following options are set to default values:
 
 ### Additional options
 The options can be changed as follows:
-*	--dateformat
-*	--merchant="fiege"
-	In order to loosen the validationrules one could set a merchant with the option *--merchant="MerchantName*.
+
+*	\-\-dateformat
+*	\-\-merchant="fiege"
+	In order to loosen the validationrules one could set a merchant with the option *\-\-merchant="MerchantName*.
 	_*fiege*_ means if an validation fails, an exception is raised and the conversion fails.
 	_*anything_else*_ only writes warnings but will create a BMEcat if nothing really bad is inserted.
-*	--manufacturer
-*	--separators=autodetect
+*	\-\-manufacturer
+*	\-\-separators=autodetect
 	three states are possible
 	-	autodetect:
 		tries to autodetect thousands- and decimalseparators
@@ -83,6 +86,7 @@ The options can be changed as follows:
 
 ## Detailed Information
 The first case, converting from BMEcat into Excel covers the following aspects:
+
 *	The first sheet is called 'Artikel'. It contains the following fields:
 	-	Article/Product
 		-	suplierArticleID
@@ -123,11 +127,11 @@ The first case, converting from BMEcat into Excel covers the following aspects:
 			-	attributeValue1
 			combination of value and unit
 *	The second sheet is called 'Artikelbeziehungen'. It contains all relations between all articles in the BMEcat. Every row contains one relation.
-The columns are named as follows:
+	The columns are named as follows:
 	-	supplierArticleId
 	-	referencType
 	-	referencedSupplierArticleId
 *	The third sheet is called 'Artikelsuchbegriffe'. It contains all searchwords for all articles. One row contains all searchwords for one article.
-The columns are named as follows:
+	The columns are named as follows:
 	-	supplierArticleId
 	-	keywords
