@@ -54,22 +54,26 @@ Thus with calling _*python src/main.py -i "%path_to_inputfile%" -o "%path_to_out
 
 The following options are set to default values:
 
-*	-	dateformat
+*	\-\-dateformat=None
 *	\-\-merchant="fiege"
 	Default merchant dissolves to _*fiege*_, this means if an validation fails, an exception is raised and the conversion fails.
 *	\-\-manufacturer=None
 	Default Manufacturer if no manufacturername is provided in the BMEcat.
 *	\-\-separators=autodetect
 	Default is _*autodetect*_, which tries to resolve the thousands- and decimalseparator
-	three states are possible
-	-	autodetect:
-		tries to autodetect thousands- and decimalseparators
-	-	
 
 ### Additional options
 The options can be changed as follows:
 
-*	\-\-dateformat
+*	\-\-dateformat="%Y-%m-%d"
+	has to be set if the generation date looks like "2018-9-18".
+	%Y is the year with century, i.e., 2018
+	%y is the year without century, i.e., 98 for 1998, 01 for 2001
+	%m is the month
+	%d is the day of the month
+	%h is the hour
+	%M is the minute
+	%S is the second
 *	\-\-merchant="fiege"
 	In order to loosen the validationrules one could set a merchant with the option *\-\-merchant="MerchantName*.
 	_*fiege*_ means if an validation fails, an exception is raised and the conversion fails.
