@@ -19,28 +19,78 @@ def printHelp():
     """
     Hilfe ausgeben
     """
-    logging.info("---  Help  ---\n\t  python main.py -i <inputfile> -o <outputfile>" +
-                 " --dateformat \"%Y-%m-%d\" --separators english" +
-                 "\n"
-                 "\t  There are two modes in which the converter can be used:\n" +
-                 "\t\t  1.\tInput XML and Output xlsx:\n" +
-                 "\t  This means converting from any BMEcat format to Excel\n" +
-                 "\t\t  --dateformat <dateformat>\n" +
-                 "\t\t\t  e.g. '%Y-%m-%d' or '%d.%m.%Y' or anything else with Y as Year" +
-                 ", d as day and m as month\n" +
-                 "\t\t  --separators <english|german|detect>\n" +
-                 "\t\t\t  e.g. -separators german leads to numbers" +
-                 " beeing expected like 10.000,00\n" +
-                 "\t\t\t       -separators english leads to numbers" +
-                 " beeing expected like 10,000.00\n" +
-                 "\t\t\t       -separators detect tries to detect" +
-                 " what could be there (unsafe).\n" +
-                 "\t  Optionally:\n" +
-                 "\t\t  --merchant <Merchantname>\n" +
-                 "\t\t  --manufacturer <Manufacturername>\n" +
-                 "\t\t  i.e. python main.py -i makita_bmecat.xml" +
-                 " -o makita_excelfilname.xlsx -merchant \"Contorion\"" +
-                 " -manufacturer \"Makita\"\n")
+    logging.info("### Help ###\n" +
+                 "\n" +
+                 "   ### Usage ###\n" +
+                 "   The BMEcat-Converter has to be used with the following " +
+                 "arguments:\n" +
+                 "\n" +
+                 "\t-i \"%path_to_inputfile%\"\n" +
+                 "\tthis can be a relative or absolute path, it has to be " +
+                 "either an Excelfile (*.xlsm or *.xlsx) or a BMEcat-file " +
+                 "(*.xml).\n" +
+                 "\t-o \"%path_to_outputfile%\"\n" +
+                 "\tthis can be a relative or absolute path, it has to be " +
+                 "either an Excelfile (*.xlsm or *.xlsx) or a BMEcat-file " +
+                 "(*.xml).\n" +
+                 "\t--dateformat=\"%Y-%m-%d\"\n" +
+                 "\tthe dateformat has to be provided, if you convert from " +
+                 "XML to Excel (Case one). You can usually derive the " +
+                 "dateformat from the generation date of the BMEcat. If you " +
+                 "use a cmd-file for running the converter you should escape" +
+                 " the percentage sign by double-typing, i.e., " +
+                 "\"%%Y-%%m-%%d\".\n" +
+                 "\n" +
+                 "   Thus with calling 'python src/main.py -i " +
+                 "\"%path_to_inputfile%\" -o \"%path_to_outputfile%\"' " +
+                 "will work if you convert from an Excelfile to a BMEcat.\n" +
+                 "\n" +
+                 "   The following options are set to default values:\n" +
+                 "\n" +
+                 "\t--dateformat=None\n" +
+                 "\t--merchant=\"fiege\"\n" +
+                 "\tDefault merchant dissolves to 'fiege', this means if an " +
+                 "validation fails, an exception is raised and the conversion" +
+                 " fails.\n" +
+                 "\t--manufacturer=None\n" +
+                 "\tDefault Manufacturer if no manufacturername is provided " +
+                 "in the BMEcat.\n" +
+                 "\t--separators=autodetect\n" +
+                 "\tDefault is 'autodetect', which tries to resolve the " +
+                 "thousands- and decimalseparator\n" +
+                 "\n" +
+                 "   ### Additional options ###\n" +
+                 "   The options can be changed as follows:\n" +
+                 "\n" +
+                 "\t--dateformat=\"%Y-%m-%d\"\n" +
+                 "\thas to be set if the generation date looks like " +
+                 "\"2018-9-18\".\n" +
+                 "\t%Y is the year with century, i.e., 2018\n" +
+                 "\t%y is the year without century, i.e., 98 for 1998, 01 " +
+                 "for 2001\n" +
+                 "\t%m is the month\n" +
+                 "\t%d is the day of the month\n" +
+                 "\t%h is the hour\n" +
+                 "\t%M is the minute\n" +
+                 "\t%S is the second\n" +
+                 "\t--merchant=\"fiege\"\n" +
+                 "\tIn order to loosen the validationrules one could set a " +
+                 "merchant with the option '--merchant=\"MerchantName\"'.\n" +
+                 "\t'fiege' means if an validation fails, an exception is " +
+                 "raised and the conversion fails.\n" +
+                 "\t'anything_else' only writes warnings but will create a " +
+                 "BMEcat if nothing really bad is inserted.\n" +
+                 "\t--manufacturer\n" +
+                 "\t--separators=autodetect\n" +
+                 "\tthree states are possible\n" +
+                 "\t- autodetect:\n" +
+                 "\t\ttries to autodetect thousands- and decimalseparators\n" +
+                 "\t- english:\n" +
+                 "\t\tset thousandsseparator to comma and decimalseparator " +
+                 "to dot.\n" +
+                 "\t- german:\n" +
+                 "\t\tset thousandsseparator to dot and decimalseparator " +
+                 "to comma.\n\n")
 
 
 def findNextFreeLogfilename(logfilename):
