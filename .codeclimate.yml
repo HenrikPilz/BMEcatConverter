@@ -1,14 +1,17 @@
 version: "2"         # required to adjust maintainability checks
 
 plugins:
-  markdownlint:
-    enabled: true
   duplication:
     enabled: true
   fixme:
     enabled: true
+  markdownlint:
+    enabled: true
   pep8:
     enabled: true
+  pylint:
+    enabled: true
+    channel: "beta"
   radon:
     enabled: true
   sonar-python:
@@ -16,11 +19,6 @@ plugins:
     config:
       tests_patterns:
         - src/test/**
-
-engines:
-  pylint:
-    enabled: true
-    channel: "beta"
 
 checks:
   argument-count:
