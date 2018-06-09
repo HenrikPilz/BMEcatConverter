@@ -1,6 +1,8 @@
 version: "2"         # required to adjust maintainability checks
 
 plugins:
+  markdownlint:
+    enabled: true
   duplication:
     enabled: true
   fixme:
@@ -14,6 +16,12 @@ plugins:
     config:
       tests_patterns:
         - src/test/**
+
+engines:
+  pylint:
+    enabled: true
+    channel: "beta"
+
 checks:
   argument-count:
     config:
