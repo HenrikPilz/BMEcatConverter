@@ -20,7 +20,9 @@ class DataErrorException(Exception):
 
 class BMEcatExporter(object):
 
-    def __init__(self, articles, filename, merchant='fiege'):
+    __strict_validation = 'strict'
+
+    def __init__(self, articles, filename, merchant=__strict_validation):
         self._articles = articles  # dict!
         self._filename = filename
         self._merchant = merchant
@@ -36,7 +38,7 @@ class BMEcatExporter(object):
         exceptions = []
         for article in articles:
             try:
-                articleElement = article.toXml(articleType, self._merchant.lower() == 'fiege')
+                articleElement = article.toXml(articleType, self._merchant.lower() == BMEcatExporter.__strict_validation)
                 articleElements.append(articleElement)
             except Exception as e:
                 exceptions.append(e)
@@ -67,7 +69,7 @@ class BMEcatExporter(object):
     def __createCatalogGroupSystemElement(self):
         return etree.XML("<CATALOG_GROUP_SYSTEM>" +
                          "<GROUP_SYSTEM_ID>1</GROUP_SYSTEM_ID>" +
-                         "<GROUP_SYSTEM_NAME>Default Groupsystem Contorion</GROUP_SYSTEM_NAME>" +
+                         "<GROUP_SYSTEM_NAME>Default Groupsystem</GROUP_SYSTEM_NAME>" +
                          '<CATALOG_STRUCTURE type="root">' +
                          "<GROUP_ID>1</GROUP_ID>" +
                          "<GROUP_NAME>Katalog</GROUP_NAME>" +
@@ -140,19 +142,19 @@ class BMEcatExporter(object):
         SubElement(catalog, "CURRENCY").text = "EUR"
         return catalog
 
-    def __createSubElementWithNameContorion(self, tag):
+    def __createSubElement(self, tag):
         element = Element(tag)
-        SubElement(element, tag + "_NAME").text = "Contorion GmbH"
+        SubElement(element, tag + "_NAME").text = tag
         return element
 
     def __createHeaderElement(self):
         ''' Create Header of BMEcat
         '''
         header = Element("HEADER")
-        SubElement(header, "GENERATOR_INFO").text = "BMEcatConverter Contorion"
+        SubElement(header, "GENERATOR_INFO").text = "BMEcatConverter"
         header.append(self.__createCatalogInfo())
-        header.append(self.__createSubElementWithNameContorion("BUYER"))
-        header.append(self.__createSubElementWithNameContorion("SUPPLIER"))
+        header.append(self.__createSubElement("BUYER"))
+        header.append(self.__createSubElement("SUPPLIER"))
 
         return header
 
