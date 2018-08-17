@@ -12,7 +12,7 @@ from importer.excel import ExcelImporter
 from test.handler.basicHandlerTest import BasicHandlerTest
 
 
-class ExcelTransformationsForFiegeTest(BasicHandlerTest):
+class ExcelTransformationsForStrictValidationTest(BasicHandlerTest):
 
     def testConvertAndReimportFullArticle(self):
         article = Product()
@@ -171,7 +171,7 @@ class ExcelTransformationsForFiegeTest(BasicHandlerTest):
         article.addPriceDetails(priceDetails)
         super().runAndCheck(article, 'testConvertAndReimportWithoutManufacturerArticleId.xlsx')
 
-    def runTestMethod(self, article, filename, merchant='fiege'):
+    def runTestMethod(self, article, filename, validation='strict'):
         articles = { 'new' : [ article ]}
 
         # export as Excel

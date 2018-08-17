@@ -12,7 +12,7 @@ from importer.excel import ExcelImporter
 from test.handler.basicHandlerTest import BasicHandlerTest
 
 
-class ExcelTransformationNonFiegeTest(BasicHandlerTest):
+class ExcelTransformationNonStrictValidationTest(BasicHandlerTest):
 
     def testConvertAndReimportFullArticle(self):
         article = Product()
@@ -91,7 +91,7 @@ class ExcelTransformationNonFiegeTest(BasicHandlerTest):
         featureSet.addFeature(feature)
         article.addFeatureSet(featureSet)
 
-        super().runAndCheck(article, 'testConvertAndReimportFullArticle.xlsx', 'contorion')
+        super().runAndCheck(article, 'testConvertAndReimportFullArticle.xlsx', 'nonstrict')
 
     def testConvertAndReimportWithGTINAsNumber(self):
         article = Product()
@@ -116,7 +116,7 @@ class ExcelTransformationNonFiegeTest(BasicHandlerTest):
         price.tax = 0.19
         priceDetails.addPrice(price)
         article.addPriceDetails(priceDetails)
-        super().runAndCheck(article, 'testConvertAndReimportWithGTINAsNumber.xlsx', 'contorion')
+        super().runAndCheck(article, 'testConvertAndReimportWithGTINAsNumber.xlsx', 'nonstrict')
 
     def testConvertAndReimportWithManufacturerArticleId(self):
         article = Product()
@@ -140,7 +140,7 @@ class ExcelTransformationNonFiegeTest(BasicHandlerTest):
         price.tax = 0.19
         priceDetails.addPrice(price)
         article.addPriceDetails(priceDetails)
-        super().runAndCheck(article, 'testConvertAndReimportWithManufacturerArticleId.xlsx', 'contorion')
+        super().runAndCheck(article, 'testConvertAndReimportWithManufacturerArticleId.xlsx', 'nonstrict')
 
     def testConvertAndReimportWithoutPrice(self):
         article = Product()
@@ -158,7 +158,7 @@ class ExcelTransformationNonFiegeTest(BasicHandlerTest):
 
         priceDetails = PriceDetails()
         article.addPriceDetails(priceDetails)
-        super().runAndCheck(article, 'testConvertAndReimportWithoutPrice.xlsx', 'contorion')
+        super().runAndCheck(article, 'testConvertAndReimportWithoutPrice.xlsx', 'nonstrict')
 
     def testConvertAndReimportWithoutManufacturerArticleId(self):
         article = Product()
@@ -181,9 +181,9 @@ class ExcelTransformationNonFiegeTest(BasicHandlerTest):
         price.tax = 0.19
         priceDetails.addPrice(price)
         article.addPriceDetails(priceDetails)
-        super().runAndCheck(article, 'testConvertAndReimportWithoutManufacturerArticleId.xlsx', 'contorion')
+        super().runAndCheck(article, 'testConvertAndReimportWithoutManufacturerArticleId.xlsx', 'nonstrict')
 
-    def runTestMethod(self, article, filename, merchant='contorion'):
+    def runTestMethod(self, article, filename, validation='nonstrict'):
         articles = { 'new' : [ article ]}
 
         # export as Excel

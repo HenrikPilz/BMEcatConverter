@@ -1,2 +1,2 @@
-from test.handler.excel.excelTransformationTest import ExcelTransformationNonFiegeTest
-from test.handler.excel.excelTransformationsForFiegeTest import ExcelTransformationsForFiegeTest
+from test.handler.excel.excelTransformationTest import ExcelTransformationNonStrictValidationTest
+from test.handler.excel.excelTransformationsForStrictValidationTest import ExcelTransformationsForStrictValidationTest

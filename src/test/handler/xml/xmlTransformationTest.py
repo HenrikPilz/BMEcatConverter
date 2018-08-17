@@ -4,7 +4,6 @@ Created on 09.10.2017
 @author: Henrik Pilz
 '''
 from xml.sax import make_parser
-import os
 
 from datamodel import Feature, FeatureSet, Mime, OrderDetails, Price, PriceDetails, Product, ProductDetails, Reference, TreatmentClass
 from exporter.xml.bmecatExporter import BMEcatExporter
@@ -13,14 +12,14 @@ from resolver import DTDResolver
 from test.handler.basicHandlerTest import BasicHandlerTest
 
 
-class XmlTransformationNonFiegeTest(BasicHandlerTest):
+class XmlTransformationNonStrictValidationTest(BasicHandlerTest):
 
     def testCreateBMEcatFullData(self):
         article = Product()
         article.productId = '12345'
         article.details = ProductDetails()
         article.details.deliveryTime = 10
-        article.details.description = 'Test Description\nTest Descirption Line 2   '
+        article.details.description = 'Test Description\nTest Description Line 2   '
         article.details.ean = '12345678901234'
         article.details.keywords = [ 'Keyword 1', 'Keyword 2']
         article.details.manufacturerArticleId = '09876'
@@ -93,7 +92,7 @@ class XmlTransformationNonFiegeTest(BasicHandlerTest):
         featureSet.addFeature(feature)
         article.addFeatureSet(featureSet)
 
-        self.runAndCheck(article, 'testCreateBMEcatFullData.xml', 'contorion')
+        self.runAndCheck(article, 'testCreateBMEcatFullData.xml', 'nonstrict')
 
     def testCreateBMEcatMinimumDataPlusKeywords(self):
         article = Product()
@@ -119,7 +118,7 @@ class XmlTransformationNonFiegeTest(BasicHandlerTest):
 
         article.addKeyword("Testkeyword")
 
-        self.runAndCheck(article, 'testCreateBMEcatMinimumDataPlusKeywords.xml', 'contorion')
+        self.runAndCheck(article, 'testCreateBMEcatMinimumDataPlusKeywords.xml', 'nonstrict')
 
     def testCreateBMEcatMinimumDataFloatDescription(self):
         article = Product()
@@ -143,7 +142,7 @@ class XmlTransformationNonFiegeTest(BasicHandlerTest):
         price.tax = 0.19
         priceDetails.addPrice(price)
         article.addPriceDetails(priceDetails)
-        self.runAndCheck(article, 'testCreateBMEcatMinimumDataFloatDescription.xml', 'contorion')
+        self.runAndCheck(article, 'testCreateBMEcatMinimumDataFloatDescription.xml', 'nonstrict')
 
     def testCreateBMEcatMinimumData(self):
         article = Product()
@@ -166,13 +165,13 @@ class XmlTransformationNonFiegeTest(BasicHandlerTest):
         price.tax = 0.19
         priceDetails.addPrice(price)
         article.addPriceDetails(priceDetails)
-        self.runAndCheck(article, 'testCreateBMEcatMinimumData.xml', 'contorion')
+        self.runAndCheck(article, 'testCreateBMEcatMinimumData.xml', 'nonstrict')
 
-    def runTestMethod(self, article, filename, merchant='contorion'):
+    def runTestMethod(self, article, filename, validation='nonstrict'):
         articles = { 'new' : [ article ]}
 
         # export
-        bmecatExporter = BMEcatExporter(articles, filename, merchant)
+        bmecatExporter = BMEcatExporter(articles, filename, validation)
         bmecatExporter.writeBMEcatAsXML()
 
         # import again

@@ -76,8 +76,8 @@ class ArgumentParser():
     def _logData(self):
         logging.info("Input file is {0}".format(self.inputfile))
         logging.info("Output file is {0}".format(self.outputfile))
-        if self.merchant is not None:
-            logging.info("Merchant: {0}".format(self.merchant))
+        if self.validation is not None:
+            logging.info("Validation: {0}".format(self.validation))
         if self.manufacturer is not None:
             logging.info("Manufacturer: {0}".format(self.manufacturer))
 
@@ -88,5 +88,5 @@ class ArgumentParser():
             'dateFormat' : self.dateformat,
             'separatorMode' : self.separatorMode,
             'manufacturerName': self.manufacturer,
-            'merchant' : self.merchant
+            'validation' : self.validation
         }

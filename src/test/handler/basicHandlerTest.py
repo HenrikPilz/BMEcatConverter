@@ -13,14 +13,14 @@ class BasicHandlerTest(unittest.TestCase):
     outputPath = os.path.join(os.path.dirname(__file__), "..", "..", "..", "test_output")
 
     @abstractmethod
-    def runTestMethod(self, merchant='fiege'):
+    def runTestMethod(self, validation='strict'):
         '''
         @return array of articles
         '''
 
-    def runAndCheck(self, article, filename, merchant='fiege'):
-        article.validate(merchant == 'fiege')
-        article2 = self.runTestMethod(article, os.path.join(self.outputPath, filename), merchant)[0]
+    def runAndCheck(self, article, filename, validation='strict'):
+        article.validate(validation == 'strict')
+        article2 = self.runTestMethod(article, os.path.join(self.outputPath, filename), validation)[0]
 
         self.assertEqual(article.productId, article2.productId, "Artikelnummer")
         self.assertEqual(article.details.deliveryTime, int(article2.details.deliveryTime), "deliveryTime")

@@ -149,16 +149,16 @@ class TestMainConverter(unittest.TestCase):
     --- Ab hier richtige Konvertierungen
     -------------------------------------
     '''
-    def testCreateExcelFromBMEcatFullDataNonFiege(self):
-        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFromBMEcatFullDataNonFiege.xml")
-        outputFilePath = os.path.join(self.outputPath, "testCreateExcelFromBMEcatFullDataNonFiege.xlsx")
+    def testCreateExcelFromBMEcatFullDataNonStrictValidation(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFromBMEcatFullDataNonStrictValidation.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelFromBMEcatFullDataNonStrictValidation.xlsx")
 
-        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"', '--merchant=contorion']
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"', '--validation=nonstrict']
         self.__runTestAssertOutputFileExists(args, outputFilePath)
 
-    def testCreateExcelFromBMEcatFullDataFiege(self):
-        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFromBMEcatFullDataFiege.xml")
-        outputFilePath = os.path.join(self.outputPath, "testCreateExcelFromBMEcatFullDataFiege.xlsx")
+    def testCreateExcelFromBMEcatFullDataStrictValidation(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFromBMEcatFullDataStrictValidation.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelFromBMEcatFullDataStrictValidation.xlsx")
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
         self.__runTestAssertOutputFileExists(args, outputFilePath)
@@ -170,16 +170,16 @@ class TestMainConverter(unittest.TestCase):
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
         self.__runTestAssertOutputFileExists(args, outputFilePath)
 
-    def testCreateBMEcatFromExcelFullDataNonFiege(self):
-        inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatFromExcelFullDataNonFiege.xlsx")
-        outputFilePath = os.path.join(self.outputPath, "testCreateBMEcatFromExcelFullDataNonFiege.xml")
+    def testCreateBMEcatFromExcelFullDataNonStrictValidation(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatFromExcelFullDataNonStrictValidation.xlsx")
+        outputFilePath = os.path.join(self.outputPath, "testCreateBMEcatFromExcelFullDataNonStrictValidation.xml")
 
-        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"', '--merchant=contorion']
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"', '--validation=nonstrict']
         self.__runTestAssertOutputFileExists(args, outputFilePath)
 
-    def testCreateBMEcatFromExcelFullDataFiege(self):
-        inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatFromExcelFullDataFiege.xlsx")
-        outputFilePath = os.path.join(self.outputPath, "testCreateBMEcatFromExcelFullDataFiege.xml")
+    def testCreateBMEcatFromExcelFullDataStrictValidation(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatFromExcelFullDataStrictValidation.xlsx")
+        outputFilePath = os.path.join(self.outputPath, "testCreateBMEcatFromExcelFullDataStrictValidation.xml")
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
         self.__runTestAssertOutputFileExists(args, outputFilePath)

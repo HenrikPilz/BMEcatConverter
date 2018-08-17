@@ -4,7 +4,6 @@ Created on 09.10.2017
 @author: Henrik Pilz
 '''
 from xml.sax import make_parser
-import os
 
 from datamodel import Feature, FeatureSet, Mime, OrderDetails, Price, PriceDetails, Product, ProductDetails, Reference, TreatmentClass
 from exporter.xml import BMEcatExporter
@@ -13,14 +12,14 @@ from resolver import DTDResolver
 from test.handler.basicHandlerTest import BasicHandlerTest
 
 
-class XmlTransformationForFiegeTest(BasicHandlerTest):
+class XmlTransformationForStrictValidationTest(BasicHandlerTest):
 
     def testCreateBMEcatFullData(self):
         article = Product()
         article.productId = '12345'
         article.details = ProductDetails()
         article.details.deliveryTime = 10
-        article.details.description = 'Test Description\nTest Descirption Line 2   '
+        article.details.description = 'Test Description\nTest Description Line 2   '
         article.details.ean = '12345678901234'
         article.details.keywords = [ 'Keyword 1', 'Keyword 2']
         article.details.manufacturerArticleId = '09876'
@@ -180,7 +179,7 @@ class XmlTransformationForFiegeTest(BasicHandlerTest):
         article.addPriceDetails(priceDetails)
         self.runAndCheck(article, 'testCreateBMEcatMinimumData.xml')
 
-    def runTestMethod(self, article, filename, merchant='fiege'):
+    def runTestMethod(self, article, filename, validation='strict'):
         articles = { 'new' : [ article ]}
         # export
         bmecatExporter = BMEcatExporter(articles, filename)
