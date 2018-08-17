@@ -8,11 +8,11 @@ import logging
 import os
 import time
 
-from exporter.excel import PyxelExporter
-from exporter.xml import BMEcatExporter
+from exporter import BMEcatExporter
+from exporter import PyxelExporter
 from importer import BMEcatImportHandler
 from importer import ExcelImporter
-from resolver.dtdResolver import DTDResolver
+from resolver import DTDResolver
 from transformer import SeparatorTransformer
 
 
