@@ -27,7 +27,7 @@ class ArgumentParser():
     def __init__(self):
         self.inputfile = None
         self.outputfile = None
-        self.merchant = 'fiege'
+        self.validation = 'strict'
         self.manufacturer = None
         self.dateformat = None
         self.separatorMode = None
@@ -36,7 +36,7 @@ class ArgumentParser():
         opts, _ = getopt.getopt(
                                 argv,
                                 "hi:o:",
-                                ["merchant=",
+                                ["validation=",
                                  "manufacturer=",
                                  "dateformat=",
                                  "separators="]
@@ -60,8 +60,8 @@ class ArgumentParser():
             self.outputfile = arg
         if opt == "--manufacturer":
             self.manufacturer = arg
-        if opt == "--merchant":
-            self.merchant = arg
+        if opt == "--validation":
+            self.validation = arg
         if opt == "--separators":
             self.separatorMode = arg
         if opt == "--dateformat":

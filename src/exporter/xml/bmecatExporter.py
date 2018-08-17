@@ -22,10 +22,10 @@ class BMEcatExporter(object):
 
     __strict_validation = 'strict'
 
-    def __init__(self, articles, filename, merchant=__strict_validation):
+    def __init__(self, articles, filename, validation=__strict_validation):
         self._articles = articles  # dict!
         self._filename = filename
-        self._merchant = merchant
+        self._validation = validation
 
     def __createArticleElements(self):
         articleElements = []
@@ -38,7 +38,7 @@ class BMEcatExporter(object):
         exceptions = []
         for article in articles:
             try:
-                articleElement = article.toXml(articleType, self._merchant.lower() == BMEcatExporter.__strict_validation)
+                articleElement = article.toXml(articleType, self._validation.lower() == BMEcatExporter.__strict_validation)
                 articleElements.append(articleElement)
             except Exception as e:
                 exceptions.append(e)
@@ -137,7 +137,7 @@ class BMEcatExporter(object):
         SubElement(catalog, "LANGUAGE").text = "deu"
         SubElement(catalog, "CATALOG_ID").text = catalogId + "_" + initials
         SubElement(catalog, "CATALOG_VERSION").text = "1.0"
-        SubElement(catalog, "CATALOG_NAME").text = dateYMD + "-" + self._merchant.title() + "-Update_" + initials
+        SubElement(catalog, "CATALOG_NAME").text = dateYMD + "-" + self._validation.title() + "-Update_" + initials
         catalog.append(self.__createGenerationDate())
         SubElement(catalog, "CURRENCY").text = "EUR"
         return catalog

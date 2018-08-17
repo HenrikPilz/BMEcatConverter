@@ -48,8 +48,8 @@ def printHelp():
                  "   The following options are set to default values:\n" +
                  "\n" +
                  "\t--dateformat=None\n" +
-                 "\t--merchant=\"fiege\"\n" +
-                 "\tDefault merchant dissolves to 'fiege', this means if an " +
+                 "\t--validation=\"strict\"\n" +
+                 "\tDefault validation dissolves to 'strict', this means if a " +
                  "validation fails, an exception is raised and the conversion" +
                  " fails.\n" +
                  "\t--manufacturer=None\n" +
@@ -73,10 +73,10 @@ def printHelp():
                  "\t%h is the hour\n" +
                  "\t%M is the minute\n" +
                  "\t%S is the second\n" +
-                 "\t--merchant=\"fiege\"\n" +
+                 "\t--validation=\"strict\"\n" +
                  "\tIn order to loosen the validationrules one could set a " +
-                 "merchant with the option '--merchant=\"MerchantName\"'.\n" +
-                 "\t'fiege' means if an validation fails, an exception is " +
+                 "merchant with the option '--validation=\"strict\"'.\n" +
+                 "\t'strict' means if an validation fails, an exception is " +
                  "raised and the conversion fails.\n" +
                  "\t'anything_else' only writes warnings but will create a " +
                  "BMEcat if nothing really bad is inserted.\n" +

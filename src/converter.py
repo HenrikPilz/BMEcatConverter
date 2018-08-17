@@ -43,7 +43,7 @@ class Converter(object):
         self._outputfile = config['outputfile']
         self._dateFormat = config['dateFormat']
         self._manufacturerName = config['manufacturerName']
-        self._merchant = config['merchant']
+        self._validation = config['validation']
         self._separatorTransformer = SeparatorTransformer(config['separatorMode'])
 
     def _relativePathToAbsolutePath(self, filename):
@@ -99,7 +99,7 @@ class Converter(object):
             logging.info("Daten eingelesen")
             print("Daten eingelesen")
 
-            exporter = BMEcatExporter(articles, self._outputfile, self._merchant)
+            exporter = BMEcatExporter(articles, self._outputfile, self._validation)
 
             logging.info("Erstelle XML-Datei")
             print("Erstelle XML-Datei")
