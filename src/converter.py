@@ -10,8 +10,8 @@ import time
 
 from exporter.excel import PyxelExporter
 from exporter.xml import BMEcatExporter
-from importer.excel import ExcelImporter
-from importer.xml import BMEcatImportHandler
+from importer import BMEcatImportHandler
+from importer import ExcelImporter
 from resolver.dtdResolver import DTDResolver
 from transformer import SeparatorTransformer
 

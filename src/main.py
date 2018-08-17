@@ -12,7 +12,7 @@ from argumentParser import HelpCalledException
 from argumentParser import MissingArgumentException
 from converter import ConversionModeException
 from converter import Converter
-from exporter.xml import DataErrorException
+from exporter import DataErrorException
 
 
 def printHelp():
