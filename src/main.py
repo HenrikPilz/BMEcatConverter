@@ -192,10 +192,10 @@ def main(argv):
     except (MissingArgumentException, getopt.GetoptError) as mae:
         printHelpAndExit("Missing/Wrong Arguments: {0}".format(str(mae)), 3)
     except DataErrorException as dee:
-        logging.error("{0}".format(str(dee)))
+        logging.error(str(dee))
         sys.exit(7)
     except Exception as e:
-        logging.exception("General Exception: {0}".format(str(e)))
+        logging.exception("General Exception: ", str(e))
         sys.exit(6)
 
     computeDuration(t1, time.clock())
