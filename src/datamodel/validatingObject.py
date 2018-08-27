@@ -5,14 +5,9 @@ Created on 07.10.2017
 '''
 from abc import abstractmethod
 from array import array
-from email import _header_value_parser
 import logging
 
-
-class FormulaFoundException(Exception):
-    '''
-    Exception thrown if an excel formula entry is found.
-    '''
+from error import FormulaFoundException
 
 
 class ValidatingObject(object):

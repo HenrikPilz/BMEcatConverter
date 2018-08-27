@@ -7,8 +7,8 @@ from getopt import GetoptError
 import unittest
 
 from argumentParser import ArgumentParser
-from argumentParser import HelpCalledException
-from argumentParser import MissingArgumentException
+from error import HelpCalledException
+from error import MissingArgumentException
 
 
 class ArgumentParserTest(unittest.TestCase):

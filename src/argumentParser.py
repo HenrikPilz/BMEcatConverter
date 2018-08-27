@@ -8,18 +8,8 @@ Parses given arguments and option and converting them into a config object
 
 import getopt
 import logging
-
-
-class HelpCalledException(Exception):
-    '''
-    Exception if Help is called
-    '''
-
-
-class MissingArgumentException(Exception):
-    '''
-    Exception if an argument is Missing
-    '''
+from error import HelpCalledException
+from error import MissingArgumentException
 
 
 class ArgumentParser():
@@ -130,7 +120,7 @@ class ArgumentParser():
 
     def getConfig(self):
         """
-        return arguments and options as config object
+        return arguments and options as configuration object
         """
         return {
             'inputfile' : self.inputfile,

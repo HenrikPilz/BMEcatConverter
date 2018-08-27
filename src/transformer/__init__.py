@@ -1,3 +1,1 @@
-from transformer.separators import NumberFormatException
-from transformer.separators import SeparatorNotDetectableException
 from transformer.separators import SeparatorTransformer

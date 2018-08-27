@@ -1,1 +1,1 @@
-from exporter.xml.bmecatExporter import BMEcatExporter, DataErrorException
+from exporter.xml.bmecatExporter import BMEcatExporter

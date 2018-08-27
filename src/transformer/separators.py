@@ -6,17 +6,8 @@ Created on 26.06.2017
 
 import logging
 
-
-class SeparatorNotDetectableException(Exception):
-    '''
-    If the Separators are not detectable
-    '''
-
-
-class NumberFormatException(Exception):
-    '''
-    If the format of the number is wrong
-    '''
+from error import NumberFormatException
+from error import SeparatorNotDetectableException
 
 
 class SeparatorTransformer(object):

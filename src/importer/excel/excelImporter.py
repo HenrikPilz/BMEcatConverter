@@ -15,8 +15,8 @@ from datamodel import Mime
 from datamodel import Price
 from datamodel import PriceDetails
 from datamodel import Product
-from datamodel.validatingObject import FormulaFoundException
-from transformer import NumberFormatException
+from error import FormulaFoundException
+from error import NumberFormatException
 from transformer import SeparatorTransformer
 
 

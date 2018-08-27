@@ -8,14 +8,13 @@ import logging
 import os
 import sys
 import time
-import urllib.error
 
 from argumentParser import ArgumentParser
-from argumentParser import HelpCalledException
-from argumentParser import MissingArgumentException
-from converter import ConversionModeException
 from converter import Converter
-from exporter import DataErrorException
+from error import ConversionModeException
+from error import DataErrorException
+from error import HelpCalledException
+from error import MissingArgumentException
 
 
 def printHelp():
@@ -178,7 +177,7 @@ def main(argv):
         converter.convert()
     except HelpCalledException:
         printHelpAndExit()
-    except (FileNotFoundError, urllib.error.URLError) as fnfe:
+    except FileNotFoundError as fnfe:
         printHelpAndExit("File not found: {0}".format(str(fnfe)), 5)
     except ConversionModeException as cme:
         printHelpAndExit("Wrong Conversion Mode: {0}".format(str(cme)), 2)

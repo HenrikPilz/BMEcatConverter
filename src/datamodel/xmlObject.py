@@ -8,12 +8,7 @@ from abc import abstractmethod
 from lxml.etree import SubElement, Element
 
 from datamodel.validatingObject import ValidatingObject
-
-
-class NoValueGivenException(Exception):
-    '''
-    Exception thrown when no Value is given.
-    '''
+from error import NoValueGivenException
 
 
 class XMLObject(object):
@@ -23,11 +18,18 @@ class XMLObject(object):
 
     @abstractmethod
     def toXml(self):
+        """
+        method for converting object into XML node
+        """
         raise NotImplementedError("Please implement 'toXml' in your class '{0}".format(__file__))
 
     def addMandatorySubElement(self, parent, tag, value):
         '''
-        Erstellt eiin Child-Element und wirft eine Exception, falls value nicht None
+        Erstellt ein Child-Element und wirft eine Exception, falls value nicht None
+
+        @param parent: parent element
+        @param tag: tag name of new element
+        @param value: value of new element
         '''
         if value is None:
             raise NoValueGivenException("'{0}' Kein Wert übergeben.".format(tag))
@@ -37,17 +39,29 @@ class XMLObject(object):
 
     def addOptionalSubElement(self, parent, tag, value):
         '''
-        Erstellt eiin Child-Element, falls value nicht None
+        Erstellt ein Child-Element, falls value nicht None
+
+        @param parent: parent element
+        @param tag: tag name of new element
+        @param value: value of new element
         '''
         if value is not None and len(str(value)) > 0:
             return self.addMandatorySubElement(parent, tag, value)
         return None
 
     def addListOfSubElements(self, parent, listOfSubElements, raiseExceptionOnValidate=True):
+        """
+        @param parent: parent element
+        """
         for element in listOfSubElements:
             parent.append(element.toXml(raiseExceptionOnValidate=raiseExceptionOnValidate))
 
     def addDateTimeSubElement(self, parent, dateType, date):
+        """
+        @param parent: parent element
+        @param dateType: type attribute DATETIME
+        @param date: date to split into date and time element
+        """
         dateTimeSubElement = SubElement(parent, "DATETIME", { "type"  : dateType})
         dateSubElement = SubElement(dateTimeSubElement, "DATE")
         dateSubElement.text = date.strftime("%Y-%m-%d")
@@ -61,5 +75,12 @@ class ValidatingXMLObject(ValidatingObject, XMLObject):
     '''
 
     def validateAndCreateBaseElement(self, tagname, attributes=None, raiseExceptionOnValidate=True):
+        """
+        validate current object and create base element if everything is ok.
+
+        @param tagname: create base element
+        @param attributes: possible attributes to set, default=None
+        @param raiseExceptionOnValidate: raise exception on validation, default=True
+        """
         self.validate(raiseExceptionOnValidate)
         return Element(tagname, attributes)

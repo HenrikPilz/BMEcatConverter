@@ -3,7 +3,6 @@ Created on 05.05.2017
 
 @author: henrik.pilz
 '''
-from math import floor, ceil
 import logging
 
 from datamodel.comparableEqual import ComparableEqual

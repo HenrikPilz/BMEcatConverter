@@ -22,7 +22,7 @@ class TestMainConverter(unittest.TestCase):
         self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
 
         args = ['--separators=english', '-i', inputFilePath, '-o', outputFilePath]
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 7)
 
         args = ['--separators=german', '-i', inputFilePath, '-o', outputFilePath]
         self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
@@ -35,17 +35,17 @@ class TestMainConverter(unittest.TestCase):
         outputFilePath = os.path.join(self.outputPath, "testConvertExcelToXmlWrongSeparatorsInDeliveryTime.xml")
 
         args = ['--separators=english', '-i', inputFilePath, '-o', outputFilePath]
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 7)
 
     def testConvertBMEcatMissingOptions(self):
         inputFilePath = os.path.join(self.testDataPath, "testConvertBMEcatMissingOptions.xml")
         outputFilePath = os.path.join(self.outputPath, "testConvertBMEcatMissingOptions.xlsx")
 
         args = ['-i', inputFilePath, '-o', outputFilePath]
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 7)
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 7)
 
         args = ['-i', 'Test.xml', '-o', 'test.xlsx', '--dateformat="%Y-%m-%d"']
         self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 5)
@@ -128,7 +128,7 @@ class TestMainConverter(unittest.TestCase):
         outputFilePath = os.path.join(self.outputPath, "testConvertExcelToBMEcatExceptionFormulaFound.xml")
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 7)
 
     def __runAndAssertSystemExitAndNotOutputfile(self, args, outputFilePath, exitcode):
         with self.assertRaises(SystemExit) as cm:

@@ -7,25 +7,16 @@ from xml.sax import make_parser
 import logging
 import os
 import time
+import urllib.error
 
+from error import ConversionModeException
+from error import DateFormatMissingException
 from exporter import BMEcatExporter
 from exporter import PyxelExporter
 from importer import BMEcatImportHandler
 from importer import ExcelImporter
 from resolver import DTDResolver
 from transformer import SeparatorTransformer
-
-
-class ConversionModeException(Exception):
-    '''
-    Exception for wrong converion modes
-    '''
-
-
-class DateFormatMissingException(Exception):
-    '''
-    Exception if an argument is Missing
-    '''
 
 
 class Converter(object):
@@ -65,7 +56,10 @@ class Converter(object):
         parser.setEntityResolver(DTDResolver())
 
         t1 = time.clock()
-        parser.parse("file:" + self._inputfile)
+        try:
+            parser.parse("file:" + self._inputfile)
+        except urllib.error.URLError as urlError:
+            raise FileNotFoundError(urlError)
         t2 = time.clock()
         print("Einlesen:")
         self.computeDuration(t1, t2)

@@ -227,8 +227,9 @@ class BMEcatImportHandler(handler.ContentHandler):
     def createProduct(self, attrs):
         logging.debug("Anfang Produkt " + ", ".join(attrs.getNames()))
         self._objectIsNone(self.__currentArticle,
-                              "Fehler im BMEcat: Neuer Artikel soll erstellt werden. Es wird schon ein Artikel verarbeitet.",
-                              True)
+                           "Fehler im BMEcat: Neuer Artikel soll erstellt " +
+                           "werden. Es wird schon ein Artikel verarbeitet.",
+                           True)
         self.__currentArticle = Product()
         self.__currentContent = ""
         self.__currentElement = self.__currentArticle
@@ -339,7 +340,7 @@ class BMEcatImportHandler(handler.ContentHandler):
     def createTreatmentClass(self, attrs):
         self._objectIsNone(self.__currentTreatmentClass,
                            "Fehler im BMEcat: Neue SpecialTreatmentClass soll erstellt werden. Es wird schon ein SpecialTreatmentClass verarbeitet.",
-                              True)
+                           True)
         self.__currentTreatmentClass = TreatmentClass(attrs.getValue('type'))
         self.__currentElement = self.__currentTreatmentClass
 
@@ -386,7 +387,7 @@ class BMEcatImportHandler(handler.ContentHandler):
     def createReference(self, attrs=None):
         self._objectIsNone(self.__currentReference,
                            "Fehler im BMEcat: Neue Referenz soll erstellt werden. Es wird schon eine Referenz verarbeitet.",
-                              True)
+                           True)
         if 'type' not in attrs.getNames():
             logging.warning("Referenz auf Artikel konnte nicht verarbeitet werdern, da kein Typ angegeben wurde.")
         else:

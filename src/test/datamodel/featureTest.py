@@ -9,7 +9,7 @@ from lxml import etree
 
 from datamodel import Feature
 from datamodel import Variant
-from datamodel.validatingObject import FormulaFoundException
+from error import FormulaFoundException
 
 
 class FeatureTest(unittest.TestCase):

@@ -10,12 +10,7 @@ import logging
 from lxml import etree
 from lxml.etree import Element
 from lxml.etree import SubElement
-
-
-class DataErrorException(Exception):
-    '''
-    Exception if the validation of an article fails.
-    '''
+from error import DataErrorException
 
 
 class BMEcatExporter(object):
