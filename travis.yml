@@ -1,7 +1,0 @@
-language: python
-
-install:
-    pip install -r requirements.txt
-
-notifications:
-    slack: henrikpilz:g2Nmivz0aRypTM9USWd3Ii3e
