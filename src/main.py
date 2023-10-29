@@ -197,7 +197,7 @@ def computeDuration(beginning):
     """
     compute duration from beginning to end.
     """
-    duration = time.clock() - beginning
+    duration = time.time() - beginning
     if duration < 60:
         print('Duration in seconds: %d', duration)
     else:
