@@ -168,7 +168,7 @@ def main(argv):
     logging.debug('Number of arguments: %d arguments.', len(argv))
     logging.debug('Argument List: %s', str(argv))
 
-    startingTime = time.clock()
+    startingTime = time.time()
 
     try:
         argumentParser = ArgumentParser()
