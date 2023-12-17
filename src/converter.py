@@ -55,21 +55,21 @@ class Converter(object):
         parser.setContentHandler(importer)
         parser.setEntityResolver(DTDResolver())
 
-        t1 = time.clock()
+        t1 = time.time()
         try:
             parser.parse("file:" + self._inputfile)
         except urllib.error.URLError as urlError:
             raise FileNotFoundError(urlError)
-        t2 = time.clock()
+        t2 = time.time()
         print("Einlesen:")
         self.computeDuration(t1, t2)
         logging.info("Daten eingelesen")
 
         exporter = PyxelExporter(importer.articles, self._outputfile, self._manufacturerName)
         logging.info("Erstelle Excel-Datei")
-        t3 = time.clock()
+        t3 = time.time()
         exporter.createNewWorkbook()
-        t4 = time.clock()
+        t4 = time.time()
         print("Wegschreiben:")
         self.computeDuration(t3, t4)
         logging.info("Fertig.")
@@ -82,9 +82,9 @@ class Converter(object):
         importer = ExcelImporter(self._separatorTransformer)
 
         if os.path.isfile(self._inputfile):
-            t1 = time.clock()
+            t1 = time.time()
             importer.readWorkbook(self._inputfile)
-            t2 = time.clock()
+            t2 = time.time()
             print("Einlesen:")
             self.computeDuration(t1, t2)
 
@@ -97,9 +97,9 @@ class Converter(object):
 
             logging.info("Erstelle XML-Datei")
             print("Erstelle XML-Datei")
-            t3 = time.clock()
+            t3 = time.time()
             exporter.writeBMEcatAsXML()
-            t4 = time.clock()
+            t4 = time.time()
             print("Wegschreiben:")
             self.computeDuration(t3, t4)
         else:
