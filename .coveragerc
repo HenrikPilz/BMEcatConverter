@@ -10,4 +10,4 @@ source = src/
 directory = coverage/report/html
 
 [xml]
-output = coverage/xml/coverage.xml
+output = coverage.xml
