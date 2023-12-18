@@ -1,4 +1,4 @@
 openpyxl
 regex
-coverage==4.3
+coverage>=4.3
 lxml
