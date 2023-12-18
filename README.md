@@ -12,7 +12,7 @@ Overview about build and besting status as well as status of compliance of codin
 
 ### Circle CI
 
-Build: [![CircleCI](https://circleci.com/gh/HenrikPilz/BMEcatConverter.svg?style=svg&circle-token=84c7ca4ac6fed76f1a113efb0fa4ddea1db3a7b2)](https://circleci.com/gh/HenrikPilz/BMEcatConverter)
+Build: [![CircleCI](https://dl.circleci.com/status-badge/img/gh/HenrikPilz/BMEcatConverter/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/HenrikPilz/BMEcatConverter/tree/master)
 
 ## Prerequisites
 In order to use the BMEcatConverter you need a python installation. The Python version, for which this Converter was developed is [python 3.4.4](https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi) due to its availability as a Windows Installer.
