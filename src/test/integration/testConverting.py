@@ -19,118 +19,118 @@ class TestMainConverter(unittest.TestCase):
         outputFilePath = os.path.join(self.outputPath, "testPriceIsNumberAndTaxIsString.xml")
 
         args = ['-i', inputFilePath, '-o', outputFilePath]
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 6)
 
         args = ['--separators=english', '-i', inputFilePath, '-o', outputFilePath]
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 7)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 7)
 
         args = ['--separators=german', '-i', inputFilePath, '-o', outputFilePath]
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 6)
 
         args = ['-i', 'Test.xlsx', '-o', 'test.xml']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 5)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 5)
 
     def testConvertExcelToXmlWrongSeparatorsInDeliveryTime(self):
         inputFilePath = os.path.join(self.testDataPath, "testConvertExcelToXmlWrongSeparatorsInDeliveryTime.xlsx")
         outputFilePath = os.path.join(self.outputPath, "testConvertExcelToXmlWrongSeparatorsInDeliveryTime.xml")
 
         args = ['--separators=english', '-i', inputFilePath, '-o', outputFilePath]
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 7)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 7)
 
     def testConvertBMEcatMissingOptions(self):
         inputFilePath = os.path.join(self.testDataPath, "testConvertBMEcatMissingOptions.xml")
         outputFilePath = os.path.join(self.outputPath, "testConvertBMEcatMissingOptions.xlsx")
 
         args = ['-i', inputFilePath, '-o', outputFilePath]
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 7)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 7)
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 7)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 7)
 
         args = ['-i', 'Test.xml', '-o', 'test.xlsx', '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 5)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 5)
 
     def testConvertExcelNonExistent(self):
         inputFilePath = os.path.join(self.testDataPath, "testConvertExcelNonExistent.xlsm")
         outputFilePath = os.path.join(self.outputPath, "testConvertExcelNonExistent.xml")
 
         args = ['--separators=german', '-i', inputFilePath, '-o', outputFilePath]
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 5)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 5)
 
     def testConversionModeExceptionThrown(self):
         inputFilePath = os.path.join(self.testDataPath, "testConversionModeExceptionThrown.png")
         outputFilePath = os.path.join(self.outputPath, "testConversionModeExceptionThrown.xml")
         args = ['--separators=german', '-i', inputFilePath, '-o', outputFilePath]
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 2)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 2)
 
         inputFilePath = os.path.join(self.testDataPath, "testConversionModeExceptionThrown.xlsx")
         outputFilePath = os.path.join(self.outputPath, "testConversionModeExceptionThrown.png")
         args = ['--separators=german', '-i', inputFilePath, '-o', outputFilePath]
 
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 2)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 2)
 
     def testRelativePathButFail(self):
         inputFilePath = os.path.join("../test_data", "testRelativePathButFail.xml")
         outputFilePath = os.path.join(self.outputPath, "testRelativePathButFail.xlsx")
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 5)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 5)
 
     def testMissingArgumentException(self):
         outputFilePath = os.path.join(self.outputPath, "testMissingArgumentException.xml")
 
         args = ['-i', '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 3)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 3)
 
     def testGetoptOptErrorException(self):
         outputFilePath = os.path.join(self.outputPath, "testMissingArgumentException.xml")
 
         args = ['-p', '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 3)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 3)
 
     def testCreateExcelFullDataDTDNotFoundException(self):
         inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFullDataWithCategoryTreeAndDTDNotExistent.xml")
         outputFilePath = os.path.join(self.outputPath, "testCreateExcelFullDataWithCategoryTreeAndDTDNotExistent.xlsx")
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 5)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 5)
 
     def testCreateExcelNestedArticleDetailsException(self):
         inputFilePath = os.path.join(self.testDataPath, "testCreateExcelNestedArticleDetailsException.xml")
         outputFilePath = os.path.join(self.outputPath, "testCreateExcelNestedArticleDetailsException.xlsx")
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 6)
 
     def testCreateExcelArticleDetailsOutOfArticleException(self):
         inputFilePath = os.path.join(self.testDataPath, "testCreateExcelArticleDetailsOutOfArticleException.xml")
         outputFilePath = os.path.join(self.outputPath, "testCreateExcelArticleDetailsOutOfArticleException.xlsx")
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 6)
 
     def testCreateBMEcatNoPossibleSheet(self):
         inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatNoPossibleSheet.xlsx")
         outputFilePath = os.path.join(self.outputPath, "testCreateBMEcatNoPossibleSheet.xml")
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 6)
 
     def testCreateBMEcatTwoPossibleSheets(self):
         inputFilePath = os.path.join(self.testDataPath, "testCreateBMEcatTwoPossibleSheets.xlsx")
         outputFilePath = os.path.join(self.outputPath, "testCreateBMEcatTwoPossibleSheets.xml")
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 6)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 6)
 
     def testConvertExcelToBMEcatExceptionFormulaFound(self):
         inputFilePath = os.path.join(self.testDataPath, "testConvertExcelToBMEcatExceptionFormulaFound.xlsx")
         outputFilePath = os.path.join(self.outputPath, "testConvertExcelToBMEcatExceptionFormulaFound.xml")
 
         args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runAndAssertSystemExitAndNotOutputfile(args, outputFilePath, 7)
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 7)
 
-    def __runAndAssertSystemExitAndNotOutputfile(self, args, outputFilePath, exitcode):
+    def __runAndAssertSystemExitAndNoOutputfile(self, args, outputFilePath, exitcode):
         with self.assertRaises(SystemExit) as cm:
             main.main(args)
         self.assertEqual(cm.exception.code, exitcode)

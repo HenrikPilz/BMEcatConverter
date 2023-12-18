@@ -15,17 +15,17 @@ Overview about build and besting status as well as status of compliance of codin
 Build: [![CircleCI](https://circleci.com/gh/HenrikPilz/BMEcatConverter.svg?style=svg&circle-token=84c7ca4ac6fed76f1a113efb0fa4ddea1db3a7b2)](https://circleci.com/gh/HenrikPilz/BMEcatConverter)
 
 ## Prerequisites
-In order to use the BMEcatConverter you need a python installation. The Python version, for which this Converter was developed is [python 3.4.4](https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi) due to its availability as an Windows Installer.
+In order to use the BMEcatConverter you need a python installation. The Python version, for which this Converter was developed is [python 3.4.4](https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi) due to its availability as a Windows Installer.
 It should be able to run on higher version as well.
 Please make sure you added python to the _path_-Environmentvariable and that you installed the _*requirements.txt*_ within a commandline shell with administrator permissions using _*pip install -r requirements.txt*_.
 
 ## Introduction
-The BMEcatConverter is a tool to convert BMEcats into a special Excel-Workbook (Mappiong-Master) and vice versa.
+The BMEcatConverter is a tool to convert BMEcats into a special Excel-Workbook (Mapping-Master) and vice versa.
 
 *	The first case, converting from BMEcat into Excel, which result in a workbook with three sheets:
     -	Article Data - all the data belonging to one article is in one row (This is called _Mapping-Master_-Format.)
     -	Article Relations - the relation between two articles is defined in one row
-    -	Search Words per Article - one row contains all searchwords, for this article
+    -	Search Words per Article - one row contains all search-words, for this article
 *	The second case is converting from an Excel-Workbook \(Mapping-Master\)
     The outcome is a [BMEcat Version 1.2](https://www.bme.de/fileadmin/content/Initativen/BMEcat/Download_BMEcat_1.2/BMEcatV12e.pdf). The BMEcat contains only one featureset per article.
 
@@ -38,7 +38,7 @@ The BMEcat-Converter has to be used with the following arguments:
 *	-o "%path_to_outputfile%"
     this can be a relative or absolute path, it has to be either an Excelfile \(\*.xlsm or \*.xlsx\) or a BMEcat-file \(\*.xml\).
 *	\-\-dateformat="%Y-%m-%d"
-    the dateformat has to be provided, if you convert from XML to Excel \(Case one\). You can usually derive the dateformat from the generation date of the BMEcat.	If you use a _*cmd*_-file for running the converter you should escape the percentage sign by double-typing, i.e., "%%Y-%%m-%%d".
+    the dateformat has to be provided, if you convert from XML to Excel \(Case one\). You can usually derive the date-format from the generation date of the BMEcat.	If you use a _*cmd*_-file for running the converter you should escape the percentage sign by double-typing, i.e., "%%Y-%%m-%%d".
 
 Thus with calling _*python src/main.py -i "%path_to_inputfile%" -o "%path_to_outputfile%"*_ will work if you convert from an Excelfile to a BMEcat.
 
@@ -50,7 +50,7 @@ The following options are set to default values:
 *	\-\-manufacturer=None
     Default Manufacturer if no manufacturername is provided in the BMEcat.
 *	\-\-separators=autodetect
-    Default is _*autodetect*_, which tries to resolve the thousands- and decimalseparator
+    Default is _*autodetect*_, which tries to resolve the thousands- and decimal-separator
 
 ### Additional options
 The options can be changed as follows:
@@ -65,18 +65,18 @@ The options can be changed as follows:
     %M is the minute
     %S is the second
 *	\-\-validation="strict"
-    In order to loosen the validationrules one could set the validation with the option *\-\-validation="nonstrict*.
+    In order to loosen the validation-rules one could set the validation with the option *\-\-validation="nonstrict*.
     _*strict*_ means if a validation fails, an exception is raised and the conversion fails.
     _*anything_else*_ only writes warnings but will create a BMEcat if nothing really bad is inserted.
 *	\-\-manufacturer
 *	\-\-separators=autodetect
     three states are possible
     -	autodetect:
-        tries to autodetect thousands- and decimalseparators
+        tries to autodetect thousands- and decimal-separators
     -	english:
-        set thousandsseparator to comma and decimalseparator to dot.
+        set thousands-separator to comma and decimal-separator to dot.
     -	german:
-        set thousandsseparator to dot and decimalseparator to comma.
+        set thousands-separator to dot and decimal-separator to comma.
 
 ## Detailed Information
 The first case, converting from BMEcat into Excel covers the following aspects:
@@ -88,9 +88,9 @@ The first case, converting from BMEcat into Excel covers the following aspects:
         -	title(descriptionShort)
         -	description(descriptionLong)
         -	manufacturerArticleID
-        -	manufactuerName
+        -	manufacturerName
         -	GTIN
-        -	deliverytime
+        -	deliveryTime
     -	orderDetails
         -	OrderUnit
         -	ContentUnit
@@ -123,9 +123,9 @@ The first case, converting from BMEcat into Excel covers the following aspects:
 *	The second sheet is called 'Artikelbeziehungen'. It contains all relations between all articles in the BMEcat. Every row contains one relation.
     The columns are named as follows:
     -	supplierArticleId
-    -	referencType
+    -	referenceType
     -	referencedSupplierArticleId
-*	The third sheet is called 'Artikelsuchbegriffe'. It contains all searchwords for all articles. One row contains all searchwords for one article.
+*	The third sheet is called 'Artikelsuchbegriffe'. It contains all search-words for all articles. One row contains all search-words for one article.
     The columns are named as follows:
     -	supplierArticleId
     -	keywords

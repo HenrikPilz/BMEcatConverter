@@ -113,8 +113,8 @@ class ReferenceTest(unittest.TestCase):
         reference.addSupplierArticleId("Test")
 
         self.assertEqual(etree.tostring(reference.toXml()),
-                         b'<ARTICLE_REFERENCE quantity="1" type="consists_of"><ART_ID_TO>Test</ART_ID_TO></ARTICLE_REFERENCE>',
-                         "XML Ouput ist kaputt")
+                         b'<ARTICLE_REFERENCE type="consists_of" quantity="1"><ART_ID_TO>Test</ART_ID_TO></ARTICLE_REFERENCE>',
+                         "XML Output ist kaputt")
 
 
 # if __name__ == "__main__":
