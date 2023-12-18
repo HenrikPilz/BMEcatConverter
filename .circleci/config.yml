@@ -88,11 +88,11 @@ jobs:
             ./cc-test-reporter before-build
             coverage run -p --source=src src/test_main.py 
             coverage run -p --source=src src/setup.py build
-            ./cc-test-reporter after-build --exit-code $?
             coverage combine
             coverage report
             coverage xml
             coverage html
+            ./cc-test-reporter after-build --exit-code $?
 
       - store_artifacts:
           path: ~/repo/coverage/report/html
