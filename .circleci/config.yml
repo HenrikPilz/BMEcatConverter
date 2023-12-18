@@ -92,7 +92,7 @@ jobs:
             coverage report
             coverage xml
             coverage html
-            ./cc-test-reporter after-build -t coverage.py --prefix coverage/xml/ --exit-code $?
+            ./cc-test-reporter after-build -t coverage.py -p ~repo/coverage/xml/ --exit-code $?
 
       - store_artifacts:
           path: ~/repo/coverage/report/html
