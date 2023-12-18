@@ -48,6 +48,8 @@ jobs:
             python src/test_main.py
 
   coverage:
+    environment:
+      CC_TEST_REPORTER_ID: 7cab17cbed7019019ea4955c73a8099e2d8c1199833546e7b5e9223bbb1e6dc6
     docker:
       - image: circleci/python:3.6.1
     working_directory: ~/repo
@@ -72,18 +74,25 @@ jobs:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
 
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+          # download test reporter as a static binary
+                     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+                     chmod +x ./cc-test-reporter
       # run coverage!
       - run:
           name: run coverage
           command: |
             . venv/bin/activate
+            ./cc-test-reporter before-build
             coverage run -p --source=src src/test_main.py 
             coverage run -p --source=src src/setup.py build
+            ./cc-test-reporter after-build --exit-code $?
             coverage combine
             coverage report
             coverage xml
             coverage html
-            CODECLIMATE_REPO_TOKEN=7cab17cbed7019019ea4955c73a8099e2d8c1199833546e7b5e9223bbb1e6dc6 codeclimate-test-reporter
 
       - store_artifacts:
           path: ~/repo/coverage/report/html
