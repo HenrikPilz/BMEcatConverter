@@ -1,8 +1,8 @@
-'''
+"""
 Created on 01.09.2017
 
 @author: henrik.pilz
-'''
+"""
 from xml.sax import make_parser
 import logging
 import os
@@ -20,16 +20,21 @@ from transformer import SeparatorTransformer
 
 
 class Converter(object):
-    '''
-    classdocs
-    '''
+    """
+    Converter for formats stated in allowedExcelFormats
+
+    Attributes
+    ----------
+    allowedExcelFormats: Array
+        formats of Excel, which can be handled
+    """
 
     allowedExcelFormats = [".xlsx", ".xlsm", ".xltx", ".xltm"]
 
     def __init__(self, config):
-        '''
+        """
         Constructor
-        '''
+        """
         self._inputfile = config['inputfile']
         self._outputfile = config['outputfile']
         self._dateFormat = config['dateFormat']
@@ -43,9 +48,9 @@ class Converter(object):
         return filename
 
     def xmlToExcel(self):
-        '''
+        """
         convert XML BMEcat to Excel-File
-        '''
+        """
         if self._dateFormat is None or len(self._dateFormat.strip()) == 0:
             raise DateFormatMissingException("Zum Konvertieren von XML in Excel muss ein Datumsformat angegeben werden.")
 
@@ -62,7 +67,7 @@ class Converter(object):
             raise FileNotFoundError(urlError)
         t2 = time.time()
         print("Einlesen:")
-        self.computeDuration(t1, t2)
+        self.__computeDuration(t1, t2)
         logging.info("Daten eingelesen")
 
         exporter = PyxelExporter(importer.articles, self._outputfile, self._manufacturerName)
@@ -71,13 +76,13 @@ class Converter(object):
         exporter.createNewWorkbook()
         t4 = time.time()
         print("Wegschreiben:")
-        self.computeDuration(t3, t4)
+        self.__computeDuration(t3, t4)
         logging.info("Fertig.")
 
     def excelToXml(self):
-        '''
+        """
         convert Excel-File to XML BMEcat
-        '''
+        """
 
         importer = ExcelImporter(self._separatorTransformer)
 
@@ -86,7 +91,7 @@ class Converter(object):
             importer.readWorkbook(self._inputfile)
             t2 = time.time()
             print("Einlesen:")
-            self.computeDuration(t1, t2)
+            self.__computeDuration(t1, t2)
 
             articles = { 'new' : importer.articles }
 
@@ -101,18 +106,21 @@ class Converter(object):
             exporter.writeBMEcatAsXML()
             t4 = time.time()
             print("Wegschreiben:")
-            self.computeDuration(t3, t4)
+            self.__computeDuration(t3, t4)
         else:
             raise FileNotFoundError("Datei '{0}' wurde nicht gefunden".format(self._inputfile))
         logging.info("Fertig.")
         print("Fertig.")
 
     def convert(self):
+        """
+        convert from input to output
+        """
         self._inputfile = self._relativePathToAbsolutePath(self._inputfile)
         self._outputfile = self._relativePathToAbsolutePath(self._outputfile)
-        if self._inputfile.endswith(".xml") and self._isExcel(self._outputfile):
+        if self._inputfile.endswith(".xml") and self.__isExcel(self._outputfile):
             self.__runConverterMethod(self.xmlToExcel)
-        elif self._isExcel(self._inputfile) and self._outputfile.endswith(".xml"):
+        elif self.__isExcel(self._inputfile) and self._outputfile.endswith(".xml"):
             self.__runConverterMethod(self.excelToXml)
         else:
             raise ConversionModeException("Mode not supported")
@@ -125,10 +133,10 @@ class Converter(object):
                 os.remove(self._outputfile)
             raise e
 
-    def _isExcel(self, filename):
+    def __isExcel(self, filename):
         return str(filename[-5:]) in self.allowedExcelFormats
 
-    def computeDuration(self, t1, t2):
+    def __computeDuration(self, t1, t2):
         duration = t2 - t1
         if duration < 60:
             print('Duration in seconds: ', (t2 - t1))

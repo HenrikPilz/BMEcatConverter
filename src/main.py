@@ -87,11 +87,10 @@ def findNextFreeLogfilename(logfilename):
             return freeLogfilename
 
 
-def createFileLoggingHandler(logfilename, logLevel=logging.DEBUG,
-                             logFormat='%(levelname)7s: %(message)s'):
-    '''
+def createFileLoggingHandler(logfilename, logLevel=logging.DEBUG, logFormat='%(levelname)7s: %(message)s'):
+    """
     setUp Logging for File
-    '''
+    """
     if os.path.exists(logfilename):
         try:
             os.remove(logfilename)
@@ -108,9 +107,9 @@ def createFileLoggingHandler(logfilename, logLevel=logging.DEBUG,
 
 
 def configureStdoutLogging(logLevel=logging.DEBUG):
-    '''
+    """
     setUp Logging for Console
-    '''
+    """
     frmStdOut = logging.Formatter('%(levelname)7s - %(message)s')
     # Console out
     stdOutHandler = logging.StreamHandler(sys.stdout)
@@ -120,9 +119,9 @@ def configureStdoutLogging(logLevel=logging.DEBUG):
 
 
 def setUpLogging():
-    '''
+    """
     setUp Logging for File and Console
-    '''
+    """
     loggingLevel = logging.INFO
     logger = logging.getLogger()
 
@@ -162,7 +161,7 @@ def main(argv):
     """
     main method
     """
-    # Loging einstgellen: zwei Outputdateien plus Konsole
+    # Loging einstellen: zwei Output-dateien plus Konsole
     setUpLogging()
 
     logging.debug('Number of arguments: %d arguments.', len(argv))

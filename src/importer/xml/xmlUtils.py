@@ -36,10 +36,11 @@ def objectIsNotNone(objectToCheck, msg: str, raiseException = True):
 
 
 def objectIsNotNoneAndNotEmpty(objectToCheck, msg: str, raiseException = True):
-    objectIsNotNone(objectToCheck, msg)
-    if isinstance(objectToCheck, (list, array)) and len(objectToCheck) > 0:
-        if raiseException:
-            raise Exception(msg)
-        logging.warning(msg)
+    if objectIsNotNone(objectToCheck, msg, raiseException) and \
+       isinstance(objectToCheck, (list, array, str)) and \
+       len(objectToCheck) > 0:
         return True
+    if raiseException:
+        raise Exception(msg)
+    logging.warning(msg)
     return False

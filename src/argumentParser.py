@@ -28,7 +28,7 @@ class ArgumentParser():
         """
         parsing arguments
 
-        @param argv: arguments and options
+        :param argv: arguments and options
         """
         opts, _ = getopt.getopt(argv,
                                 "hi:o:",
@@ -51,8 +51,8 @@ class ArgumentParser():
         """
         check for each argument and option
 
-        @param opt: options
-        @param args: arguments
+        :param opt: options
+        :param args: arguments
         """
         self._checkIfHelpCalled(opt, arg)
         self._checkForArguments(opt, arg)
@@ -63,8 +63,8 @@ class ArgumentParser():
         checks if the help option is called.
         If so, raise HelpCalledException
 
-        @param opt: options
-        @param args: arguments
+        :param opt: options
+        :param args: arguments
         """
         if opt == '-h':
             raise HelpCalledException()
@@ -73,8 +73,8 @@ class ArgumentParser():
         """
         check for arguments, inputfile and outputfile
 
-        @param opt: options
-        @param args: arguments
+        :param opt: options
+        :param args: arguments
         """
         if opt == "-i":
             self.inputfile = arg
@@ -86,8 +86,8 @@ class ArgumentParser():
         check for options, manufacturer, validation mode,
         separators and date format
 
-        @param opt: options
-        @param args: arguments
+        :param opt: options
+        :param args: arguments
         """
         if opt == "--manufacturer":
             self.manufacturer = arg

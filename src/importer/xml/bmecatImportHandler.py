@@ -146,13 +146,20 @@ class BMEcatImportHandler(handler.ContentHandler):
     __fieldsToTransform = ["amount", "tax", "factor"]
 
     def __init__(self, dateFormat, separatorTransformer=SeparatorTransformer("detect")):
-        """ Konstruktor """
-        super().__init__()
+        """ Konstruktor
+        :param dateFormat: str
+        :param separatorTransformer: SeparatorTransformer
+        """
         self.__dateFormat = dateFormat
         self._separatorTransformer = separatorTransformer
 
         # articles by SKU and Product Structure as Value
-        self.articles = { "new" : [], "update" : [], "delete" : [], "failed" : [] }
+        self.articles = {
+            "new": [],
+            "update": [],
+            "delete": [],
+            "failed": []
+        }
         self.__currentArticle = None
         self.__currentPrice = None
         self.__currentMime = None
@@ -200,7 +207,7 @@ class BMEcatImportHandler(handler.ContentHandler):
             raise NotImplementedError("Class [{0}] does not implement [{1}]".format(self.__class__.__name__, method))
 
     def _determineTagName(self, tag: str, isOpenTag: bool):
-        """ Handlernamen fuer das XML-Element ermitteln. """
+        """ Handler fuer das XML-Element ermitteln. """
         name = tag.lower()
         if tag.lower() in self.__alias:
             logging.debug("[{0}] '{1}' has an alias".format("start" if isOpenTag else "end", tag))
@@ -213,7 +220,7 @@ class BMEcatImportHandler(handler.ContentHandler):
             return self._determineHandlername(name, self.__startElementHandler)
         return self._determineHandlername(name, self.__endElementHandler)
 
-    def _determineHandlername(self, name, handlerByName: dict):
+    def _determineHandlername(self, name: str, handlerByName: dict):
         try:
             return handlerByName[name]
         except KeyError:
@@ -447,7 +454,7 @@ class BMEcatImportHandler(handler.ContentHandler):
         if not xmlUtils.objectIsNotNone(elementWithAddMethod,
                                      "{0} soll gespeichert werden. Aber es ist kein {1} vorhanden.".format(attrName, elementWithAddMethod.__class__.__name__),
                                      raiseException) \
-           or self._noValidatingObject(elementWithAddMethod,
+           or xmlUtils.noValidatingObject(elementWithAddMethod,
                                        "Could not execute addMethod. No ValidatingObject",
                                        raiseException):
             return
