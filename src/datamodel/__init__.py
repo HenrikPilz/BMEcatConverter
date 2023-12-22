@@ -1,6 +1,6 @@
-'''
+"""
 Module for the datastructures
-'''
+"""
 
 from datamodel.comparableEqual import ComparableEqual
 from datamodel.feature import Feature
@@ -19,15 +19,18 @@ from datamodel.variantSet import VariantSet
 from datamodel.xmlObject import ValidatingXMLObject
 from datamodel.xmlObject import XMLObject
 
-__all__ = ['Feature',
-           'FeatureSet',
-           'Mime',
-           'Product',
-           'ProductDetails',
-           'OrderDetails',
-           'PriceDetails',
-           'Price',
-           'Reference',
-           'TreatmentClass',
-           'Variant',
-           'VariantSet']
+__all__ = [
+    'Feature',
+    'FeatureSet',
+    'Mime',
+    'Product',
+    'ProductDetails',
+    'OrderDetails',
+    'PriceDetails',
+    'Price',
+    'Reference',
+    'TreatmentClass',
+    'Variant',
+    'VariantSet',
+    'ValidatingObject'
+    ]

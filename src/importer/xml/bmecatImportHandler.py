@@ -1,9 +1,8 @@
-'''
+"""
 Created on 05.05.2017
 
 @author: henrik.pilz
-'''
-from array import array
+"""
 from datetime import datetime
 from xml.sax import handler
 import logging
@@ -18,33 +17,45 @@ from datamodel import Reference
 from datamodel import TreatmentClass
 from datamodel import ValidatingObject
 from datamodel import Variant
+from importer.xml import xmlUtils
 from transformer import SeparatorTransformer
 
 
 class BMEcatImportHandler(handler.ContentHandler):
-    '''
+    """
         Handler fuer Sax2Parser, welcher BMEcats in den Formaten 1.01,1.2,2005, 2005.1 sowie ETIM aller Arten liest.
-    '''
 
-    ''' alle registrierten StartElementhandler '''
-    __startElementHandler = { "article" : "createProduct",
-                              "article_details" : "createProductDetails",
-                              "order_details" : "createOrderDetails",
-                              "price_details" : "createPriceDetails",
-                              "price" : "createPrice",
-                              "mime" : "createMime",
-                              "mime_info" : "startMimeInfo",
-                              "datetime" : "startDateTime",
-                              "article_features" : "createFeatureSet",
-                              "feature" : "createFeature",
-                              "special_treatment_class" : "createTreatmentClass",
-                              "article_reference" : "createReference",
-                              "variants" : "createFeatureVariantSet",
-                              "variant" : "createFeatureVariant",
-                              "description_long" : "_startDescription",
-                              "description" : "_startDescription" }
+        Attributes
+        ----------
+        __startElementHandler: dict
+            handler fuer starting tags
+        __alias: dict
+            Moegliche Aliase fuer Varianten der BMEcats
+        __endElementHandler: dict
+            handler fuer den Abschluss eines Elements
+        __fieldsToTransform: dict
+            Felder die umgeformt werden sollen
+    """
 
-    ''' Moegliche Aliase fuer Varianten der BMEcats '''
+    __startElementHandler = {
+        "article": "createProduct",
+        "article_details": "createProductDetails",
+        "order_details": "createOrderDetails",
+        "price_details": "createPriceDetails",
+        "price": "createPrice",
+        "mime": "createMime",
+        "mime_info": "startMimeInfo",
+        "datetime": "startDateTime",
+        "article_features": "createFeatureSet",
+        "feature": "createFeature",
+        "special_treatment_class": "createTreatmentClass",
+        "article_reference": "createReference",
+        "variants": "createFeatureVariantSet",
+        "variant": "createFeatureVariant",
+        "description_long": "_startDescription",
+        "description": "_startDescription"
+    }
+
     __alias = {
                 "product" : "article",
                 "product_details" : "article_details",
@@ -65,7 +76,6 @@ class BMEcatImportHandler(handler.ContentHandler):
                 "supplier_pid_supplement" : "supplier_aid_supplement"
             }
 
-    ''' alle registrierten EndElementhandler '''
     __endElementHandler = {
                 "catalog_group_system" : "_resetAll",
                 "feature" : "saveFeature",
@@ -133,14 +143,15 @@ class BMEcatImportHandler(handler.ContentHandler):
                 "reference_feature_group_id" : ("_addAttributeToCurrentFeatureSet", "referenceGroupId", False),
                 "reference_feature_group_name" : ("_addAttributeToCurrentFeatureSet", "referenceGroupName", False) }
 
-    __fieldsToTransform = [ "amount", "tax", "factor"]
+    __fieldsToTransform = ["amount", "tax", "factor"]
 
-    ''' Konstruktor '''
     def __init__(self, dateFormat, separatorTransformer=SeparatorTransformer("detect")):
+        """ Konstruktor """
+        super().__init__()
         self.__dateFormat = dateFormat
         self._separatorTransformer = separatorTransformer
 
-        '''articles by SKU and Product Structure as Value'''
+        # articles by SKU and Product Structure as Value
         self.articles = { "new" : [], "update" : [], "delete" : [], "failed" : [] }
         self.__currentArticle = None
         self.__currentPrice = None
@@ -160,20 +171,20 @@ class BMEcatImportHandler(handler.ContentHandler):
         self.__lineFeedToHTML = False
         self.__currentArticleMode = "failed"
 
-    ''' Starte aktuelles XML Element '''
     def startElement(self, name, attrs):
+        """ Starte aktuelles XML Element """
         self._workOnElement(name, attrs, True)
 
-    ''' Schliesse aktuelles XML Element '''
     def endElement(self, name):
+        """ Schliesse aktuelles XML Element """
         self._workOnElement(name, None, False)
 
-    ''' Handler ermitteln, der die Arbeit macht. '''
-    def _workOnElement(self, name, attrs, bOpen):
+    def _workOnElement(self, name, attrs, isOpenTag: bool):
+        """ Handler ermitteln, der die Arbeit macht. """
         logging.debug("Call for Tag <" + name + ">")
         method = None
         try:
-            handlerInfo = self._determineTagHandlername(name, bOpen)
+            handlerInfo = self._determineTagHandlername(name, isOpenTag)
             if handlerInfo is None:
                 self.__currentContent = ""
                 return
@@ -188,28 +199,27 @@ class BMEcatImportHandler(handler.ContentHandler):
         except AttributeError:
             raise NotImplementedError("Class [{0}] does not implement [{1}]".format(self.__class__.__name__, method))
 
-    ''' Handlernamen fuer das XML-Element ermitteln. '''
-    def _determineTagName(self, tag, bOpen):
+    def _determineTagName(self, tag: str, isOpenTag: bool):
+        """ Handlernamen fuer das XML-Element ermitteln. """
         name = tag.lower()
         if tag.lower() in self.__alias:
-            logging.debug("[{0}] '{1}' has an alias".format("start" if bOpen else "end", tag))
+            logging.debug("[{0}] '{1}' has an alias".format("start" if isOpenTag else "end", tag))
             name = self.__alias[tag.lower()]
         return name
 
-    def _determineTagHandlername(self, tag, bOpen):
-        name = self._determineTagName(tag, bOpen)
-        if bOpen:
+    def _determineTagHandlername(self, tag: str, isOpenTag: bool):
+        name = self._determineTagName(tag, isOpenTag)
+        if isOpenTag:
             return self._determineHandlername(name, self.__startElementHandler)
-        else:
-            return self._determineHandlername(name, self.__endElementHandler)
+        return self._determineHandlername(name, self.__endElementHandler)
 
-    def _determineHandlername(self, name, handlerByName):
-            try:
-                return handlerByName[name]
-            except KeyError:
-                logging.debug("Call for Tag <" + name + "> FAILED:")
+    def _determineHandlername(self, name, handlerByName: dict):
+        try:
+            return handlerByName[name]
+        except KeyError:
+            logging.debug("Call for Tag <%s> FAILED:" % name)
 
-    ''' ---------------------------------------------------------------------'''
+    # --------------------------------------------------------------------- #
     def _resetAll(self, attrs=None):
         self.__currentArticle = None
         self.__currentPrice = None
@@ -222,11 +232,11 @@ class BMEcatImportHandler(handler.ContentHandler):
         self.__currentFeature = None
         self.__currentTreatmentClass = None
 
-    ''' ---------------------------------------------------------------------'''
-    ''' Anfang Artikel '''
+    # --------------------------------------------------------------------- #
     def createProduct(self, attrs):
-        logging.debug("Anfang Produkt " + ", ".join(attrs.getNames()))
-        self._objectIsNone(self.__currentArticle,
+        """ Anfang Artikel """
+        logging.debug("Anfang Produkt %s" % ", ".join(attrs.getNames()))
+        xmlUtils.objectIsNone(self.__currentArticle,
                            "Fehler im BMEcat: Neuer Artikel soll erstellt " +
                            "werden. Es wird schon ein Artikel verarbeitet.",
                            True)
@@ -239,63 +249,69 @@ class BMEcatImportHandler(handler.ContentHandler):
             self.__currentArticleMode = 'new'
             logging.warning("Fehler im BMEcat: es wurde kein mode fuer den Artikel angegeben.")
 
-    ''' Artikel speichern '''
     def saveProduct(self, attr=None):
-        logging.info("Produkt validieren: " + self.__currentArticle.productId)
-        self._objectIsNotNone(self.__currentArticle , "Es wurde kein aktuell zu bearbeitender Artikel gefunden.", True)
+        """ Artikel speichern """
+        logging.info("Produkt validieren: %s" % self.__currentArticle.productId)
+        xmlUtils.objectIsNotNone(self.__currentArticle , "Es wurde kein aktuell zu bearbeitender Artikel gefunden.", True)
         self.__currentArticle.validate(False)
-        logging.debug("Neues Produkt erstellt. Modus: " + self.__currentArticleMode)
+        logging.debug("Neues Produkt erstellt. Modus: %s" % self.__currentArticleMode)
         self.articles[self.__currentArticleMode].append(self.__currentArticle)
         logging.debug("Produktende")
         self._resetAll()
 
-    ''' ---------------------------------------------------------------------'''
+    # --------------------------------------------------------------------- #
     def createProductDetails(self, attrs):
-        self._objectIsNotNone(self.__currentArticle,
+        """ Artikeldetailinformationen erstellen """
+        xmlUtils.objectIsNotNone(self.__currentArticle,
                               "Artikeldetails sollen erstellt werden. Aber es ist kein Artikel vorhanden", True)
-        self._objectIsNone(self.__currentArticle.details,
+        xmlUtils.objectIsNone(self.__currentArticle.details,
                            "Fehler im BMEcat: Neue Artikeldetails sollen erstellt werden. Es werden schon Artikeldetails verarbeitet.", True)
         self.__currentArticle.addDetails()
         self.__currentArticleDetails = self.__currentArticle.details
         self.__currentElement = self.__currentArticle.details
 
     def endProductDetails(self, attrs=None):
+        """ Artikeldetailinformationen speichern """
         self.__currentArticleDetails = None
         self.__currentElement = self.__currentArticle
 
-    ''' ---------------------------------------------------------------------'''
+    # --------------------------------------------------------------------- #
     def createOrderDetails(self, attrs=None):
-        self._objectIsNotNone(self.__currentArticle,
+        """ Bestelldetails erstellen """
+        xmlUtils.objectIsNotNone(self.__currentArticle,
                               "Bestelldetails sollen erstellt werden. Aber es ist kein Artikel vorhanden", True)
-        self._objectIsNone(self.__currentOrderDetails,
+        xmlUtils.objectIsNone(self.__currentOrderDetails,
                            "Fehler im BMEcat: Neue Bestelldetails sollen erstellt werden. Es werden schon Bestelldetails verarbeitet.", True)
         self.__currentArticle.addOrderDetails()
         self.__currentOrderDetails = self.__currentArticle.orderDetails
 
     def endOrderDetails(self, attrs=None):
-        self._objectIsNotNone(self.__currentArticle,
+        """ Bestelldetails speichern """
+        xmlUtils.objectIsNotNone(self.__currentArticle,
                               "Bestelldetails sollen gespeichert werden. Aber es ist kein Artikel vorhanden", True)
         self.__currentOrderDetails = None
         self.__currentElement = self.__currentArticle
 
-    ''' ---------------------------------------------------------------------'''
+    # --------------------------------------------------------------------- #
     def createPriceDetails(self, attrs):
-        self._objectIsNone(self.__currentPriceDetails,
+        """ Preisdetails erstellen """
+        xmlUtils.objectIsNone(self.__currentPriceDetails,
                            "Fehler im BMEcat: Neue Preisdetails sollen erstellt werden. Es werden schon Preisdetails verarbeitet.", True)
         self.__currentPriceDetails = PriceDetails()
         self.__currentElement = self.__currentPriceDetails
 
     def savePriceDetails(self, attrs):
-        self._objectIsNotNone(self.__currentArticle,
+        """ Preisdetails speichern """
+        xmlUtils.objectIsNotNone(self.__currentArticle,
                               "Preisdetails sollen gespeichert werden. Aber es ist kein Artikel vorhanden", True)
         self.__currentArticle.addPriceDetails(self.__currentPriceDetails, False)
         self.__currentPriceDetails = None
         self.__currentElement = None
 
-    ''' ---------------------------------------------------------------------'''
-    ''' Anfang Preis '''
+    # --------------------------------------------------------------------- #
     def createPrice(self, attrs):
-        self._objectIsNone(self.__currentPrice,
+        """ Preis erstellen """
+        xmlUtils.objectIsNone(self.__currentPrice,
                            "Fehler im BMEcat: Neuer Preis soll erstellt werden. Es wird schon ein Preis verarbeitet.", True)
         priceType = "other"
         try:
@@ -305,48 +321,50 @@ class BMEcatImportHandler(handler.ContentHandler):
         self.__currentPrice = Price(priceType)
         self.__currentElement = self.__currentPrice
 
-    ''' Preis speichern '''
     def savePrice(self, attrs):
-        self._objectIsNotNone(self.__currentPriceDetails, "Preis soll gespeichert werden. Aber es sind keine Preisdetails  vorhanden", True)
+        """ Preis speichern """
+        xmlUtils.objectIsNotNone(self.__currentPriceDetails, "Preis soll gespeichert werden. Aber es sind keine Preisdetails  vorhanden", True)
         self.__currentPriceDetails.addPrice(self.__currentPrice, False)
         self.__currentPrice = None
         self.__currentElement = self.__currentPriceDetails
 
-    ''' ---------------------------------------------------------------------'''
+    # --------------------------------------------------------------------- #
     def startMimeInfo(self, attrs=None):
+        """ Medieninformation erstellen """
         self.__currentElement = self.__currentArticle
         self.__currentMime = None
 
     def endMimeInfo(self, attrs=None):
+        """ Medieninformation speichern """
         self.__currentMime = None
         self.__currentElement = None
 
-    ''' ---------------------------------------------------------------------'''
-    ''' Anfang Bild '''
+    # --------------------------------------------------------------------- #
     def createMime(self, attrs):
-        self._objectIsNone(self.__currentMime,
+        """ Medium erstellen """
+        xmlUtils.objectIsNone(self.__currentMime,
                            "Fehler im BMEcat: Neues Bild soll erstellt werden. Es wird schon ein Bild verarbeitet.",
                            True)
         self.__currentMime = Mime()
 
-    ''' Bild speichern '''
     def saveMime(self, attrs):
-        if self._objectIsNotNone(self.__currentElement, "Bild konnte nicht gespeichert werden.", False):
-            self.__currentElement.addMime(self.__currentMime, raiseException=False)
+        """ Medium speichern """
+        if xmlUtils.objectIsNotNone(self.__currentElement, "Bild konnte nicht gespeichert werden.", False):
+            self.__currentElement.addMime(self.__currentMime, False)
         self.__currentMime = None
 
-    ''' ---------------------------------------------------------------------'''
-    ''' Anfang TreatmentClass '''
+    # --------------------------------------------------------------------- #
     def createTreatmentClass(self, attrs):
-        self._objectIsNone(self.__currentTreatmentClass,
+        """ Anfang TreatmentClass """
+        xmlUtils.objectIsNone(self.__currentTreatmentClass,
                            "Fehler im BMEcat: Neue SpecialTreatmentClass soll erstellt werden. Es wird schon ein SpecialTreatmentClass verarbeitet.",
                            True)
         self.__currentTreatmentClass = TreatmentClass(attrs.getValue('type'))
         self.__currentElement = self.__currentTreatmentClass
 
-    ''' TreatmentClass speichern '''
     def saveTreatmentClass(self, attrs):
-        self._objectIsNotNone(self.__currentArticle,
+        """ TreatmentClass speichern """
+        xmlUtils.objectIsNotNone(self.__currentArticle,
                               "SpecialTreatmentClass soll gespeichert werden. Aber es ist kein Artikel vorhanden",
                               True)
         self.__currentTreatmentClass.value = self.__currentContent
@@ -354,38 +372,42 @@ class BMEcatImportHandler(handler.ContentHandler):
         self.__currentTreatmentClass = None
         self.__currentElement = None
 
-    ''' ---------------------------------------------------------------------'''
+    # --------------------------------------------------------------------- #
     def createFeatureSet(self, attrs=None):
-        self._objectIsNone(self.__currentFeatureSet,
+        """ Eigenschaften-Set erstellen """
+        xmlUtils.objectIsNone(self.__currentFeatureSet,
                            "Fehler im BMEcat: Neues Attributset soll erstellt werden. Es wird schon ein Attributset verarbeitet.",
                            True)
         self.__currentFeatureSet = FeatureSet()
         self.__currentContent = ""
 
     def saveFeatureSet(self, attrs=None):
-        self._objectIsNotNone(self.__currentArticle,
+        """ Eigenschaften-Set speichern """
+        xmlUtils.objectIsNotNone(self.__currentArticle,
                               "Attributset soll gespeichert werden. Aber es ist kein Artikel vorhanden", True)
         self.__currentArticle.addFeatureSet(self.__currentFeatureSet)
         self.__currentFeatureSet = None
 
-    ''' ---------------------------------------------------------------------'''
+    # --------------------------------------------------------------------- #
     def createFeature(self, attrs=None):
-        self._objectIsNone(self.__currentFeature, "Fehler im BMEcat: Neues Attribut soll erstellt werden. Es wird schon ein Attribut verarbeitet.", True)
+        """ Eigenschaft erstellen """
+        xmlUtils.objectIsNone(self.__currentFeature, "Fehler im BMEcat: Neues Attribut soll erstellt werden. Es wird schon ein Attribut verarbeitet.", True)
         self.__currentFeature = Feature()
         self.__currentElement = self.__currentFeature
         self.__currentContent = ""
 
     def saveFeature(self, attrs=None):
-        if self._objectIsNotNone(self.__currentFeatureSet, "Attribut soll gespeichert werden. Aber es ist kein Attributset vorhanden", False):
+        """ Eigenschaft speichern """
+        if xmlUtils.objectIsNotNone(self.__currentFeatureSet, "Attribut soll gespeichert werden. Aber es ist kein Attributset vorhanden", False):
             self.__currentFeatureSet.addFeature(self.__currentFeature)
 
         self.__currentFeature = None
         self.__currentElement = None
 
-    ''' ---------------------------------------------------------------------'''
-    ''' Referenz erstellen'''
+    # --------------------------------------------------------------------- #
     def createReference(self, attrs=None):
-        self._objectIsNone(self.__currentReference,
+        """ Referenz erstellen """
+        xmlUtils.objectIsNone(self.__currentReference,
                            "Fehler im BMEcat: Neue Referenz soll erstellt werden. Es wird schon eine Referenz verarbeitet.",
                            True)
         if 'type' not in attrs.getNames():
@@ -397,32 +419,32 @@ class BMEcatImportHandler(handler.ContentHandler):
             if 'quantity' in attrs.getNames():
                 self.__currentReference.quantity = attrs.getValue('quantity')
 
-    ''' Referenz speichern'''
     def saveReference(self, attrs=None):
+        """ Referenz speichern """
         self.save(self.__currentReference, self.__currentArticle, "references")
         # self.__currentArticle.addReference(self.__currentReference)
         self.__currentReference = None
         self.__currentElement = None
 
-    ''' ---------------------------------------------------------------------'''
-    ''' Erstellen '''
+    # --------------------------------------------------------------------- #
     def create(self, typeToCreate, referenceToSet, setCurrentElement=False):
-        self._objectIsNotNone(referenceToSet,
+        """ Element erstellen """
+        xmlUtils.objectIsNotNone(referenceToSet,
                               "Fehler im BMEcat: Neues Bild soll erstellt werden. Es wird schon ein Bild verarbeitet.", True)
         referenceToSet = typeToCreate()
         if setCurrentElement:
             self.__currentElement = referenceToSet
 
-    ''' speichern '''
     def save(self, elementToBeSaved, elementToSaveAt, attributeName):
+        """ Element speichern """
         if not isinstance(elementToSaveAt, ValidatingObject):
             logging.warning("'{0}' konnte nicht gespeichert werden.".format(elementToBeSaved.__class__.__name__))
         else:
             elementToSaveAt.add(attributeName, elementToBeSaved)
 
-    ''' ---------------------------------------------------------------------'''
+    # --------------------------------------------------------------------- #
     def _addAttribute(self, elementWithAddMethod, attrName, raiseException):
-        if not self._objectIsNotNone(elementWithAddMethod,
+        if not xmlUtils.objectIsNotNone(elementWithAddMethod,
                                      "{0} soll gespeichert werden. Aber es ist kein {1} vorhanden.".format(attrName, elementWithAddMethod.__class__.__name__),
                                      raiseException) \
            or self._noValidatingObject(elementWithAddMethod,
@@ -462,45 +484,50 @@ class BMEcatImportHandler(handler.ContentHandler):
     def _addAttributeToCurrentElement(self, attrName, raiseException):
         self._addAttribute(self.__currentElement, attrName, raiseException)
 
-    ''' Attribut fuer Variante speichern '''
     def _addAttributeToCurrentVariant(self, attrName, raiseException):
+        """ Attribut fuer Variante speichern """
         self._addAttribute(self.__currentVariant, attrName, raiseException)
 
-    ''' ---------------------------------------------------------------------'''
-    ''' Referenz ID speichern'''
-    ''' Referenz Beschreibung speichern'''
+    # --------------------------------------------------------------------- #
     def _addAttributeToCurrentReference(self, attrName, raiseException):
+        """ Referenz ID speichern"""
         self._addAttribute(self.__currentReference, attrName, raiseException)
 
-    ''' ---------------------------------------------------------------------'''
+    # --------------------------------------------------------------------- #
     def _startDescription(self, attrs=None):
+        """ Referenz Beschreibung speichern"""
         self.__lineFeedToHTML = True
 
-    ''' ---------------------------------------------------------------------'''
+    # --------------------------------------------------------------------- #
     def createFeatureVariantSet(self, attrs=None):
-        self._objectIsNotNoneAndNotEmpty(self.__currentFeature.values ,
+        """ Eigenschaften-Set fuer Varianten erstellen """
+        xmlUtils.objectIsNotNoneAndNotEmpty(self.__currentFeature.values ,
                                          "Fehler im BMEcat: FeatureVariants sollen hinzugefuegt werden, es existieren aber schon FeatureValues.",
                                          True)
-        self._objectIsNotNone(self.__currentFeature.variants,
+        xmlUtils.objectIsNotNone(self.__currentFeature.variants,
                               "Fehler im BMEcat: FeatureVariants sollen hinzugefuegt werden, es existieren aber schon FeatureVariants.")
         self.__currentFeature.addVariantSet()
 
     def addFeatureVariantSetOrder(self, attrs=None):
+        """ Eigenschaftenreihenfolge fuer Varianten erstellen """
         self.__currentFeature.addVariantOrder(int(self.__currentContent))
 
     def createFeatureVariant(self, attrs=None):
-        self._objectIsNotNone(self.__currentVariant,
+        """ Eigenschaft fuer Varianten erstellen """
+        xmlUtils.objectIsNotNone(self.__currentVariant,
                               "Fehler im BMEcat: FeatureVariant soll erstellt werden, aber es existiert schon eine.")
         self.__currentVariant = Variant()
         self.__currentElement = self.__currentVariant
 
     def saveFeatureVariant(self, attrs=None):
+        """ Eigenschaft fuer Varianten speichern """
         self.__currentFeature.addVariant(self.__currentVariant)
         self.__currentVariant = None
         self.__currentElement = None
 
-    ''' ---------------------------------------------------------------------'''
+    # --------------------------------------------------------------------- #
     def startDateTime(self, attrs=None):
+        """ Zeitstempel erstellen """
         if attrs is None or 'type' not in attrs.getNames():
             logging.warning("DateTime kann nicht gespeichert werden.")
         else:
@@ -508,26 +535,28 @@ class BMEcatImportHandler(handler.ContentHandler):
             self.__currentElement = self.__currentPriceDetails
 
     def endDateTime(self, attrs=None):
+        """ Zeitstempel speichern """
         self.__dateType = None
         self.__currentElement = None
 
     def addDate(self, attrs=None):
+        """ Zeitstempel hinzufuegen """
         if self.__currentElement is None:
-            logging.warning("Datum [" + self.__dateType + "] kann nicht gespeichert werden, weil kein Element zum Speichern existiert.")
+            logging.warning("Datum [%s] kann nicht gespeichert werden, weil kein Element zum Speichern existiert." % self.__dateType)
         elif self.__dateType is None:
             logging.warning("Kein Datumstyp gesetzt. Datum kann nicht gespeichert werden.")
         elif self.__dateType == 'valid_start_date':
-            logging.debug("Datum [" + self.__currentContent + "] wird als Startdatum gespeichert.")
+            logging.debug("Datum [%s] wird als Startdatum gespeichert." % self.__currentContent)
             self.__currentElement.validFrom = datetime.strptime(self.__currentContent, self.__dateFormat)
         elif self.__dateType == 'valid_end_date':
-            logging.debug("Datum [" + self.__currentContent + "] wird als Enddatum gespeichert.")
+            logging.debug("Datum [%s] wird als Enddatum gespeichert." % self.__currentContent)
             self.__currentElement.validTo = datetime.strptime(self.__currentContent, self.__dateFormat)
         else:
             logging.warning("Datum [" + self.__dateType + "] kann nicht gespeichert werden.")
 
-    ''' ---------------------------------------------------------------------'''
-    '''aktuellen Inhalt des XML-Elements ermitteln'''
+    # --------------------------------------------------------------------- #
     def characters(self, content):
+        """ aktuellen Inhalt des XML-Elements ermitteln """
         logging.debug("Original input: '{0}'".format(content))
         if self.__lineFeedToHTML:
             self.__currentContent += content.replace("\n", "<br>").strip()
@@ -536,40 +565,3 @@ class BMEcatImportHandler(handler.ContentHandler):
                 self.__currentContent = self.__currentContent.strip() + ' '
             self.__currentContent += content.strip()
         logging.debug("Saved input: '{0}'".format(self.__currentContent))
-
-    def _noValidatingObject(self, elementToCheck, msg, raiseException):
-        if not isinstance(elementToCheck, ValidatingObject):
-            if raiseException:
-                raise Exception(msg)
-            else:
-                logging.warning(msg)
-                return True
-        return False
-
-    def _objectIsNone(self, objectToCheck, msg, raiseException):
-        if objectToCheck is None:
-            return True
-        if raiseException:
-            raise Exception(msg)
-        else:
-            logging.warning(msg)
-        return False
-
-    def _objectIsNotNone(self, objectToCheck, msg, raiseException):
-        if objectToCheck is not None:
-            return True
-        if raiseException:
-            raise Exception(msg)
-        else:
-            logging.warning(msg)
-        return False
-
-    def _objectIsNotNoneAndNotEmpty(self, objectToCheck, msg, raiseException):
-        self._objectIsNotNone(objectToCheck, msg)
-        if isinstance(objectToCheck, (list, array)) and len(objectToCheck) > 0:
-            if raiseException:
-                raise Exception(msg)
-            else:
-                logging.warning(msg)
-                return True
-        return False
