@@ -3,7 +3,7 @@ Created on 01.09.2017
 
 @author: henrik.pilz
 """
-from xml.sax import make_parser
+from xml.sax import make_parser, handler
 import logging
 import os
 import time
@@ -55,7 +55,6 @@ class Converter(object):
             raise DateFormatMissingException("Zum Konvertieren von XML in Excel muss ein Datumsformat angegeben werden.")
 
         parser = make_parser()
-
         importer = BMEcatImportHandler(self._dateFormat, self._separatorTransformer)
         parser.setContentHandler(importer)
         parser.setEntityResolver(DTDResolver())

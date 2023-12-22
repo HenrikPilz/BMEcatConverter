@@ -9,6 +9,8 @@ import os
 import sys
 import time
 
+from lxml.etree import XMLSyntaxError
+
 from argumentParser import ArgumentParser
 from converter import Converter
 from error import ConversionModeException
@@ -185,6 +187,9 @@ def main(argv):
     except DataErrorException as dee:
         logging.error(str(dee))
         sys.exit(7)
+    except XMLSyntaxError as xse:
+        logging.error(str(xse))
+        sys.exit(8)
     except Exception as generalException:
         logging.exception("General Exception: %s", str(generalException))
         sys.exit(6)
