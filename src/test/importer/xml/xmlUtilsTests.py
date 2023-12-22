@@ -7,9 +7,21 @@ Created on 22.12.2023
 import unittest
 
 from importer.xml import xmlUtils
-
+from datamodel import ValidatingObject
 
 class XMLUtilsImportTest(unittest.TestCase):
+
+    def testNoValidatingObjectGivenNoneShouldReturnTrue(self):
+        self.assertEqual(True, xmlUtils.noValidatingObject(None, "", False))
+
+    def testNoValidatingObjectGivenObjectRaiseExceptionFalseShouldReturnFalse(self):
+        validatingObject = ValidatingObject()
+        self.assertEqual(False, xmlUtils.noValidatingObject(validatingObject, "", False))
+
+    def testNoValidatingObjectGivenObjectRaiseExceptionTrueShouldRaiseException(self):
+        with self.assertRaises(Exception):
+            xmlUtils.objectIsNone("validatingObject", "", True)
+
     def testObjectIsNoneGivenNoneShouldReturnTrue(self):
         self.assertEqual(True, xmlUtils.objectIsNone(None, "", False))
 
