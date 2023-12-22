@@ -188,7 +188,7 @@ class BMEcatImportHandler(handler.ContentHandler):
 
     def _workOnElement(self, name, attrs, isOpenTag: bool):
         """ Handler ermitteln, der die Arbeit macht. """
-        logging.debug("Call for Tag <" + name + ">")
+        logging.debug("Call for Tag <%s>" % name)
         method = None
         try:
             handlerInfo = self._determineTagHandlername(name, isOpenTag)
@@ -242,7 +242,7 @@ class BMEcatImportHandler(handler.ContentHandler):
     # --------------------------------------------------------------------- #
     def createProduct(self, attrs):
         """ Anfang Artikel """
-        logging.debug("Anfang Produkt %s" % ", ".join(attrs.getNames()))
+        logging.debug("Anfang Produkt %s" % attrs.getNames())
         xmlUtils.objectIsNone(self.__currentArticle,
                            "Fehler im BMEcat: Neuer Artikel soll erstellt " +
                            "werden. Es wird schon ein Artikel verarbeitet.",

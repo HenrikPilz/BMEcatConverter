@@ -88,6 +88,13 @@ class TestMainConverter(unittest.TestCase):
         args = ['-p', '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
         self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 3)
 
+    def testCreateExcelFullDataDTDNotFoundException(self):
+        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFullDataWithCategoryTreeAndDTDNotExistent.xml")
+        outputFilePath = os.path.join(self.outputPath, "testCreateExcelFullDataWithCategoryTreeAndDTDNotExistent.xlsx")
+
+        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
+        self.__runAndAssertSystemExitAndNoOutputfile(args, outputFilePath, 5)
+
     def testCreateExcelNestedArticleDetailsException(self):
         inputFilePath = os.path.join(self.testDataPath, "testCreateExcelNestedArticleDetailsException.xml")
         outputFilePath = os.path.join(self.outputPath, "testCreateExcelNestedArticleDetailsException.xlsx")
@@ -142,13 +149,6 @@ class TestMainConverter(unittest.TestCase):
     --- Ab hier richtige Konvertierungen
     -------------------------------------
     '''
-    def testCreateExcelFullDataDTDNotFoundException(self):
-        inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFullDataWithCategoryTreeAndDTDNotExistent.xml")
-        outputFilePath = os.path.join(self.outputPath, "testCreateExcelFullDataWithCategoryTreeAndDTDNotExistent.xlsx")
-
-        args = ['-i', inputFilePath, '-o', outputFilePath, '--dateformat="%Y-%m-%d"']
-        self.__runTestAssertOutputFileExists(args, outputFilePath)
-
     def testCreateExcelFromBMEcatFullDataNonStrictValidation(self):
         inputFilePath = os.path.join(self.testDataPath, "testCreateExcelFromBMEcatFullDataNonStrictValidation.xml")
         outputFilePath = os.path.join(self.outputPath, "testCreateExcelFromBMEcatFullDataNonStrictValidation.xlsx")
