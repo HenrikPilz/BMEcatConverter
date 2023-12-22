@@ -20,7 +20,7 @@ class XMLUtilsImportTest(unittest.TestCase):
 
     def testNoValidatingObjectGivenObjectRaiseExceptionTrueShouldRaiseException(self):
         with self.assertRaises(Exception):
-            xmlUtils.objectIsNone("validatingObject", "", True)
+            xmlUtils.noValidatingObject("validatingObject", "", True)
 
     def testObjectIsNoneGivenNoneShouldReturnTrue(self):
         self.assertEqual(True, xmlUtils.objectIsNone(None, "", False))
