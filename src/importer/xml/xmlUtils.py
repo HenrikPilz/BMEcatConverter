@@ -1,8 +1,8 @@
-'''
+"""
 Created on 22.12.2023
 
 @author: henrik.pilz
-'''
+"""
 from array import array
 import logging
 from datamodel import ValidatingObject
